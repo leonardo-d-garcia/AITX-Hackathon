@@ -1,0 +1,53 @@
+{
+  "schema_version": "0.1.0",
+  "base_revision_id": "rev_mock_0001",
+  "preview_revision_id": "rev_mock_0002_preview",
+  "operation": "translate_component",
+  "status": "ok",
+  "affected_part_ids": [
+    "battery_pack"
+  ],
+  "changes": [
+    {
+      "part_id": "battery_pack",
+      "field": "T_parent_from_local.translation",
+      "before": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "after": [
+        0.025,
+        0.0,
+        0.0
+      ],
+      "unit": "m"
+    },
+    {
+      "part_id": "battery_pack",
+      "field": "cg_contribution_x_m",
+      "before": 0.3,
+      "after": 0.325,
+      "unit": "m"
+    }
+  ],
+  "checks": [
+    {
+      "name": "battery stays inside the declared corridor",
+      "passed": true,
+      "detail": "x 0.325 m within 0.24 -> 0.42 m"
+    },
+    {
+      "name": "no undeclared interference",
+      "passed": true,
+      "detail": "overlap only with fuse_mid and wing_bay_plate, both declared"
+    },
+    {
+      "name": "retention hardware verified",
+      "passed": false,
+      "detail": "retention and harness are unknown, so no verified-movement claim is made"
+    }
+  ],
+  "artifacts": [],
+  "error": null
+}

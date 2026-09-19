@@ -1,0 +1,547 @@
+{
+  "schema_version": "0.1.0",
+  "design_id": "titan_avenger",
+  "revision_id": "fixture-0001",
+  "frame": "FRD",
+  "reference_area_m2": {
+    "value": 0.348993,
+    "unit": "m2",
+    "status": "estimated",
+    "source_kind": "computed",
+    "evidence_ids": [],
+    "confidence": null,
+    "assumptions": [
+      "exposed wing panels both sides; no fuselage carry-through"
+    ]
+  },
+  "reference_span_m": {
+    "value": 2.221,
+    "unit": "m",
+    "status": "estimated",
+    "source_kind": "computed",
+    "evidence_ids": [],
+    "confidence": null,
+    "assumptions": [
+      "source side mirrored about the aircraft centreline"
+    ]
+  },
+  "reference_chord_m": {
+    "value": 0.17271,
+    "unit": "m",
+    "status": "estimated",
+    "source_kind": "computed",
+    "evidence_ids": [],
+    "confidence": null,
+    "assumptions": []
+  },
+  "surfaces": [
+    {
+      "surface_id": "wing",
+      "part_ids": [
+        "wing1",
+        "wing2",
+        "wing3",
+        "wing4",
+        "wing5",
+        "aileron"
+      ],
+      "stations": [
+        {
+          "span_y_m": 0.07,
+          "leading_edge_x_m": -0.40664,
+          "chord_m": 0.21389,
+          "z_m": -0.01668,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.14826
+        },
+        {
+          "span_y_m": 0.15,
+          "leading_edge_x_m": -0.41084,
+          "chord_m": 0.2069,
+          "z_m": -0.01689,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.14459
+        },
+        {
+          "span_y_m": 0.25,
+          "leading_edge_x_m": -0.4161,
+          "chord_m": 0.19816,
+          "z_m": -0.01706,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.14073
+        },
+        {
+          "span_y_m": 0.4,
+          "leading_edge_x_m": -0.42398,
+          "chord_m": 0.18506,
+          "z_m": -0.01714,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.13603
+        },
+        {
+          "span_y_m": 0.55,
+          "leading_edge_x_m": -0.43186,
+          "chord_m": 0.17195,
+          "z_m": -0.01722,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.13064
+        },
+        {
+          "span_y_m": 0.7,
+          "leading_edge_x_m": -0.43973,
+          "chord_m": 0.15885,
+          "z_m": -0.0173,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.12441
+        },
+        {
+          "span_y_m": 0.9,
+          "leading_edge_x_m": -0.45023,
+          "chord_m": 0.1414,
+          "z_m": -0.01739,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.11446
+        },
+        {
+          "span_y_m": 1.05,
+          "leading_edge_x_m": -0.4581,
+          "chord_m": 0.1283,
+          "z_m": -0.01745,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.1054
+        },
+        {
+          "span_y_m": 1.09,
+          "leading_edge_x_m": -0.46019,
+          "chord_m": 0.12481,
+          "z_m": -0.01746,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.10271
+        },
+        {
+          "span_y_m": 1.1105,
+          "leading_edge_x_m": -0.47753,
+          "chord_m": 0.04788,
+          "z_m": -0.01751,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.13452
+        }
+      ],
+      "symmetric": true,
+      "cant_rad": null,
+      "span_m": {
+        "value": 2.221,
+        "unit": "m",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "frame unconfirmed"
+        ]
+      },
+      "area_m2": {
+        "value": 0.348993,
+        "unit": "m2",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "projected planform, exposed panels only (no fuselage carry-through)"
+        ]
+      },
+      "mac_m": {
+        "value": 0.17271,
+        "unit": "m",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": []
+      },
+      "x_mac_le_m": {
+        "value": -0.43098,
+        "unit": "m",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": []
+      },
+      "aspect_ratio": {
+        "value": 14.1345,
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": []
+      },
+      "sweep_le_rad": {
+        "value": 0.05245,
+        "unit": "rad",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": []
+      },
+      "dihedral_rad": {
+        "value": 0.00076,
+        "unit": "rad",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": []
+      },
+      "airfoil": {
+        "value": "NACA 44xx (assumed)",
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "NACA 4-digit family, camber assumed (m=0.04, p=0.4), thickness taken from the measured per-station t/c. Not an exact match claim; no UIUC identification attempted."
+        ]
+      },
+      "control_surfaces": [
+        "aileron"
+      ],
+      "fit_rms_m": null
+    },
+    {
+      "surface_id": "vtail_right",
+      "part_ids": [
+        "vtail1",
+        "vtail2",
+        "taileron"
+      ],
+      "stations": [
+        {
+          "span_y_m": 0.0555,
+          "leading_edge_x_m": -0.83182,
+          "chord_m": 0.14962,
+          "z_m": -0.01574,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.1
+        },
+        {
+          "span_y_m": 0.09,
+          "leading_edge_x_m": -0.84031,
+          "chord_m": 0.13973,
+          "z_m": -0.03378,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.1
+        },
+        {
+          "span_y_m": 0.13,
+          "leading_edge_x_m": -0.85017,
+          "chord_m": 0.12826,
+          "z_m": -0.05713,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.1
+        },
+        {
+          "span_y_m": 0.17,
+          "leading_edge_x_m": -0.86002,
+          "chord_m": 0.1168,
+          "z_m": -0.08049,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.1
+        },
+        {
+          "span_y_m": 0.21,
+          "leading_edge_x_m": -0.86988,
+          "chord_m": 0.10533,
+          "z_m": -0.10384,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.1
+        },
+        {
+          "span_y_m": 0.245,
+          "leading_edge_x_m": -0.8785,
+          "chord_m": 0.0953,
+          "z_m": -0.12428,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.1
+        },
+        {
+          "span_y_m": 0.265,
+          "leading_edge_x_m": -0.88342,
+          "chord_m": 0.08957,
+          "z_m": -0.13595,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.1
+        },
+        {
+          "span_y_m": 0.2855,
+          "leading_edge_x_m": -0.89321,
+          "chord_m": 0.04917,
+          "z_m": -0.1473,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.1
+        }
+      ],
+      "symmetric": true,
+      "cant_rad": 0.5235,
+      "span_m": {
+        "value": 0.26497,
+        "unit": "m",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "frame unconfirmed"
+        ]
+      },
+      "area_m2": {
+        "value": 0.026477,
+        "unit": "m2",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "projected planform, exposed panels only (no fuselage carry-through)"
+        ]
+      },
+      "mac_m": {
+        "value": 0.11974,
+        "unit": "m",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": []
+      },
+      "x_mac_le_m": {
+        "value": -0.83182,
+        "unit": "m",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": []
+      },
+      "aspect_ratio": {
+        "value": 2.6517,
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": []
+      },
+      "sweep_le_rad": {
+        "value": 0.22767,
+        "unit": "rad",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": []
+      },
+      "dihedral_rad": {
+        "value": 0.5235,
+        "unit": "rad",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": []
+      },
+      "airfoil": {
+        "value": "NACA 44xx (assumed)",
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "NACA 4-digit family, camber assumed (m=0.04, p=0.4), thickness taken from the measured per-station t/c. Not an exact match claim; no UIUC identification attempted."
+        ]
+      },
+      "control_surfaces": [
+        "taileron"
+      ],
+      "fit_rms_m": null
+    }
+  ],
+  "fuselage": [
+    {
+      "x_m": 0.0,
+      "width_m": 0.004,
+      "height_m": 0.004,
+      "z_center_m": 0.0
+    },
+    {
+      "x_m": -0.0431,
+      "width_m": 0.08462,
+      "height_m": 0.06549,
+      "z_center_m": -0.00663
+    },
+    {
+      "x_m": -0.0843,
+      "width_m": 0.11355,
+      "height_m": 0.09013,
+      "z_center_m": -0.01064
+    },
+    {
+      "x_m": -0.1254,
+      "width_m": 0.13098,
+      "height_m": 0.10727,
+      "z_center_m": -0.01401
+    },
+    {
+      "x_m": -0.1665,
+      "width_m": 0.14092,
+      "height_m": 0.11747,
+      "z_center_m": -0.01617
+    },
+    {
+      "x_m": -0.2077,
+      "width_m": 0.14396,
+      "height_m": 0.1207,
+      "z_center_m": -0.01692
+    },
+    {
+      "x_m": -0.25,
+      "width_m": 0.14065,
+      "height_m": 0.11603,
+      "z_center_m": -0.01458
+    },
+    {
+      "x_m": -0.29,
+      "width_m": 0.13434,
+      "height_m": 0.10682,
+      "z_center_m": -0.00998
+    },
+    {
+      "x_m": -0.3311,
+      "width_m": 0.12709,
+      "height_m": 0.09687,
+      "z_center_m": -0.005
+    },
+    {
+      "x_m": -0.3722,
+      "width_m": 0.12154,
+      "height_m": 0.08904,
+      "z_center_m": -0.00109
+    },
+    {
+      "x_m": -0.4134,
+      "width_m": 0.14,
+      "height_m": 0.08686,
+      "z_center_m": 0.0
+    },
+    {
+      "x_m": -0.4956,
+      "width_m": 0.14,
+      "height_m": 0.0864,
+      "z_center_m": 0.00023
+    },
+    {
+      "x_m": -0.5779,
+      "width_m": 0.14,
+      "height_m": 0.08686,
+      "z_center_m": 0.0
+    },
+    {
+      "x_m": -0.6602,
+      "width_m": 0.12,
+      "height_m": 0.08686,
+      "z_center_m": -0.0
+    },
+    {
+      "x_m": -0.7424,
+      "width_m": 0.12,
+      "height_m": 0.08686,
+      "z_center_m": -0.0
+    },
+    {
+      "x_m": -0.7836,
+      "width_m": 0.11834,
+      "height_m": 0.09731,
+      "z_center_m": -0.00542
+    },
+    {
+      "x_m": -0.8247,
+      "width_m": 0.11172,
+      "height_m": 0.09146,
+      "z_center_m": -0.00348
+    },
+    {
+      "x_m": -0.8659,
+      "width_m": 0.11462,
+      "height_m": 0.08296,
+      "z_center_m": -0.00128
+    },
+    {
+      "x_m": -0.907,
+      "width_m": 0.11812,
+      "height_m": 0.07346,
+      "z_center_m": -0.0
+    },
+    {
+      "x_m": -0.9481,
+      "width_m": 0.10791,
+      "height_m": 0.05892,
+      "z_center_m": -0.0
+    },
+    {
+      "x_m": -0.989,
+      "width_m": 0.05153,
+      "height_m": 0.05153,
+      "z_center_m": 0.0
+    }
+  ],
+  "fuselage_length_m": {
+    "value": 0.99125,
+    "unit": "m",
+    "status": "estimated",
+    "source_kind": "computed",
+    "evidence_ids": [],
+    "confidence": null,
+    "assumptions": []
+  },
+  "mass_kg": {
+    "value": null,
+    "unit": "kg",
+    "status": "unknown",
+    "source_kind": null,
+    "evidence_ids": [],
+    "confidence": null,
+    "assumptions": [
+      "no BOM in the archive; mesh volume is not mass"
+    ]
+  },
+  "cg_m": {
+    "value": null,
+    "unit": "m",
+    "status": "unknown",
+    "source_kind": null,
+    "evidence_ids": [],
+    "confidence": null,
+    "assumptions": [
+      "mass distribution unknown"
+    ]
+  },
+  "quality": {
+    "frame_confirmed": false,
+    "method": "axis-aligned mesh sections of the FRD-transformed reference groups",
+    "wing_exposed_span_m": 1.0405,
+    "wing_root_station_m": 0.07,
+    "vtail_cant_deg": 29.994,
+    "variant_selected": "wing3_16mm_hole",
+    "warnings": [
+      "Stand-in fixture produced by tests/cad/fixtures/make_avenger_features.py, not by packages/ingest.",
+      "Several source meshes are not watertight; section extents are still valid but no volume or mass may be derived from them.",
+      "V-tail t/c is assumed 0.10; the axis-aligned slice cannot measure it.",
+      "Areas exclude the fuselage carry-through; compare like for like."
+    ]
+  }
+}

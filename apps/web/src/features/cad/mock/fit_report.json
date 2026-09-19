@@ -1,0 +1,37 @@
+{
+  "rms_m": 0.0038,
+  "max_m": 0.0142,
+  "method": "per-station chord/LE/z deviation plus sampled silhouette distance",
+  "per_part": [
+    {
+      "part_id": "wing_right",
+      "rms_m": 0.0031,
+      "max_m": 0.0098,
+      "note": "tip chord 3% under the reference"
+    },
+    {
+      "part_id": "wing_left",
+      "rms_m": 0.0031,
+      "max_m": 0.0098,
+      "note": "mirrored instance of wing_right"
+    },
+    {
+      "part_id": "vtail_right",
+      "rms_m": 0.0047,
+      "max_m": 0.0142,
+      "note": "cant 2 deg shallower than measured"
+    },
+    {
+      "part_id": "vtail_left",
+      "rms_m": 0.0047,
+      "max_m": 0.0142
+    },
+    {
+      "part_id": "fuse_mid",
+      "rms_m": 0.0044,
+      "max_m": 0.0121,
+      "note": "station envelope is a convex box"
+    }
+  ],
+  "note": "Not usable for engineering comparison until a human confirms the reconstruction."
+}

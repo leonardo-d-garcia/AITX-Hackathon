@@ -1,0 +1,138 @@
+# ============== SYNTHETIC DEMO BOM — NOT TITAN DATA, NOT VENDOR DATA ==============
+# ---------------------------------------------------------------------------------------------
+# This file is a curated, hand-written demonstration bill of materials for an Avenger-class
+# fixed-wing aircraft. None of it was measured from, inferred from, or supplied with the STL
+# archive: the archive contains no motors, batteries, spars, avionics or wiring, and filenames
+# are not a hardware list. Every number below is a *typical class value* an engineer would use as
+# a placeholder while the real hardware is unknown.
+#
+# Rules this file obeys:
+#   * every component is emitted with source_kind: catalog and status: estimated, never "known"
+#   * no supplier, brand, part number, price or stock claim appears anywhere
+#   * envelopes are boxes for visualisation and clearance only; a solid envelope is not a mass
+#   * placements are assumed positions in the confirmed FRD frame (x forward from the nose datum,
+#     y right, z down, metres) chosen to be plausible, not measured
+#   * replace this file with measured or supplier-confirmed hardware before publishing any mass,
+#     CG, endurance or regulatory result
+# ---------------------------------------------------------------------------------------------
+schema: dronebench.demo_bom/1
+synthetic: true
+title: Avenger-class demonstration hardware (synthetic)
+provenance: >-
+  Hand-authored placeholder hardware for the DroneBench demo. Not vendor data, not from the STL
+  archive, not a configuration claim about any real aircraft.
+components:
+  - id: motor_pusher
+    name: Pusher motor (synthetic)
+    category: motor
+    qty: 1
+    side: center
+    mass_kg: 0.285
+    envelope_m: [0.062, 0.050, 0.050]
+    placement_m: [-0.996, 0.0, 0.0]
+    function: Drives the pusher propeller.
+    notes:
+      - The archive has exactly one motor mount (motor_mount.stl, at the tail), so one cruise
+        motor is modelled. Any VTOL lift system is NOT modelled — no lift mounts exist in the
+        archive and inventing four booms would be fabrication.
+      - Mass is a typical 35xx-class outrunner; not measured.
+  - id: prop_pusher
+    name: Folding pusher propeller (synthetic)
+    category: prop
+    qty: 1
+    side: center
+    mass_kg: 0.048
+    envelope_m: [0.035, 0.381, 0.381]
+    placement_m: [-1.020, 0.0, 0.0]
+    function: Cruise thrust; envelope is the swept disc, used for clearance checks.
+    notes:
+      - Envelope is the swept volume of a 15 in class propeller, not a blade shape.
+      - Diameter is an assumption; no propeller is present in the archive.
+  - id: esc_main
+    name: Main ESC (synthetic)
+    category: esc
+    qty: 1
+    side: center
+    mass_kg: 0.092
+    envelope_m: [0.085, 0.040, 0.020]
+    placement_m: [-0.860, 0.0, 0.020]
+    function: Drives the cruise motor from the main battery.
+    notes:
+      - One ESC because one motor is modelled. A VTOL profile would need more, and the hardware
+        for it is unknown.
+  - id: battery_main
+    name: Main flight battery (synthetic)
+    category: battery
+    qty: 1
+    side: center
+    mass_kg: 1.900
+    envelope_m: [0.190, 0.095, 0.070]
+    placement_m: [-0.330, 0.0, 0.005]
+    function: Sole electrical energy source in this demo configuration.
+    energy_wh: 355.0
+    notes:
+      - Typical 6S Li-ion pack for this airframe class; capacity and mass are placeholders.
+      - Placement is the movable component in the demo edit; its travel corridor is declared by
+        the fuselage bay, not by this file.
+  - id: fc_main
+    name: Flight controller (synthetic)
+    category: fc
+    qty: 1
+    side: center
+    mass_kg: 0.038
+    envelope_m: [0.060, 0.040, 0.016]
+    placement_m: [-0.470, 0.0, 0.010]
+    function: Autopilot and control mixing.
+  - id: rx_main
+    name: Control-link receiver (synthetic)
+    category: rx
+    qty: 1
+    side: center
+    mass_kg: 0.014
+    envelope_m: [0.045, 0.025, 0.012]
+    placement_m: [-0.520, 0.030, 0.010]
+    function: Command and control link.
+  - id: gps_main
+    name: GNSS/compass module (synthetic)
+    category: gps
+    qty: 1
+    side: center
+    mass_kg: 0.032
+    envelope_m: [0.055, 0.055, 0.015]
+    placement_m: [-0.570, 0.0, -0.045]
+    function: Position and heading reference; mounted above the fuselage skin.
+  - id: payload_camera
+    name: Nose camera payload (synthetic)
+    category: payload
+    qty: 1
+    side: center
+    mass_kg: 0.160
+    envelope_m: [0.070, 0.060, 0.060]
+    placement_m: [-0.230, 0.0, 0.035]
+    function: Demonstration payload; drives the belly-camera fuselage variant if that one is chosen.
+    notes:
+      - Choosing fuse3_belly_cam is a user decision. This entry does not select a variant and the
+        presence of a camera cut-out in a mesh is not evidence of this payload.
+  - id: servo_aileron
+    name: Aileron servo (synthetic)
+    category: servo
+    qty: 2
+    sides: [left, right]
+    mass_kg: 0.019
+    envelope_m: [0.033, 0.013, 0.030]
+    placement_m: [-0.400, 0.520, 0.005]
+    function: Drives one aileron.
+    notes:
+      - One per side; the right-hand instance is the mirror of the left placement.
+  - id: servo_ruddervator
+    name: Ruddervator servo (synthetic)
+    category: servo
+    qty: 2
+    sides: [left, right]
+    mass_kg: 0.019
+    envelope_m: [0.033, 0.013, 0.030]
+    placement_m: [-0.880, 0.110, -0.035]
+    function: Drives one V-tail ruddervator.
+    notes:
+      - One per canted panel. The archive shows no servo bay, horn or linkage as a separate body,
+        so these positions are assumed, not located.

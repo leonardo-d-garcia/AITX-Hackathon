@@ -22,10 +22,12 @@ fixtures/**/evaluation.json
 node_modules/
 # Node / Vite
 # OS / IDE
+*.pyc
 __pycache__/
 *.py[cod]
 .pytest_cache/
 # Python
+revisions/
 .ruff_cache/
 # Secrets
 *.sqlite
