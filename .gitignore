@@ -24,6 +24,9 @@ node_modules/
 apps/web/dist/
 apps/web/.vite/
 
+# Generated evaluation dumps (reproducible via CLI)
+fixtures/**/evaluation.json
+
 # OS / IDE
 .DS_Store
 Thumbs.db
