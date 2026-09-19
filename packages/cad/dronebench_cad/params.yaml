@@ -310,3 +310,5 @@ assumptions:
 - Spar, battery, motor, prop and their masses are a synthetic demo envelope; none
   of them appear in the source archive.
 - Holes, latches, hinges, print details and internal structure are not reconstructed.
+- Spar OD defaults to 0.016 m, matching the wing3_16mm_hole variant; that hole is
+  the hard limit for A3 resize_spar.

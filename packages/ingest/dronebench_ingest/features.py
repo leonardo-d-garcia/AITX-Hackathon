@@ -38,6 +38,7 @@ N_VTAIL_STATIONS = 16
 N_FUSELAGE_STATIONS = 24
 N_AIRFOIL_BINS = 24
 EDGE_FRACTION = 0.05          # chord fraction used to read leading/trailing-edge height
+END_INSET_M = 1e-4            # how far inside the bounds the end station planes are cut
 
 
 # ------------------------------------------------------------------ slicing helpers
@@ -322,8 +323,14 @@ def _fuselage(manifest: DesignManifest, quality: dict) -> tuple[list[FuselageSta
     if mesh is None:
         return [], None
     lo, hi = float(mesh.bounds[0][0]), float(mesh.bounds[1][0])
-    d = (hi - lo) / N_FUSELAGE_STATIONS
-    positions = lo + d * (np.arange(N_FUSELAGE_STATIONS) + 0.5)
+    # Stations span the measured extent end to end: a consumer lofting an envelope through them
+    # would otherwise stop half a bin short of the nose and the tail. The two end planes are
+    # stepped inside the body by END_INSET_M, because a plane exactly on the bound cuts a point,
+    # not a section; x_m is the plane actually sliced, never a rounded-up extreme.
+    positions = np.linspace(lo, hi, N_FUSELAGE_STATIONS)
+    positions[0] += END_INSET_M
+    positions[-1] -= END_INSET_M
+    d = float(positions[1] - positions[0])
     stations = []
     for x, section in zip(positions, _sections(mesh, 0, positions)):
         if section is None:
@@ -334,10 +341,16 @@ def _fuselage(manifest: DesignManifest, quality: dict) -> tuple[list[FuselageSta
                                         z_center_m=float((z.max() + z.min()) / 2)))
     quality["fuselage"] = {
         "stations_measured": len(stations),
+        "x_extent_m": [lo, hi],
+        "station_spacing_m": d,
+        "end_inset_m": END_INSET_M,
         "max_width_m": max((s.width_m for s in stations), default=None),
         "max_height_m": max((s.height_m for s in stations), default=None),
         "notes": ["envelope of the fuselage, canopy and hatch bodies; the canopy raises the height "
-                  "of the stations it covers"],
+                  "of the stations it covers",
+                  "the first and last stations sit within end_inset_m of the measured extremes, so "
+                  "an envelope lofted through them spans the whole body rather than stopping short "
+                  "of the nose and the tail"],
     }
     return stations, hi - lo
 

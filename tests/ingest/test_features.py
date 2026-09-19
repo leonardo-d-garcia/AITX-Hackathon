@@ -156,6 +156,23 @@ def test_fuselage_stations_and_length(confirmed):
     assert all(s.height_m > 0 for s in features.fuselage)
 
 
+def test_fuselage_stations_reach_both_extremes(confirmed):
+    """An envelope lofted through the stations must not stop short of the nose or the tail.
+
+    A consumer (A2) places the pusher mount relative to the aft-most station, so a station set that
+    stopped half a bin inside the body moved the mount ~18 mm forward of the real motor_mount.
+    """
+    _, _, _, features = confirmed
+    lo, hi = features.quality["fuselage"]["x_extent_m"]
+    inset = features.quality["fuselage"]["end_inset_m"]
+    xs = [s.x_m for s in features.fuselage]
+    assert lo == pytest.approx(-features.fuselage_length_m.value, abs=1e-9)
+    assert xs[0] == pytest.approx(lo, abs=2 * inset)             # tail
+    assert xs[-1] == pytest.approx(hi, abs=2 * inset)            # nose
+    assert all(lo <= x <= hi for x in xs)                        # never outside the measured body
+    assert xs[-1] - xs[0] == pytest.approx(features.fuselage_length_m.value, abs=3 * inset)
+
+
 def test_mass_and_cg_stay_unknown_without_measured_mass(confirmed):
     _, _, _, features = confirmed
     assert features.mass_kg.value is None and features.mass_kg.status.value == "unknown"
