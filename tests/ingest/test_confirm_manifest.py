@@ -9,7 +9,7 @@ import pytest
 from dronebench_ingest import confirm, load_manifest, placed_mesh, stable_part_id
 from dronebench_ingest.errors import IngestError
 
-from conftest import FUSE3, SELECTION, WING3
+from .conftest import FUSE3, SELECTION, WING3
 
 
 def test_confirm_requires_explicit_variant_choices(staged):

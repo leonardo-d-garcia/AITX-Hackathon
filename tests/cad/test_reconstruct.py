@@ -46,7 +46,7 @@ def test_every_expected_part_is_built(model):
 def test_every_solid_is_valid_closed_and_watertight(model):
     for part in model.parts:
         assert part.is_valid(), f"{part.part_id} failed isValid()"
-        assert part.solid.Closed(), f"{part.part_id} is not a closed solid"
+        assert len(part.solid.Shells()) == 1, f"{part.part_id} is not a single shell"
         assert part.volume_m3() > 0, f"{part.part_id} has non-positive volume"
         assert math.isfinite(part.volume_m3())
         assert _mesh(part).is_watertight, f"{part.part_id} tessellates to an open mesh"

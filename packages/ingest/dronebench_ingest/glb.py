@@ -29,6 +29,20 @@ FRD_TO_GLTF: list[list[float]] = [
     [0.0, 0.0, 0.0, 1.0],
 ]
 GLB_NAME = "reference_meshes.glb"
+CREASE_ANGLE_RAD = np.radians(30.0)
+
+
+def shade(mesh: trimesh.Trimesh) -> trimesh.Trimesh:
+    """Split vertices across sharp edges so the GLB can carry usable per-vertex normals.
+
+    glTF has no "compute the normals for me": a primitive without a NORMAL accessor is shaded flat
+    black by most renderers, so normals are written explicitly. Averaging them over every incident
+    face would smear a printed part's hard edges, so vertices are duplicated where the dihedral
+    angle exceeds the crease angle and averaged only within a smooth patch.
+    """
+    shaded = trimesh.graph.smooth_shade(mesh, angle=CREASE_ANGLE_RAD)
+    shaded.vertex_normals  # noqa: B018 - force the accessor so the exporter finds them
+    return shaded
 
 
 def build_scene(manifest: DesignManifest) -> trimesh.Scene:
@@ -38,6 +52,7 @@ def build_scene(manifest: DesignManifest) -> trimesh.Scene:
     for part in manifest.parts:
         mesh = placed_mesh(manifest, part) if part.source else envelope_mesh(part)
         mesh.apply_transform(adapter)
+        mesh = shade(mesh)
         mesh.metadata["name"] = part.part_id
         scene.add_geometry(mesh, node_name=part.part_id, geom_name=part.part_id)
     scene.metadata["dronebench"] = {
@@ -63,7 +78,7 @@ def export_reference_glb(manifest: DesignManifest, out_path: str | Path | None =
                                     groups=unresolved)
     path = Path(out_path) if out_path is not None else Path.cwd() / GLB_NAME
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_bytes(build_scene(manifest).export(file_type="glb"))
+    path.write_bytes(build_scene(manifest).export(file_type="glb", include_normals=True))
     return Artifact(
         path=path.name,
         sha256=sha256_file(path),

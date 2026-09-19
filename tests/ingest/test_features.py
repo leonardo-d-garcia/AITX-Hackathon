@@ -168,7 +168,7 @@ def test_mass_and_cg_stay_unknown_without_measured_mass(confirmed):
 def test_shell_estimate_gives_a_mass_but_the_cg_stays_unknown(staged):
     """Selecting the mass model buys an estimated total; it does not buy a CG."""
     from dronebench_ingest import confirm, load_features
-    from conftest import SELECTION
+    from .conftest import SELECTION
     design_dir, _, _ = staged
     revision = confirm(design_dir, units="mm", variants=SELECTION, mirror="x=0",
                        mass_model="shell_estimate", confirmed_by="pytest")

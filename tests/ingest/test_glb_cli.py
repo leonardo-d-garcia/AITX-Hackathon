@@ -12,7 +12,7 @@ from dronebench_ingest import export_reference_glb, preview_manifest
 from dronebench_ingest.cli import main
 from dronebench_ingest.glb import FRD_TO_GLTF, GLB_NAME
 
-from conftest import SELECTION
+from .conftest import SELECTION
 
 
 def test_glb_round_trips_with_every_part_node(confirmed, tmp_path):
