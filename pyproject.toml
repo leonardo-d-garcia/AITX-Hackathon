@@ -17,6 +17,8 @@ dependencies = [
     "fastapi>=0.110",
     "networkx>=3.2",
     "pyyaml>=6",
+    "jsonschema>=4.21",
+    "numpy>=1.26",
 ]
 
 [project.optional-dependencies]

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dronebench.dev/schemas/part_map.schema.json",
+  "title": "PartMap",
+  "description": "part_id -> display name, mesh node, and material provenance. Material is a string-valued provenance object, not a numeric Claim.",
+  "type": "object",
+  "minProperties": 1,
+  "additionalProperties": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["name", "mesh_node", "material"],
+    "properties": {
+      "name": { "type": "string", "minLength": 1 },
+      "mesh_node": { "type": "string", "minLength": 1 },
+      "material": { "$ref": "#/$defs/material_provenance" }
+    }
+  },
+  "$defs": {
+    "material_provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "status", "source_kind", "evidence_ids", "assumptions"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "status": {
+          "type": "string",
+          "enum": ["known", "estimated", "unknown", "conflicted", "not_applicable"]
+        },
+        "source_kind": {
+          "type": "string",
+          "enum": ["cad", "bom", "manual", "catalog", "computed", "inferred", "assumed"]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "assumptions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

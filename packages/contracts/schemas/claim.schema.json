@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dronebench.dev/schemas/claim.schema.json",
+  "title": "Claim",
+  "description": "A typed numeric statement with provenance. Null is not zero. assumption_range is a propagated input range, not a confidence interval. Omit assumption_range when value is null. Invariant: if present, low <= nominal <= high. Angles in radians, lengths in metres, masses in kilograms.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["value", "unit", "status", "source_kind", "evidence_ids", "assumptions"],
+  "properties": {
+    "value": {
+      "type": ["number", "null"],
+      "description": "Numeric value, or null when status is unknown or not_applicable. Must be finite (no NaN/Infinity)."
+    },
+    "unit": {
+      "type": "string",
+      "minLength": 1,
+      "description": "SI unit string. Use '1' for dimensionless quantities. Wh for watt-hours, MPa for megapascals, rpm/V for motor KV."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["known", "estimated", "unknown", "conflicted", "not_applicable"]
+    },
+    "source_kind": {
+      "type": "string",
+      "enum": ["cad", "bom", "manual", "catalog", "computed", "inferred", "assumed"]
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "assumption_range": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["low", "nominal", "high"],
+      "description": "low <= nominal <= high. Omit when value is null. Not a statistical CI.",
+      "properties": {
+        "low": { "type": "number" },
+        "nominal": { "type": "number" },
+        "high": { "type": "number" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "value": { "type": "null" } },
+        "required": ["value"]
+      },
+      "then": {
+        "not": { "required": ["assumption_range"] }
+      }
+    },
+    {
+      "if": {
+        "properties": { "status": { "const": "unknown" } },
+        "required": ["status"]
+      },
+      "then": {
+        "properties": { "value": { "type": "null" } }
+      }
+    },
+    {
+      "if": {
+        "properties": { "status": { "enum": ["known", "estimated"] } },
+        "required": ["status"]
+      },
+      "then": {
+        "properties": { "value": { "type": "number" } }
+      }
+    }
+  ]
+}

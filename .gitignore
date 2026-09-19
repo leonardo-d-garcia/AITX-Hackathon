@@ -1,24 +1,42 @@
-# Generated runtime files (architecture section 11)
+/AITX-Hackathon/
+apps/web/dist/
+apps/web/.vite/
+artifacts/
 artifacts/*
+!artifacts/README.md
+build/
+dist/
+.DS_Store
+*.egg-info/
+.env
+.env.*
 # Externally supplied aircraft files; licence terms not established
-vendor_assets/*
-
+fixtures/**/evaluation.json
+# Generated evaluation dumps (reproducible via CLI)
+# Generated runtime files (architecture section 11)
+# Generated solver / runtime
+.idea/
+# keep the directory placeholders in git
+.mypy_cache/
+# Nested accidental clone
+node_modules/
+# Node / Vite
+# OS / IDE
 __pycache__/
 *.py[cod]
 .pytest_cache/
-*.egg-info/
+# Python
+.ruff_cache/
+# Secrets
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+Thumbs.db
+vendor_assets/
+vendor_assets/*
+!vendor_assets/README.md
 .venv/
 venv/
-
-node_modules/
-apps/web/dist/
-apps/web/.vite/
-
-*.sqlite
-*.sqlite-wal
-*.sqlite-shm
-.DS_Store
-
-# keep the directory placeholders in git
-!artifacts/README.md
-!vendor_assets/README.md
+.vscode/
+*.vsp3
+*.vsp3.*
