@@ -1,0 +1,107 @@
+{
+  "fit_error_m": {
+    "assumptions": [
+      "this fixture is authored parametrically, so there is no reference silhouette to deviate from; a real reconstruction reports a measured deviation here"
+    ],
+    "confidence": null,
+    "evidence_ids": [],
+    "source_kind": "computed",
+    "status": "estimated",
+    "unit": "m",
+    "value": 0.0
+  },
+  "frame_confirmed": true,
+  "neutral_point_station_m": {
+    "assumptions": [
+      "assumed neutral point for this synthetic demonstrator; no stability method has produced one, and a wing quarter-chord guess is not valid for a V-tail aircraft"
+    ],
+    "confidence": null,
+    "evidence_ids": [],
+    "source_kind": "assumed",
+    "status": "estimated",
+    "unit": "m",
+    "value": 0.4
+  },
+  "nose_datum_note": "Nose datum at the fuselage forward face of the synthetic demonstrator. Canonical FRD, X forward, so every station aft of the nose has negative x.",
+  "quality_limits": [
+    "synthetic demonstrator; no correspondence to any manufactured aircraft",
+    "no airfoil match attempted - the section is a declared assumption",
+    "skin/spar load sharing is not modelled"
+  ],
+  "reconstruction_confirmed": true,
+  "revision_id": "rev_0359f785ba2bb790",
+  "schema_version": "1.0",
+  "units_confirmed": true,
+  "vtail_panels": [
+    {
+      "area_m2": 0.055,
+      "arm_m": 0.78,
+      "cant_rad": 0.6457718232379019,
+      "mean_chord_m": 0.15,
+      "part_id": "prt_vtail-left"
+    },
+    {
+      "area_m2": 0.055,
+      "arm_m": 0.78,
+      "cant_rad": 0.6457718232379019,
+      "mean_chord_m": 0.15,
+      "part_id": "prt_vtail-right"
+    }
+  ],
+  "wing_mac_m": {
+    "assumptions": [],
+    "confidence": null,
+    "evidence_ids": [
+      "ev_recon-geometry"
+    ],
+    "source_kind": "cad",
+    "status": "known",
+    "unit": "m",
+    "value": 0.2224242424242424
+  },
+  "wing_reference_area_m2": {
+    "assumptions": [],
+    "confidence": null,
+    "evidence_ids": [
+      "ev_recon-geometry"
+    ],
+    "source_kind": "cad",
+    "status": "known",
+    "unit": "m^2",
+    "value": 0.44
+  },
+  "wing_span_m": {
+    "assumptions": [],
+    "confidence": null,
+    "evidence_ids": [
+      "ev_recon-geometry"
+    ],
+    "source_kind": "cad",
+    "status": "known",
+    "unit": "m",
+    "value": 2.0
+  },
+  "wing_stations": [
+    {
+      "chord_m": 0.26,
+      "leading_edge_x_m": -0.255,
+      "span_y_m": 0.0,
+      "twist_rad": 0.0,
+      "z_m": -0.01
+    },
+    {
+      "chord_m": 0.22,
+      "leading_edge_x_m": -0.265,
+      "span_y_m": 0.5,
+      "twist_rad": -0.008726646259971648,
+      "z_m": -0.008
+    },
+    {
+      "chord_m": 0.18,
+      "leading_edge_x_m": -0.275,
+      "span_y_m": 1.0,
+      "twist_rad": -0.026179938779914945,
+      "z_m": -0.005
+    }
+  ]
+}

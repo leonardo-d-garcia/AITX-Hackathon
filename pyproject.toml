@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dronebench"
+version = "0.1.0"
+description = "DroneBench Studio - local-first engineering design workbench"
+requires-python = ">=3.11"
+readme = "README.md"
+license = { file = "LICENSE" }
+
+# Team B owns this file (architecture section 11). A and C submit additions rather than editing
+# it directly, so that one lockfile describes the integration machine.
+dependencies = [
+    "pydantic>=2.7,<3",
+    "fastapi>=0.110",
+    "networkx>=3.2",
+    "pyyaml>=6",
+]
+
+[project.optional-dependencies]
+serve = ["uvicorn[standard]>=0.29"]
+dev = ["pytest>=8", "httpx>=0.27"]
+
+[project.scripts]
+dronebench = "dronebench_api.cli:main"
+
+[tool.setuptools.packages.find]
+where = [
+    "packages/contracts",
+    "packages/graph",
+    "packages/recommend",
+    "packages/workflow",
+    "apps/api",
+]
+include = ["dronebench_*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [
+    "packages/contracts",
+    "packages/graph",
+    "packages/recommend",
+    "packages/workflow",
+    "apps/api",
+]
+filterwarnings = ["error::DeprecationWarning:dronebench_.*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

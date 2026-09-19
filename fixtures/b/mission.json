@@ -1,0 +1,38 @@
+{
+  "air_density_kgm3": 1.2133,
+  "altitude_m": 120.0,
+  "cg_envelope_station_m": [
+    0.3444,
+    0.3822
+  ],
+  "cruise_speed_mps": 16.0,
+  "energy_reserve_fraction": 0.2,
+  "load_factor_limit": 3.0,
+  "locked_part_ids": [
+    "prt_payload"
+  ],
+  "max_takeoff_mass_kg": 2.0,
+  "mission_id": "msn_cruise-demo",
+  "objective": "max_endurance",
+  "payload_mass_kg": 0.25,
+  "registry_version": "fixed_wing_cruise/1.0",
+  "regulatory": {
+    "beyond_visual_line_of_sight": false,
+    "evidence_ids": [
+      "ev_faa-registration",
+      "ev_faa-remote-id"
+    ],
+    "in_friaa": false,
+    "jurisdiction": "US",
+    "operation": "part_107_commercial",
+    "over_people": false
+  },
+  "route_length_km": 12.0,
+  "schema_version": "1.0",
+  "stall_margin_fraction": 0.3,
+  "static_margin_bounds": [
+    0.08,
+    0.25
+  ],
+  "title": "Straight-and-level cruise, synthetic demonstrator"
+}

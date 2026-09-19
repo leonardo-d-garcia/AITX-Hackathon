@@ -1,0 +1,13 @@
+{
+  "design_id": "dsn_parametric-fixedwing",
+  "display_name": "parametric_fixedwing (synthetic demonstrator - not the Titan Avenger)",
+  "excluded_alternatives": [],
+  "notes": [
+    "Synthetic demonstrator authored for Team B. Not derived from the Titan archive and not a reconstruction of any real aircraft.",
+    "The battery sits at the aft end of its corridor on purpose: this is a configured demo scenario that produces a failing CG check, not a discovered defect."
+  ],
+  "representation_mode": "editable_reconstruction",
+  "revision_id": "rev_0359f785ba2bb790",
+  "schema_version": "1.0",
+  "source_archive_sha256": null
+}

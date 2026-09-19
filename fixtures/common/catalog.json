@@ -1,0 +1,724 @@
+{
+  "all_synthetic": true,
+  "captured_at": "2026-09-19T12:00:00Z",
+  "items": [
+    {
+      "catalog_item_id": "cat_bat_4s5000",
+      "category": "battery",
+      "claims": {
+        "capacity_wh": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "Wh",
+          "value": 74.0
+        },
+        "continuous_current_a": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "A",
+          "value": 100.0
+        },
+        "nominal_voltage_v": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "V",
+          "value": 14.8
+        }
+      },
+      "display_name": "Synthetic 4S 5000 mAh LiPo",
+      "evidence_ids": [
+        "ev_catalog-snapshot"
+      ],
+      "interfaces": [
+        {
+          "current_limit_a": null,
+          "dimensions_m": {
+            "height_max": 0.04,
+            "length_max": 0.16,
+            "width_max": 0.052
+          },
+          "interface_id": "if_envelope_bat_4s5000",
+          "kind": "mass_envelope",
+          "polarity": "either",
+          "voltage_v": null
+        },
+        {
+          "current_limit_a": 100.0,
+          "dimensions_m": {},
+          "interface_id": "if_dc_bat_4s5000",
+          "kind": "electrical_dc",
+          "polarity": "either",
+          "voltage_v": [
+            12.0,
+            16.8
+          ]
+        }
+      ],
+      "mass_kg": {
+        "assumptions": [],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_catalog-snapshot"
+        ],
+        "source_kind": "catalog",
+        "status": "known",
+        "unit": "kg",
+        "value": 0.545
+      },
+      "offers": [
+        {
+          "currency": "USD",
+          "lead_time_days": null,
+          "product_url": null,
+          "quantity_basis": "each",
+          "region": "synthetic",
+          "source_timestamp": null,
+          "source_url": null,
+          "stock_known": false,
+          "stock_units": null,
+          "supplier_name": null,
+          "synthetic": true,
+          "unit_price": 48.0
+        }
+      ]
+    },
+    {
+      "catalog_item_id": "cat_bat_4s4000_light",
+      "category": "battery",
+      "claims": {
+        "capacity_wh": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "Wh",
+          "value": 59.2
+        },
+        "continuous_current_a": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "A",
+          "value": 80.0
+        },
+        "nominal_voltage_v": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "V",
+          "value": 14.8
+        }
+      },
+      "display_name": "Synthetic 4S 4000 mAh LiPo, lighter",
+      "evidence_ids": [
+        "ev_catalog-snapshot"
+      ],
+      "interfaces": [
+        {
+          "current_limit_a": null,
+          "dimensions_m": {
+            "height_max": 0.035,
+            "length_max": 0.145,
+            "width_max": 0.048
+          },
+          "interface_id": "if_envelope_bat_4s4000",
+          "kind": "mass_envelope",
+          "polarity": "either",
+          "voltage_v": null
+        },
+        {
+          "current_limit_a": 80.0,
+          "dimensions_m": {},
+          "interface_id": "if_dc_bat_4s4000",
+          "kind": "electrical_dc",
+          "polarity": "either",
+          "voltage_v": [
+            12.0,
+            16.8
+          ]
+        }
+      ],
+      "mass_kg": {
+        "assumptions": [],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_catalog-snapshot"
+        ],
+        "source_kind": "catalog",
+        "status": "known",
+        "unit": "kg",
+        "value": 0.43
+      },
+      "offers": [
+        {
+          "currency": "USD",
+          "lead_time_days": null,
+          "product_url": null,
+          "quantity_basis": "each",
+          "region": "synthetic",
+          "source_timestamp": null,
+          "source_url": null,
+          "stock_known": false,
+          "stock_units": null,
+          "supplier_name": null,
+          "synthetic": true,
+          "unit_price": 41.0
+        }
+      ]
+    },
+    {
+      "catalog_item_id": "cat_bat_6s5000_oversize",
+      "category": "battery",
+      "claims": {
+        "capacity_wh": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "Wh",
+          "value": 111.0
+        },
+        "continuous_current_a": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "A",
+          "value": 100.0
+        },
+        "nominal_voltage_v": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "V",
+          "value": 22.2
+        }
+      },
+      "display_name": "Synthetic 6S 5000 mAh LiPo (does not fit the bay)",
+      "evidence_ids": [
+        "ev_catalog-snapshot"
+      ],
+      "interfaces": [
+        {
+          "current_limit_a": null,
+          "dimensions_m": {
+            "height_max": 0.048,
+            "length_max": 0.19,
+            "width_max": 0.06
+          },
+          "interface_id": "if_envelope_bat_6s5000",
+          "kind": "mass_envelope",
+          "polarity": "either",
+          "voltage_v": null
+        },
+        {
+          "current_limit_a": 100.0,
+          "dimensions_m": {},
+          "interface_id": "if_dc_bat_6s5000",
+          "kind": "electrical_dc",
+          "polarity": "either",
+          "voltage_v": [
+            18.0,
+            25.2
+          ]
+        }
+      ],
+      "mass_kg": {
+        "assumptions": [],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_catalog-snapshot"
+        ],
+        "source_kind": "catalog",
+        "status": "known",
+        "unit": "kg",
+        "value": 0.78
+      },
+      "offers": [
+        {
+          "currency": "USD",
+          "lead_time_days": null,
+          "product_url": null,
+          "quantity_basis": "each",
+          "region": "synthetic",
+          "source_timestamp": null,
+          "source_url": null,
+          "stock_known": false,
+          "stock_units": null,
+          "supplier_name": null,
+          "synthetic": true,
+          "unit_price": 72.0
+        }
+      ]
+    },
+    {
+      "catalog_item_id": "cat_spar_16x14",
+      "category": "spar",
+      "claims": {
+        "allowable_stress_pa": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "Pa",
+          "value": 600000000.0
+        },
+        "density_kgm3": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "kg/m^3",
+          "value": 1550.0
+        },
+        "inner_diameter_m": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "m",
+          "value": 0.014
+        },
+        "outer_diameter_m": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "m",
+          "value": 0.016
+        }
+      },
+      "display_name": "Synthetic CF tube 16 x 14 mm",
+      "evidence_ids": [
+        "ev_catalog-snapshot"
+      ],
+      "interfaces": [
+        {
+          "current_limit_a": null,
+          "dimensions_m": {
+            "diameter": 0.016
+          },
+          "interface_id": "if_bore_16mm",
+          "kind": "mechanical_bore",
+          "polarity": "either",
+          "voltage_v": null
+        }
+      ],
+      "mass_kg": {
+        "assumptions": [
+          "tube volume times the catalog density"
+        ],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_catalog-snapshot"
+        ],
+        "source_kind": "computed",
+        "status": "estimated",
+        "unit": "kg",
+        "value": 0.13877985547232904
+      },
+      "offers": [
+        {
+          "currency": "USD",
+          "lead_time_days": null,
+          "product_url": null,
+          "quantity_basis": "per_metre",
+          "region": "synthetic",
+          "source_timestamp": null,
+          "source_url": null,
+          "stock_known": false,
+          "stock_units": null,
+          "supplier_name": null,
+          "synthetic": true,
+          "unit_price": 19.0
+        }
+      ]
+    },
+    {
+      "catalog_item_id": "cat_spar_18x16",
+      "category": "spar",
+      "claims": {
+        "allowable_stress_pa": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "Pa",
+          "value": 600000000.0
+        },
+        "density_kgm3": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "kg/m^3",
+          "value": 1550.0
+        },
+        "inner_diameter_m": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "m",
+          "value": 0.016
+        },
+        "outer_diameter_m": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "m",
+          "value": 0.018
+        }
+      },
+      "display_name": "Synthetic CF tube 18 x 16 mm",
+      "evidence_ids": [
+        "ev_catalog-snapshot"
+      ],
+      "interfaces": [
+        {
+          "current_limit_a": null,
+          "dimensions_m": {
+            "diameter": 0.018
+          },
+          "interface_id": "if_bore_18mm",
+          "kind": "mechanical_bore",
+          "polarity": "either",
+          "voltage_v": null
+        }
+      ],
+      "mass_kg": {
+        "assumptions": [
+          "tube volume times the catalog density"
+        ],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_catalog-snapshot"
+        ],
+        "source_kind": "computed",
+        "status": "estimated",
+        "unit": "kg",
+        "value": 0.15728383620197292
+      },
+      "offers": [
+        {
+          "currency": "USD",
+          "lead_time_days": null,
+          "product_url": null,
+          "quantity_basis": "per_metre",
+          "region": "synthetic",
+          "source_timestamp": null,
+          "source_url": null,
+          "stock_known": false,
+          "stock_units": null,
+          "supplier_name": null,
+          "synthetic": true,
+          "unit_price": 23.0
+        }
+      ]
+    },
+    {
+      "catalog_item_id": "cat_spar_20x17",
+      "category": "spar",
+      "claims": {
+        "allowable_stress_pa": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "Pa",
+          "value": 600000000.0
+        },
+        "density_kgm3": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "kg/m^3",
+          "value": 1550.0
+        },
+        "inner_diameter_m": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "m",
+          "value": 0.017
+        },
+        "outer_diameter_m": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "m",
+          "value": 0.02
+        }
+      },
+      "display_name": "Synthetic CF tube 20 x 17 mm",
+      "evidence_ids": [
+        "ev_catalog-snapshot"
+      ],
+      "interfaces": [
+        {
+          "current_limit_a": null,
+          "dimensions_m": {
+            "diameter": 0.02
+          },
+          "interface_id": "if_bore_20mm",
+          "kind": "mechanical_bore",
+          "polarity": "either",
+          "voltage_v": null
+        }
+      ],
+      "mass_kg": {
+        "assumptions": [
+          "tube volume times the catalog density"
+        ],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_catalog-snapshot"
+        ],
+        "source_kind": "computed",
+        "status": "estimated",
+        "unit": "kg",
+        "value": 0.2567427326238088
+      },
+      "offers": [
+        {
+          "currency": "USD",
+          "lead_time_days": null,
+          "product_url": null,
+          "quantity_basis": "per_metre",
+          "region": "synthetic",
+          "source_timestamp": null,
+          "source_url": null,
+          "stock_known": false,
+          "stock_units": null,
+          "supplier_name": null,
+          "synthetic": true,
+          "unit_price": 27.0
+        }
+      ]
+    },
+    {
+      "catalog_item_id": "cat_servo_9g",
+      "category": "servo",
+      "claims": {
+        "stall_torque_nm": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "N*m",
+          "value": 0.157
+        }
+      },
+      "display_name": "Synthetic 9 g servo",
+      "evidence_ids": [
+        "ev_catalog-snapshot"
+      ],
+      "interfaces": [
+        {
+          "current_limit_a": null,
+          "dimensions_m": {
+            "height_max": 0.027,
+            "length_max": 0.024,
+            "width_max": 0.013
+          },
+          "interface_id": "if_envelope_servo_9g",
+          "kind": "mass_envelope",
+          "polarity": "either",
+          "voltage_v": null
+        },
+        {
+          "current_limit_a": null,
+          "dimensions_m": {},
+          "interface_id": "if_pwm_servo_9g",
+          "kind": "signal_pwm",
+          "polarity": "either",
+          "voltage_v": [
+            4.8,
+            6.0
+          ]
+        }
+      ],
+      "mass_kg": {
+        "assumptions": [],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_catalog-snapshot"
+        ],
+        "source_kind": "catalog",
+        "status": "known",
+        "unit": "kg",
+        "value": 0.009
+      },
+      "offers": [
+        {
+          "currency": "USD",
+          "lead_time_days": null,
+          "product_url": null,
+          "quantity_basis": "each",
+          "region": "synthetic",
+          "source_timestamp": null,
+          "source_url": null,
+          "stock_known": false,
+          "stock_units": null,
+          "supplier_name": null,
+          "synthetic": true,
+          "unit_price": 7.0
+        }
+      ]
+    },
+    {
+      "catalog_item_id": "cat_servo_12g_hightorque",
+      "category": "servo",
+      "claims": {
+        "stall_torque_nm": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_catalog-snapshot"
+          ],
+          "source_kind": "catalog",
+          "status": "known",
+          "unit": "N*m",
+          "value": 0.245
+        }
+      },
+      "display_name": "Synthetic 12 g high-torque servo",
+      "evidence_ids": [
+        "ev_catalog-snapshot"
+      ],
+      "interfaces": [
+        {
+          "current_limit_a": null,
+          "dimensions_m": {
+            "height_max": 0.028,
+            "length_max": 0.026,
+            "width_max": 0.013
+          },
+          "interface_id": "if_envelope_servo_12g",
+          "kind": "mass_envelope",
+          "polarity": "either",
+          "voltage_v": null
+        },
+        {
+          "current_limit_a": null,
+          "dimensions_m": {},
+          "interface_id": "if_pwm_servo_12g",
+          "kind": "signal_pwm",
+          "polarity": "either",
+          "voltage_v": [
+            4.8,
+            7.4
+          ]
+        }
+      ],
+      "mass_kg": {
+        "assumptions": [],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_catalog-snapshot"
+        ],
+        "source_kind": "catalog",
+        "status": "known",
+        "unit": "kg",
+        "value": 0.012
+      },
+      "offers": [
+        {
+          "currency": "USD",
+          "lead_time_days": null,
+          "product_url": null,
+          "quantity_basis": "each",
+          "region": "synthetic",
+          "source_timestamp": null,
+          "source_url": null,
+          "stock_known": false,
+          "stock_units": null,
+          "supplier_name": null,
+          "synthetic": true,
+          "unit_price": 11.0
+        }
+      ]
+    }
+  ],
+  "schema_version": "1.0",
+  "snapshot_id": "cat_synthetic_2026-09-19"
+}

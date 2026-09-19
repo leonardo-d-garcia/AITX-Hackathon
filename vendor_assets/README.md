@@ -1,0 +1,1 @@
+Externally supplied aircraft files live here and are git-ignored (architecture section 2: no licence document was found inside the Titan archive, so the asset stays out of a public starter repository until reuse terms are established).

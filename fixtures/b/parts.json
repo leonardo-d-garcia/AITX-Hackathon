@@ -1,0 +1,2397 @@
+{
+  "definitions": [
+    {
+      "claims": {
+        "claims": {
+          "airfoil": {
+            "assumptions": [
+              "declared assumed airfoil; no reliable match was attempted against a printed section"
+            ],
+            "confidence": null,
+            "evidence_ids": [],
+            "source_kind": "assumed",
+            "status": "estimated",
+            "unit": "1",
+            "value": "NACA 4412"
+          },
+          "cd0": {
+            "assumptions": [
+              "zero-lift drag coefficient for the whole aircraft on the wing reference area, covering profile, fuselage, and interference drag; a flat-plate build-up estimate, not a solver result"
+            ],
+            "confidence": null,
+            "evidence_ids": [],
+            "source_kind": "assumed",
+            "status": "estimated",
+            "unit": "1",
+            "value": 0.035
+          },
+          "cl_max": {
+            "assumptions": [
+              "2D section CLmax reduced for finite wing; not solver-derived"
+            ],
+            "confidence": null,
+            "evidence_ids": [],
+            "source_kind": "assumed",
+            "status": "estimated",
+            "unit": "1",
+            "value": 1.25
+          },
+          "oswald_efficiency": {
+            "assumptions": [
+              "span efficiency for a moderately tapered unswept wing"
+            ],
+            "confidence": null,
+            "evidence_ids": [],
+            "source_kind": "assumed",
+            "status": "estimated",
+            "unit": "1",
+            "value": 0.85
+          }
+        },
+        "conflicts": []
+      },
+      "definition_id": "def_wing-panel",
+      "name": "Parametric wing panel",
+      "parameters": {
+        "root_chord_m": 0.26,
+        "semi_span_m": 1.0,
+        "tip_chord_m": 0.18,
+        "tip_extension_m": 0.0
+      },
+      "representation": "editable_reconstruction",
+      "role": "wing",
+      "source": {
+        "body_path": null,
+        "original_filename": null,
+        "source_sha256": null,
+        "variant_decision": null
+      }
+    },
+    {
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_vtail-panel",
+      "name": "Parametric V-tail panel",
+      "parameters": {
+        "area_m2": 0.055,
+        "cant_rad": 0.6457718232379019,
+        "chord_m": 0.15
+      },
+      "representation": "editable_reconstruction",
+      "role": "tail_panel",
+      "source": {
+        "body_path": null,
+        "original_filename": null,
+        "source_sha256": null,
+        "variant_decision": null
+      }
+    },
+    {
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_fuselage",
+      "name": "Parametric fuselage boom and pod",
+      "parameters": {
+        "height_m": 0.12,
+        "length_m": 1.15,
+        "width_m": 0.11
+      },
+      "representation": "editable_reconstruction",
+      "role": "fuselage",
+      "source": {
+        "body_path": null,
+        "original_filename": null,
+        "source_sha256": null,
+        "variant_decision": null
+      }
+    },
+    {
+      "claims": {
+        "claims": {
+          "allowable_stress_pa": {
+            "assumptions": [],
+            "confidence": null,
+            "evidence_ids": [
+              "ev_spar-datasheet"
+            ],
+            "source_kind": "manual",
+            "status": "known",
+            "unit": "Pa",
+            "value": 600000000.0
+          },
+          "density_kgm3": {
+            "assumptions": [],
+            "confidence": null,
+            "evidence_ids": [
+              "ev_spar-datasheet"
+            ],
+            "source_kind": "manual",
+            "status": "known",
+            "unit": "kg/m^3",
+            "value": 1550.0
+          },
+          "youngs_modulus_pa": {
+            "assumptions": [],
+            "confidence": null,
+            "evidence_ids": [
+              "ev_spar-datasheet"
+            ],
+            "source_kind": "manual",
+            "status": "known",
+            "unit": "Pa",
+            "value": 120000000000.0
+          }
+        },
+        "conflicts": []
+      },
+      "definition_id": "def_spar-tube",
+      "name": "Pultruded CF spar tube",
+      "parameters": {
+        "inner_diameter_m": 0.014,
+        "length_m": 1.9,
+        "outer_diameter_m": 0.016
+      },
+      "representation": "editable_reconstruction",
+      "role": "spar",
+      "source": {
+        "body_path": null,
+        "original_filename": null,
+        "source_sha256": null,
+        "variant_decision": null
+      }
+    },
+    {
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_spar-mount",
+      "name": "Printed spar mount",
+      "parameters": {
+        "bore_m": 0.016,
+        "wall_m": 0.003
+      },
+      "representation": "generated",
+      "role": "mount",
+      "source": {
+        "body_path": null,
+        "original_filename": null,
+        "source_sha256": null,
+        "variant_decision": null
+      }
+    },
+    {
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_battery-4s5000",
+      "name": "4S 5000 mAh pack envelope",
+      "parameters": {
+        "height_m": 0.036,
+        "length_m": 0.155,
+        "width_m": 0.049
+      },
+      "representation": "catalog_envelope",
+      "role": "battery",
+      "source": {
+        "body_path": null,
+        "original_filename": null,
+        "source_sha256": null,
+        "variant_decision": null
+      }
+    },
+    {
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_motor-2216",
+      "name": "2216 outrunner envelope",
+      "parameters": {},
+      "representation": "catalog_envelope",
+      "role": "motor",
+      "source": {
+        "body_path": null,
+        "original_filename": null,
+        "source_sha256": null,
+        "variant_decision": null
+      }
+    },
+    {
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_prop-12x6",
+      "name": "12x6 propeller envelope",
+      "parameters": {},
+      "representation": "catalog_envelope",
+      "role": "propeller",
+      "source": {
+        "body_path": null,
+        "original_filename": null,
+        "source_sha256": null,
+        "variant_decision": null
+      }
+    },
+    {
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_esc-40a",
+      "name": "40 A ESC envelope",
+      "parameters": {},
+      "representation": "catalog_envelope",
+      "role": "esc",
+      "source": {
+        "body_path": null,
+        "original_filename": null,
+        "source_sha256": null,
+        "variant_decision": null
+      }
+    },
+    {
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_servo-9g",
+      "name": "9 g servo envelope",
+      "parameters": {},
+      "representation": "catalog_envelope",
+      "role": "servo",
+      "source": {
+        "body_path": null,
+        "original_filename": null,
+        "source_sha256": null,
+        "variant_decision": null
+      }
+    },
+    {
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_avionics",
+      "name": "Flight controller / receiver / GPS stack",
+      "parameters": {},
+      "representation": "catalog_envelope",
+      "role": "flight_controller",
+      "source": {
+        "body_path": null,
+        "original_filename": null,
+        "source_sha256": null,
+        "variant_decision": null
+      }
+    },
+    {
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_payload",
+      "name": "Mission payload block",
+      "parameters": {},
+      "representation": "catalog_envelope",
+      "role": "payload",
+      "source": {
+        "body_path": null,
+        "original_filename": null,
+        "source_sha256": null,
+        "variant_decision": null
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "accessed_at": "2026-09-19T12:00:00Z",
+      "content_sha256": null,
+      "evidence_id": "ev_fixture-spec",
+      "extraction_method": "fixture_specification",
+      "locator": "parametric_fixedwing v1",
+      "note": null,
+      "source_kind": "manual",
+      "source_uri": "fixtures/b/README.md",
+      "valid_from": null,
+      "valid_to": null
+    },
+    {
+      "accessed_at": "2026-09-19T12:00:00Z",
+      "content_sha256": null,
+      "evidence_id": "ev_bom-battery",
+      "extraction_method": "bom_entry",
+      "locator": "battery_4s_5000",
+      "note": null,
+      "source_kind": "bom",
+      "source_uri": "fixtures/b/bom.yaml",
+      "valid_from": null,
+      "valid_to": null
+    },
+    {
+      "accessed_at": "2026-09-19T12:00:00Z",
+      "content_sha256": null,
+      "evidence_id": "ev_bom-motor",
+      "extraction_method": "bom_entry",
+      "locator": "motor_front",
+      "note": null,
+      "source_kind": "bom",
+      "source_uri": "fixtures/b/bom.yaml",
+      "valid_from": null,
+      "valid_to": null
+    },
+    {
+      "accessed_at": "2026-09-19T12:00:00Z",
+      "content_sha256": null,
+      "evidence_id": "ev_bom-esc",
+      "extraction_method": "bom_entry",
+      "locator": "esc_main",
+      "note": null,
+      "source_kind": "bom",
+      "source_uri": "fixtures/b/bom.yaml",
+      "valid_from": null,
+      "valid_to": null
+    },
+    {
+      "accessed_at": "2026-09-19T12:00:00Z",
+      "content_sha256": null,
+      "evidence_id": "ev_bom-avionics",
+      "extraction_method": "bom_entry",
+      "locator": "fc_rx_gps",
+      "note": null,
+      "source_kind": "bom",
+      "source_uri": "fixtures/b/bom.yaml",
+      "valid_from": null,
+      "valid_to": null
+    },
+    {
+      "accessed_at": "2026-09-19T12:00:00Z",
+      "content_sha256": null,
+      "evidence_id": "ev_bom-servo",
+      "extraction_method": "bom_entry",
+      "locator": "servo_vtail",
+      "note": null,
+      "source_kind": "bom",
+      "source_uri": "fixtures/b/bom.yaml",
+      "valid_from": null,
+      "valid_to": null
+    },
+    {
+      "accessed_at": "2026-09-19T12:00:00Z",
+      "content_sha256": null,
+      "evidence_id": "ev_bom-payload",
+      "extraction_method": "bom_entry",
+      "locator": "payload_block",
+      "note": null,
+      "source_kind": "bom",
+      "source_uri": "fixtures/b/bom.yaml",
+      "valid_from": null,
+      "valid_to": null
+    },
+    {
+      "accessed_at": "2026-09-19T12:00:00Z",
+      "content_sha256": null,
+      "evidence_id": "ev_spar-datasheet",
+      "extraction_method": "datasheet_field",
+      "locator": "pultruded CF tube, synthetic datasheet",
+      "note": null,
+      "source_kind": "manual",
+      "source_uri": "fixtures/b/materials.yaml",
+      "valid_from": null,
+      "valid_to": null
+    },
+    {
+      "accessed_at": "2026-09-19T12:00:00Z",
+      "content_sha256": null,
+      "evidence_id": "ev_print-process",
+      "extraction_method": "slicer_report",
+      "locator": "LW-PLA, 15% infill, 2 walls",
+      "note": null,
+      "source_kind": "manual",
+      "source_uri": "fixtures/b/materials.yaml",
+      "valid_from": null,
+      "valid_to": null
+    },
+    {
+      "accessed_at": "2026-09-19T12:00:00Z",
+      "content_sha256": null,
+      "evidence_id": "ev_recon-geometry",
+      "extraction_method": "parametric_authoring",
+      "locator": "wing stations and V-tail panels",
+      "note": null,
+      "source_kind": "cad",
+      "source_uri": "fixtures/b/geometry_features.json",
+      "valid_from": null,
+      "valid_to": null
+    },
+    {
+      "accessed_at": "2026-09-19T12:00:00Z",
+      "content_sha256": null,
+      "evidence_id": "ev_catalog-snapshot",
+      "extraction_method": "catalog_field",
+      "locator": "synthetic snapshot 2026-09-19",
+      "note": null,
+      "source_kind": "catalog",
+      "source_uri": "fixtures/common/catalog.json",
+      "valid_from": null,
+      "valid_to": null
+    },
+    {
+      "accessed_at": "2026-09-19T12:00:00Z",
+      "content_sha256": null,
+      "evidence_id": "ev_faa-registration",
+      "extraction_method": "regulatory_text",
+      "locator": "aircraft registration",
+      "note": null,
+      "source_kind": "manual",
+      "source_uri": "https://www.faa.gov/uas/getting_started/register_drone",
+      "valid_from": null,
+      "valid_to": null
+    },
+    {
+      "accessed_at": "2026-09-19T12:00:00Z",
+      "content_sha256": null,
+      "evidence_id": "ev_faa-remote-id",
+      "extraction_method": "regulatory_text",
+      "locator": "remote identification",
+      "note": null,
+      "source_kind": "manual",
+      "source_uri": "https://www.faa.gov/uas/getting_started/remote_id",
+      "valid_from": null,
+      "valid_to": null
+    }
+  ],
+  "occurrences": [
+    {
+      "allowed_contact_part_ids": [],
+      "bounds_local_m": {
+        "max_m": [
+          0.575,
+          0.055,
+          0.06
+        ],
+        "min_m": [
+          -0.575,
+          -0.055,
+          -0.06
+        ]
+      },
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_fuselage",
+      "edit_capabilities": [],
+      "local_com_m": [
+        {
+          "assumptions": [
+            "pod-heavy mass distribution: the printed equipment pod carries most of the shell mass and the tail boom is a light tube; this is a declared approximation, not a measurement"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.2
+        },
+        {
+          "assumptions": [
+            "pod-heavy mass distribution: the printed equipment pod carries most of the shell mass and the tail boom is a light tube; this is a declared approximation, not a measurement"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "pod-heavy mass distribution: the printed equipment pod carries most of the shell mass and the tail boom is a light tube; this is a declared approximation, not a measurement"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        }
+      ],
+      "locked": false,
+      "mass_kg": {
+        "assumptions": [
+          "printed shell mass from the slicer report"
+        ],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_print-process"
+        ],
+        "source_kind": "manual",
+        "status": "known",
+        "unit": "kg",
+        "value": 0.24
+      },
+      "mirror_of": null,
+      "name": "Fuselage pod",
+      "parent_part_id": null,
+      "part_id": "prt_fuselage",
+      "role": "fuselage",
+      "transform": {
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.6
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "travel_corridor": null
+    },
+    {
+      "allowed_contact_part_ids": [
+        "prt_fuselage",
+        "prt_spar",
+        "prt_spar-mount-left",
+        "prt_spar-mount-right",
+        "prt_battery",
+        "prt_harness"
+      ],
+      "bounds_local_m": {
+        "max_m": [
+          0.065,
+          0.5,
+          0.02
+        ],
+        "min_m": [
+          -0.195,
+          -0.5,
+          -0.02
+        ]
+      },
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_wing-panel",
+      "edit_capabilities": [
+        "set_wing_tip_extension"
+      ],
+      "local_com_m": [
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        }
+      ],
+      "locked": false,
+      "mass_kg": {
+        "assumptions": [
+          "printed shell mass from the slicer report, not a filled bounding envelope"
+        ],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_print-process"
+        ],
+        "source_kind": "manual",
+        "status": "known",
+        "unit": "kg",
+        "value": 0.185
+      },
+      "mirror_of": null,
+      "name": "Wing panel, left",
+      "parent_part_id": null,
+      "part_id": "prt_wing-left",
+      "role": "wing",
+      "transform": {
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.32
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            -0.5
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -0.01
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "travel_corridor": null
+    },
+    {
+      "allowed_contact_part_ids": [
+        "prt_fuselage",
+        "prt_spar",
+        "prt_spar-mount-left",
+        "prt_spar-mount-right",
+        "prt_battery",
+        "prt_harness"
+      ],
+      "bounds_local_m": {
+        "max_m": [
+          0.065,
+          0.5,
+          0.02
+        ],
+        "min_m": [
+          -0.195,
+          -0.5,
+          -0.02
+        ]
+      },
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_wing-panel",
+      "edit_capabilities": [
+        "set_wing_tip_extension"
+      ],
+      "local_com_m": [
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        }
+      ],
+      "locked": false,
+      "mass_kg": {
+        "assumptions": [
+          "printed shell mass from the slicer report, not a filled bounding envelope"
+        ],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_print-process"
+        ],
+        "source_kind": "manual",
+        "status": "known",
+        "unit": "kg",
+        "value": 0.185
+      },
+      "mirror_of": "prt_wing-left",
+      "name": "Wing panel, right",
+      "parent_part_id": null,
+      "part_id": "prt_wing-right",
+      "role": "wing",
+      "transform": {
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.32
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.5
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -0.01
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "travel_corridor": null
+    },
+    {
+      "allowed_contact_part_ids": [
+        "prt_wing-left",
+        "prt_wing-right",
+        "prt_fuselage"
+      ],
+      "bounds_local_m": {
+        "max_m": [
+          0.008,
+          0.95,
+          0.008
+        ],
+        "min_m": [
+          -0.008,
+          -0.95,
+          -0.008
+        ]
+      },
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_spar-tube",
+      "edit_capabilities": [
+        "resize_spar"
+      ],
+      "local_com_m": [
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        }
+      ],
+      "locked": false,
+      "mass_kg": {
+        "assumptions": [
+          "tube volume times the datasheet density"
+        ],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_spar-datasheet"
+        ],
+        "source_kind": "computed",
+        "status": "estimated",
+        "unit": "kg",
+        "value": 0.13877985547232904
+      },
+      "mirror_of": null,
+      "name": "Main spar",
+      "parent_part_id": null,
+      "part_id": "prt_spar",
+      "role": "spar",
+      "transform": {
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.32
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -0.005
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "travel_corridor": null
+    },
+    {
+      "allowed_contact_part_ids": [
+        "prt_spar",
+        "prt_fuselage"
+      ],
+      "bounds_local_m": {
+        "max_m": [
+          0.015,
+          0.015,
+          0.015
+        ],
+        "min_m": [
+          -0.015,
+          -0.015,
+          -0.015
+        ]
+      },
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_spar-mount",
+      "edit_capabilities": [],
+      "local_com_m": [
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        }
+      ],
+      "locked": false,
+      "mass_kg": {
+        "assumptions": [
+          "printed mount, slicer estimate"
+        ],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_print-process"
+        ],
+        "source_kind": "computed",
+        "status": "estimated",
+        "unit": "kg",
+        "value": 0.012
+      },
+      "mirror_of": null,
+      "name": "Spar mount, left",
+      "parent_part_id": null,
+      "part_id": "prt_spar-mount-left",
+      "role": "mount",
+      "transform": {
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.32
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            -0.09
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -0.005
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "travel_corridor": null
+    },
+    {
+      "allowed_contact_part_ids": [
+        "prt_spar",
+        "prt_fuselage"
+      ],
+      "bounds_local_m": {
+        "max_m": [
+          0.015,
+          0.015,
+          0.015
+        ],
+        "min_m": [
+          -0.015,
+          -0.015,
+          -0.015
+        ]
+      },
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_spar-mount",
+      "edit_capabilities": [],
+      "local_com_m": [
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        }
+      ],
+      "locked": false,
+      "mass_kg": {
+        "assumptions": [
+          "printed mount, slicer estimate"
+        ],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_print-process"
+        ],
+        "source_kind": "computed",
+        "status": "estimated",
+        "unit": "kg",
+        "value": 0.012
+      },
+      "mirror_of": "prt_spar-mount-left",
+      "name": "Spar mount, right",
+      "parent_part_id": null,
+      "part_id": "prt_spar-mount-right",
+      "role": "mount",
+      "transform": {
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.32
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.09
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -0.005
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "travel_corridor": null
+    },
+    {
+      "allowed_contact_part_ids": [
+        "prt_fuselage"
+      ],
+      "bounds_local_m": {
+        "max_m": [
+          0.0775,
+          0.0245,
+          0.018
+        ],
+        "min_m": [
+          -0.0775,
+          -0.0245,
+          -0.018
+        ]
+      },
+      "claims": {
+        "claims": {
+          "capacity_wh": {
+            "assumptions": [],
+            "confidence": null,
+            "evidence_ids": [
+              "ev_bom-battery"
+            ],
+            "source_kind": "bom",
+            "status": "known",
+            "unit": "Wh",
+            "value": 74.0
+          },
+          "continuous_current_a": {
+            "assumptions": [],
+            "confidence": null,
+            "evidence_ids": [
+              "ev_bom-battery"
+            ],
+            "source_kind": "bom",
+            "status": "known",
+            "unit": "A",
+            "value": 100.0
+          },
+          "nominal_voltage_v": {
+            "assumptions": [],
+            "confidence": null,
+            "evidence_ids": [
+              "ev_bom-battery"
+            ],
+            "source_kind": "bom",
+            "status": "known",
+            "unit": "V",
+            "value": 14.8
+          }
+        },
+        "conflicts": []
+      },
+      "definition_id": "def_battery-4s5000",
+      "edit_capabilities": [
+        "translate_component",
+        "replace_catalog_component"
+      ],
+      "local_com_m": [
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        }
+      ],
+      "locked": false,
+      "mass_kg": {
+        "assumptions": [],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_bom-battery"
+        ],
+        "source_kind": "bom",
+        "status": "known",
+        "unit": "kg",
+        "value": 0.545
+      },
+      "mirror_of": null,
+      "name": "Main battery pack",
+      "parent_part_id": null,
+      "part_id": "prt_battery",
+      "role": "battery",
+      "transform": {
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.515
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.015
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "travel_corridor": {
+        "axis": "x",
+        "harness_allowance_m": {
+          "assumptions": [],
+          "confidence": null,
+          "evidence_ids": [
+            "ev_bom-battery"
+          ],
+          "source_kind": "bom",
+          "status": "known",
+          "unit": "m",
+          "value": 0.15
+        },
+        "max_m": -0.42,
+        "min_m": -0.53,
+        "mount_positions_m": [
+          -0.515,
+          -0.47,
+          -0.44,
+          -0.42
+        ]
+      }
+    },
+    {
+      "allowed_contact_part_ids": [
+        "prt_fuselage"
+      ],
+      "bounds_local_m": {
+        "max_m": [
+          0.02,
+          0.014,
+          0.014
+        ],
+        "min_m": [
+          -0.02,
+          -0.014,
+          -0.014
+        ]
+      },
+      "claims": {
+        "claims": {
+          "efficiency": {
+            "assumptions": [
+              "motor efficiency at the cruise operating point; a single figure standing in for a curve, and not derivable from KV alone"
+            ],
+            "confidence": null,
+            "evidence_ids": [],
+            "source_kind": "assumed",
+            "status": "estimated",
+            "unit": "1",
+            "value": 0.85
+          }
+        },
+        "conflicts": []
+      },
+      "definition_id": "def_motor-2216",
+      "edit_capabilities": [],
+      "local_com_m": [
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        }
+      ],
+      "locked": false,
+      "mass_kg": {
+        "assumptions": [],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_bom-motor"
+        ],
+        "source_kind": "bom",
+        "status": "known",
+        "unit": "kg",
+        "value": 0.072
+      },
+      "mirror_of": null,
+      "name": "Tractor motor",
+      "parent_part_id": null,
+      "part_id": "prt_motor",
+      "role": "motor",
+      "transform": {
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.045
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "travel_corridor": null
+    },
+    {
+      "allowed_contact_part_ids": [
+        "prt_motor"
+      ],
+      "bounds_local_m": {
+        "max_m": [
+          0.01,
+          0.1525,
+          0.1525
+        ],
+        "min_m": [
+          -0.01,
+          -0.1525,
+          -0.1525
+        ]
+      },
+      "claims": {
+        "claims": {
+          "efficiency": {
+            "assumptions": [
+              "propeller efficiency at the cruise advance ratio; a single figure standing in for a propeller map"
+            ],
+            "confidence": null,
+            "evidence_ids": [],
+            "source_kind": "assumed",
+            "status": "estimated",
+            "unit": "1",
+            "value": 0.55
+          }
+        },
+        "conflicts": []
+      },
+      "definition_id": "def_prop-12x6",
+      "edit_capabilities": [],
+      "local_com_m": [
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        }
+      ],
+      "locked": false,
+      "mass_kg": {
+        "assumptions": [],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_bom-motor"
+        ],
+        "source_kind": "bom",
+        "status": "known",
+        "unit": "kg",
+        "value": 0.018
+      },
+      "mirror_of": null,
+      "name": "Propeller",
+      "parent_part_id": null,
+      "part_id": "prt_prop",
+      "role": "propeller",
+      "transform": {
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.015
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "travel_corridor": null
+    },
+    {
+      "allowed_contact_part_ids": [
+        "prt_fuselage"
+      ],
+      "bounds_local_m": {
+        "max_m": [
+          0.0275,
+          0.013,
+          0.0055
+        ],
+        "min_m": [
+          -0.0275,
+          -0.013,
+          -0.0055
+        ]
+      },
+      "claims": {
+        "claims": {
+          "current_limit_a": {
+            "assumptions": [],
+            "confidence": null,
+            "evidence_ids": [
+              "ev_bom-esc"
+            ],
+            "source_kind": "bom",
+            "status": "known",
+            "unit": "A",
+            "value": 40.0
+          },
+          "efficiency": {
+            "assumptions": [
+              "ESC conversion efficiency at cruise throttle"
+            ],
+            "confidence": null,
+            "evidence_ids": [],
+            "source_kind": "assumed",
+            "status": "estimated",
+            "unit": "1",
+            "value": 0.95
+          }
+        },
+        "conflicts": []
+      },
+      "definition_id": "def_esc-40a",
+      "edit_capabilities": [],
+      "local_com_m": [
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        }
+      ],
+      "locked": false,
+      "mass_kg": {
+        "assumptions": [],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_bom-esc"
+        ],
+        "source_kind": "bom",
+        "status": "known",
+        "unit": "kg",
+        "value": 0.038
+      },
+      "mirror_of": null,
+      "name": "ESC",
+      "parent_part_id": null,
+      "part_id": "prt_esc",
+      "role": "esc",
+      "transform": {
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.1
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.018
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "travel_corridor": null
+    },
+    {
+      "allowed_contact_part_ids": [
+        "prt_fuselage"
+      ],
+      "bounds_local_m": {
+        "max_m": [
+          0.025,
+          0.025,
+          0.011
+        ],
+        "min_m": [
+          -0.025,
+          -0.025,
+          -0.011
+        ]
+      },
+      "claims": {
+        "claims": {
+          "power_w": {
+            "assumptions": [],
+            "confidence": null,
+            "evidence_ids": [
+              "ev_bom-avionics"
+            ],
+            "source_kind": "bom",
+            "status": "known",
+            "unit": "W",
+            "value": 1.5
+          }
+        },
+        "conflicts": []
+      },
+      "definition_id": "def_avionics",
+      "edit_capabilities": [],
+      "local_com_m": [
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        }
+      ],
+      "locked": false,
+      "mass_kg": {
+        "assumptions": [],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_bom-avionics"
+        ],
+        "source_kind": "bom",
+        "status": "known",
+        "unit": "kg",
+        "value": 0.061
+      },
+      "mirror_of": null,
+      "name": "FC / RX / GPS stack",
+      "parent_part_id": null,
+      "part_id": "prt_avionics",
+      "role": "flight_controller",
+      "transform": {
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.17
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.02
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "travel_corridor": null
+    },
+    {
+      "allowed_contact_part_ids": [
+        "prt_fuselage",
+        "prt_vtail-left"
+      ],
+      "bounds_local_m": {
+        "max_m": [
+          0.0115,
+          0.006,
+          0.013
+        ],
+        "min_m": [
+          -0.0115,
+          -0.006,
+          -0.013
+        ]
+      },
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_servo-9g",
+      "edit_capabilities": [],
+      "local_com_m": [
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        }
+      ],
+      "locked": false,
+      "mass_kg": {
+        "assumptions": [],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_bom-servo"
+        ],
+        "source_kind": "bom",
+        "status": "known",
+        "unit": "kg",
+        "value": 0.009
+      },
+      "mirror_of": null,
+      "name": "V-tail servo, left",
+      "parent_part_id": null,
+      "part_id": "prt_servo-left",
+      "role": "servo",
+      "transform": {
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.86
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            -0.03
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "travel_corridor": null
+    },
+    {
+      "allowed_contact_part_ids": [
+        "prt_fuselage",
+        "prt_vtail-right"
+      ],
+      "bounds_local_m": {
+        "max_m": [
+          0.0115,
+          0.006,
+          0.013
+        ],
+        "min_m": [
+          -0.0115,
+          -0.006,
+          -0.013
+        ]
+      },
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_servo-9g",
+      "edit_capabilities": [],
+      "local_com_m": [
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        }
+      ],
+      "locked": false,
+      "mass_kg": {
+        "assumptions": [],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_bom-servo"
+        ],
+        "source_kind": "bom",
+        "status": "known",
+        "unit": "kg",
+        "value": 0.009
+      },
+      "mirror_of": "prt_servo-left",
+      "name": "V-tail servo, right",
+      "parent_part_id": null,
+      "part_id": "prt_servo-right",
+      "role": "servo",
+      "transform": {
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.86
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.03
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "travel_corridor": null
+    },
+    {
+      "allowed_contact_part_ids": [
+        "prt_fuselage"
+      ],
+      "bounds_local_m": {
+        "max_m": [
+          0.0375,
+          0.02,
+          0.02
+        ],
+        "min_m": [
+          -0.11249999999999999,
+          -0.02,
+          -0.16
+        ]
+      },
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_vtail-panel",
+      "edit_capabilities": [],
+      "local_com_m": [
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        }
+      ],
+      "locked": false,
+      "mass_kg": {
+        "assumptions": [
+          "printed shell mass from the slicer report"
+        ],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_print-process"
+        ],
+        "source_kind": "manual",
+        "status": "known",
+        "unit": "kg",
+        "value": 0.036
+      },
+      "mirror_of": null,
+      "name": "V-tail panel, left",
+      "parent_part_id": null,
+      "part_id": "prt_vtail-left",
+      "role": "tail_panel",
+      "transform": {
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -1.1
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            -0.14
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -0.08
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "travel_corridor": null
+    },
+    {
+      "allowed_contact_part_ids": [
+        "prt_fuselage"
+      ],
+      "bounds_local_m": {
+        "max_m": [
+          0.0375,
+          0.02,
+          0.02
+        ],
+        "min_m": [
+          -0.11249999999999999,
+          -0.02,
+          -0.16
+        ]
+      },
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_vtail-panel",
+      "edit_capabilities": [],
+      "local_com_m": [
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        }
+      ],
+      "locked": false,
+      "mass_kg": {
+        "assumptions": [
+          "printed shell mass from the slicer report"
+        ],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_print-process"
+        ],
+        "source_kind": "manual",
+        "status": "known",
+        "unit": "kg",
+        "value": 0.036
+      },
+      "mirror_of": "prt_vtail-left",
+      "name": "V-tail panel, right",
+      "parent_part_id": null,
+      "part_id": "prt_vtail-right",
+      "role": "tail_panel",
+      "transform": {
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -1.1
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.14
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -0.08
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "travel_corridor": null
+    },
+    {
+      "allowed_contact_part_ids": [
+        "prt_fuselage"
+      ],
+      "bounds_local_m": {
+        "max_m": [
+          0.04,
+          0.03,
+          0.02
+        ],
+        "min_m": [
+          -0.04,
+          -0.03,
+          -0.02
+        ]
+      },
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_payload",
+      "edit_capabilities": [],
+      "local_com_m": [
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        }
+      ],
+      "locked": true,
+      "mass_kg": {
+        "assumptions": [],
+        "confidence": null,
+        "evidence_ids": [
+          "ev_bom-payload"
+        ],
+        "source_kind": "bom",
+        "status": "known",
+        "unit": "kg",
+        "value": 0.25
+      },
+      "mirror_of": null,
+      "name": "Mission payload block",
+      "parent_part_id": null,
+      "part_id": "prt_payload",
+      "role": "payload",
+      "transform": {
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.25
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.03
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "travel_corridor": null
+    },
+    {
+      "allowed_contact_part_ids": [
+        "prt_fuselage",
+        "prt_battery",
+        "prt_esc",
+        "prt_avionics",
+        "prt_servo-left",
+        "prt_servo-right"
+      ],
+      "bounds_local_m": {
+        "max_m": [
+          0.275,
+          0.015,
+          0.005
+        ],
+        "min_m": [
+          -0.275,
+          -0.015,
+          -0.005
+        ]
+      },
+      "claims": {
+        "claims": {},
+        "conflicts": []
+      },
+      "definition_id": "def_avionics",
+      "edit_capabilities": [],
+      "local_com_m": [
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        },
+        {
+          "assumptions": [
+            "mass taken as uniformly distributed in the component envelope"
+          ],
+          "confidence": null,
+          "evidence_ids": [],
+          "source_kind": "assumed",
+          "status": "estimated",
+          "unit": "m",
+          "value": 0.0
+        }
+      ],
+      "locked": false,
+      "mass_kg": {
+        "assumptions": [],
+        "confidence": null,
+        "evidence_ids": [],
+        "source_kind": "inferred",
+        "status": "unknown",
+        "unit": "kg",
+        "value": null
+      },
+      "mirror_of": null,
+      "name": "Wiring harness",
+      "parent_part_id": null,
+      "part_id": "prt_harness",
+      "role": "harness",
+      "transform": {
+        "matrix": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -0.35
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -0.03
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "travel_corridor": null
+    }
+  ],
+  "revision_id": "rev_0359f785ba2bb790",
+  "schema_version": "1.0"
+}

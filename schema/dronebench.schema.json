@@ -1,0 +1,4237 @@
+{
+  "$defs": {
+    "Artifact": {
+      "additionalProperties": false,
+      "description": "One immutable file belonging to a revision or run.",
+      "properties": {
+        "artifact_id": {
+          "pattern": "^art_[0-9a-f]{16}$",
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "media_type": {
+          "enum": [
+            "application/json",
+            "application/step",
+            "model/gltf-binary",
+            "text/plain",
+            "text/csv",
+            "application/octet-stream"
+          ],
+          "title": "Media Type",
+          "type": "string"
+        },
+        "part_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Part Ids",
+          "type": "array"
+        },
+        "produced_by": {
+          "description": "Owning team, so a consumer can tell a stub from a real producer.",
+          "enum": [
+            "A",
+            "B",
+            "C"
+          ],
+          "title": "Produced By",
+          "type": "string"
+        },
+        "relative_path": {
+          "description": "Path relative to the revision directory. Never an absolute or escaping path.",
+          "title": "Relative Path",
+          "type": "string"
+        },
+        "representation": {
+          "anyOf": [
+            {
+              "enum": [
+                "reference_mesh",
+                "editable_reconstruction",
+                "catalog_envelope",
+                "generated"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Representation"
+        },
+        "role": {
+          "description": "design_manifest | parts | graph | evaluation | step | glb | ...",
+          "title": "Role",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "title": "Size Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "relative_path",
+        "sha256",
+        "size_bytes",
+        "media_type",
+        "produced_by",
+        "role"
+      ],
+      "title": "Artifact",
+      "type": "object"
+    },
+    "AuditEvent": {
+      "additionalProperties": false,
+      "description": "One immutable log line. There is deliberately no field for model reasoning.",
+      "properties": {
+        "artifact_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Artifact Ids",
+          "type": "array"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "design_id": {
+          "title": "Design Id",
+          "type": "string"
+        },
+        "elapsed_s": {
+          "default": 0.0,
+          "minimum": 0.0,
+          "title": "Elapsed S",
+          "type": "number"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "event_id": {
+          "title": "Event Id",
+          "type": "string"
+        },
+        "inputs_summary": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Short scalars only. Never a payload dump.",
+          "title": "Inputs Summary",
+          "type": "object"
+        },
+        "job_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Job Id"
+        },
+        "kind": {
+          "enum": [
+            "job_queued",
+            "job_started",
+            "job_progress",
+            "job_succeeded",
+            "job_failed",
+            "job_cancelled",
+            "revision_created",
+            "revision_activated",
+            "proposal_generated",
+            "proposal_previewed",
+            "proposal_declined",
+            "proposal_committed",
+            "proposal_stale",
+            "evaluation_completed",
+            "export_completed"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "proposal_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Proposal Id"
+        },
+        "revision_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Revision Id"
+        },
+        "sequence": {
+          "description": "Monotonic per design. The SSE last-event-id.",
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "status": {
+          "default": "ok",
+          "enum": [
+            "ok",
+            "error",
+            "in_progress"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "tool_name": {
+          "description": "The tool or service function that ran.",
+          "title": "Tool Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sequence",
+        "event_id",
+        "kind",
+        "design_id",
+        "tool_name"
+      ],
+      "title": "AuditEvent",
+      "type": "object"
+    },
+    "AxisAlignedBox": {
+      "additionalProperties": false,
+      "description": "Bounds in canonical FRD metres.",
+      "properties": {
+        "max_m": {
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Max M",
+          "type": "array"
+        },
+        "min_m": {
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Min M",
+          "type": "array"
+        }
+      },
+      "required": [
+        "min_m",
+        "max_m"
+      ],
+      "title": "AxisAlignedBox",
+      "type": "object"
+    },
+    "CadEditResult": {
+      "additionalProperties": false,
+      "description": "``cad_edit_result.json`` - A's tool, called by B, consumed by everyone.\n\n``ok`` false means the edit did not produce valid geometry. B never promotes such a preview.",
+      "properties": {
+        "affected_part_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Affected Part Ids",
+          "type": "array"
+        },
+        "base_revision_id": {
+          "title": "Base Revision Id",
+          "type": "string"
+        },
+        "diagnostics": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Diagnostics",
+          "type": "array"
+        },
+        "glb_artifact_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Glb Artifact Id"
+        },
+        "interference": {
+          "items": {
+            "$ref": "#/$defs/InterferenceFinding"
+          },
+          "title": "Interference",
+          "type": "array"
+        },
+        "mass_delta_kg": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Claim"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "ok": {
+          "title": "Ok",
+          "type": "boolean"
+        },
+        "operation": {
+          "enum": [
+            "translate_component",
+            "resize_spar",
+            "set_wing_tip_extension",
+            "replace_catalog_component"
+          ],
+          "title": "Operation",
+          "type": "string"
+        },
+        "part_map_artifact_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Part Map Artifact Id"
+        },
+        "part_signatures_after": {
+          "items": {
+            "$ref": "#/$defs/PartSignature"
+          },
+          "title": "Part Signatures After",
+          "type": "array"
+        },
+        "part_signatures_before": {
+          "items": {
+            "$ref": "#/$defs/PartSignature"
+          },
+          "title": "Part Signatures Before",
+          "type": "array"
+        },
+        "preview_revision_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Preview Revision Id"
+        },
+        "produced_by": {
+          "description": "B-stub marks the reference CAD port B uses until Team A's kernel lands.",
+          "enum": [
+            "A",
+            "B-stub"
+          ],
+          "title": "Produced By",
+          "type": "string"
+        },
+        "representation": {
+          "default": "editable_reconstruction",
+          "enum": [
+            "reference_mesh",
+            "editable_reconstruction",
+            "catalog_envelope",
+            "generated"
+          ],
+          "title": "Representation",
+          "type": "string"
+        },
+        "requested_parameters_applied": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Requested Parameters Applied",
+          "type": "object"
+        },
+        "round_trip": {
+          "$ref": "#/$defs/RoundTripCheck"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "step_artifact_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Step Artifact Id"
+        },
+        "unchanged_parts_verified": {
+          "default": false,
+          "title": "Unchanged Parts Verified",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "ok",
+        "base_revision_id",
+        "operation",
+        "produced_by"
+      ],
+      "title": "CadEditResult",
+      "type": "object"
+    },
+    "CatalogItem": {
+      "additionalProperties": false,
+      "description": "One catalog part: its claims, its declared interfaces, and its offers.",
+      "properties": {
+        "catalog_item_id": {
+          "title": "Catalog Item Id",
+          "type": "string"
+        },
+        "category": {
+          "enum": [
+            "battery",
+            "spar",
+            "servo",
+            "motor",
+            "propeller",
+            "esc"
+          ],
+          "title": "Category",
+          "type": "string"
+        },
+        "claims": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Claims",
+          "type": "object"
+        },
+        "display_name": {
+          "title": "Display Name",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "interfaces": {
+          "items": {
+            "$ref": "#/$defs/DeclaredInterface"
+          },
+          "title": "Interfaces",
+          "type": "array"
+        },
+        "mass_kg": {
+          "$ref": "#/$defs/Claim"
+        },
+        "offers": {
+          "items": {
+            "$ref": "#/$defs/CatalogOffer"
+          },
+          "title": "Offers",
+          "type": "array"
+        }
+      },
+      "required": [
+        "catalog_item_id",
+        "category",
+        "display_name",
+        "mass_kg"
+      ],
+      "title": "CatalogItem",
+      "type": "object"
+    },
+    "CatalogOffer": {
+      "additionalProperties": false,
+      "description": "A purchasable offer. Synthetic entries may not name a supplier or link a product.",
+      "properties": {
+        "currency": {
+          "anyOf": [
+            {
+              "enum": [
+                "USD",
+                "EUR",
+                "GBP"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Currency"
+        },
+        "lead_time_days": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lead Time Days"
+        },
+        "product_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Product Url"
+        },
+        "quantity_basis": {
+          "anyOf": [
+            {
+              "enum": [
+                "each",
+                "pair",
+                "pack_of_4",
+                "per_metre"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Quantity Basis"
+        },
+        "region": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Region"
+        },
+        "source_timestamp": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Timestamp"
+        },
+        "source_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Where the figures were read, for a verified entry.",
+          "title": "Source Url"
+        },
+        "stock_known": {
+          "default": false,
+          "title": "Stock Known",
+          "type": "boolean"
+        },
+        "stock_units": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stock Units"
+        },
+        "supplier_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Supplier Name"
+        },
+        "synthetic": {
+          "default": true,
+          "description": "A clearly labelled demo entry with no implied real supplier offer.",
+          "title": "Synthetic",
+          "type": "boolean"
+        },
+        "unit_price": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit Price"
+        }
+      },
+      "title": "CatalogOffer",
+      "type": "object"
+    },
+    "CatalogSnapshot": {
+      "additionalProperties": false,
+      "description": "The frozen, checked-in catalog. Live supplier search is optional and never required.",
+      "properties": {
+        "all_synthetic": {
+          "default": true,
+          "description": "True when every offer in the snapshot is a demo entry.",
+          "title": "All Synthetic",
+          "type": "boolean"
+        },
+        "captured_at": {
+          "format": "date-time",
+          "title": "Captured At",
+          "type": "string"
+        },
+        "items": {
+          "items": {
+            "$ref": "#/$defs/CatalogItem"
+          },
+          "title": "Items",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "snapshot_id": {
+          "title": "Snapshot Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "captured_at",
+        "items"
+      ],
+      "title": "CatalogSnapshot",
+      "type": "object"
+    },
+    "CheckRegistry": {
+      "additionalProperties": false,
+      "description": "The versioned set of checks a mission profile requires. Frozen by construction.",
+      "properties": {
+        "checks": {
+          "items": {
+            "$ref": "#/$defs/RequiredCheck"
+          },
+          "title": "Checks",
+          "type": "array"
+        },
+        "registry_version": {
+          "title": "Registry Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "registry_version",
+        "checks"
+      ],
+      "title": "CheckRegistry",
+      "type": "object"
+    },
+    "CheckResult": {
+      "additionalProperties": false,
+      "description": "One check outcome. ``unknown`` is a legitimate result and must not be coerced to a pass.",
+      "properties": {
+        "check_class": {
+          "enum": [
+            "hard_invariant",
+            "modeled_constraint",
+            "regulatory",
+            "informational"
+          ],
+          "title": "Check Class",
+          "type": "string"
+        },
+        "check_id": {
+          "title": "Check Id",
+          "type": "string"
+        },
+        "limit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Human-readable statement of the bound.",
+          "title": "Limit"
+        },
+        "missing_inputs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Missing Inputs",
+          "type": "array"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "pass",
+            "fail",
+            "unknown",
+            "not_applicable"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Claim"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "check_id",
+        "check_class",
+        "status",
+        "title",
+        "reason"
+      ],
+      "title": "CheckResult",
+      "type": "object"
+    },
+    "Claim": {
+      "additionalProperties": false,
+      "description": "A single asserted quantity with its provenance.\n\n``value is None`` means unknown. It does not mean zero, and it may not carry a confidence.",
+      "properties": {
+        "assumptions": {
+          "description": "Declared modelling assumptions this value depends on.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional and uncalibrated unless a calibration record is cited. Not a statistical probability.",
+          "title": "Confidence"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "source_kind": {
+          "enum": [
+            "cad",
+            "bom",
+            "manual",
+            "catalog",
+            "computed",
+            "inferred",
+            "assumed"
+          ],
+          "title": "Source Kind",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "known",
+            "estimated",
+            "unknown",
+            "conflicted"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "unit": {
+          "enum": [
+            "m",
+            "m^2",
+            "m^3",
+            "m^4",
+            "kg",
+            "kg*m^2",
+            "N",
+            "N*m",
+            "Pa",
+            "s",
+            "min",
+            "h",
+            "A",
+            "V",
+            "W",
+            "Wh",
+            "Wh/km",
+            "rad",
+            "K",
+            "m/s",
+            "km",
+            "km/h",
+            "kg/m^3",
+            "1",
+            "count",
+            "USD"
+          ],
+          "title": "Unit",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Value"
+        }
+      },
+      "required": [
+        "unit",
+        "status",
+        "source_kind"
+      ],
+      "title": "Claim",
+      "type": "object"
+    },
+    "ClaimSet": {
+      "additionalProperties": false,
+      "description": "Named claims for one entity, plus any preserved conflicts.",
+      "properties": {
+        "claims": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Claims",
+          "type": "object"
+        },
+        "conflicts": {
+          "items": {
+            "$ref": "#/$defs/ConflictSet"
+          },
+          "title": "Conflicts",
+          "type": "array"
+        }
+      },
+      "title": "ClaimSet",
+      "type": "object"
+    },
+    "ComparisonPair": {
+      "additionalProperties": false,
+      "description": "Baseline and candidate evaluated at identical conditions (architecture section 8).\n\nConstruction fails if the two sides used different missions, registries, or fidelity tiers, so\nan analytic baseline can never be subtracted from a VSPAERO-informed candidate.",
+      "properties": {
+        "baseline": {
+          "$ref": "#/$defs/Evaluation"
+        },
+        "candidate": {
+          "$ref": "#/$defs/Evaluation"
+        },
+        "metric": {
+          "title": "Metric",
+          "type": "string"
+        }
+      },
+      "required": [
+        "baseline",
+        "candidate",
+        "metric"
+      ],
+      "title": "ComparisonPair",
+      "type": "object"
+    },
+    "ConflictSet": {
+      "additionalProperties": false,
+      "description": "Conflicting claims for one quantity, preserved with an explicit selection and rationale.\n\nArchitecture section 5: never silently alter evidence. Every candidate stays; the selection\nand the reason for it are recorded alongside them.",
+      "properties": {
+        "candidates": {
+          "items": {
+            "$ref": "#/$defs/Claim"
+          },
+          "minItems": 2,
+          "title": "Candidates",
+          "type": "array"
+        },
+        "quantity": {
+          "title": "Quantity",
+          "type": "string"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        },
+        "selected_index": {
+          "minimum": 0,
+          "title": "Selected Index",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "quantity",
+        "candidates",
+        "selected_index",
+        "rationale"
+      ],
+      "title": "ConflictSet",
+      "type": "object"
+    },
+    "DecisionOutcome": {
+      "additionalProperties": false,
+      "description": "What a decision did. A repeated idempotency key returns this object unchanged.",
+      "properties": {
+        "active_revision_id": {
+          "description": "The active revision after the decision. A decline leaves it untouched.",
+          "title": "Active Revision Id",
+          "type": "string"
+        },
+        "committed_revision_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Committed Revision Id"
+        },
+        "decision": {
+          "enum": [
+            "accept",
+            "decline"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "idempotency_key": {
+          "title": "Idempotency Key",
+          "type": "string"
+        },
+        "message": {
+          "default": "",
+          "title": "Message",
+          "type": "string"
+        },
+        "proposal_id": {
+          "title": "Proposal Id",
+          "type": "string"
+        },
+        "replayed": {
+          "default": false,
+          "description": "True when this outcome was returned from the idempotency store.",
+          "title": "Replayed",
+          "type": "boolean"
+        },
+        "state": {
+          "enum": [
+            "proposed",
+            "previewing",
+            "review_ready",
+            "blocked",
+            "declined",
+            "committing",
+            "committed",
+            "stale",
+            "failed"
+          ],
+          "title": "State",
+          "type": "string"
+        }
+      },
+      "required": [
+        "proposal_id",
+        "decision",
+        "state",
+        "active_revision_id",
+        "idempotency_key"
+      ],
+      "title": "DecisionOutcome",
+      "type": "object"
+    },
+    "DecisionRequest": {
+      "additionalProperties": false,
+      "description": "An accept or decline. The four fields on an accept are what make CAS possible.",
+      "properties": {
+        "decision": {
+          "enum": [
+            "accept",
+            "decline"
+          ],
+          "title": "Decision",
+          "type": "string"
+        },
+        "expected_active_revision_id": {
+          "pattern": "^rev_[0-9a-f]{16}$",
+          "title": "Expected Active Revision Id",
+          "type": "string"
+        },
+        "idempotency_key": {
+          "maxLength": 128,
+          "minLength": 8,
+          "title": "Idempotency Key",
+          "type": "string"
+        },
+        "preview_hash": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Required on accept: the exact preview the user reviewed.",
+          "title": "Preview Hash"
+        },
+        "proposal_id": {
+          "title": "Proposal Id",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Optional note, recorded on a decline.",
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "proposal_id",
+        "decision",
+        "expected_active_revision_id",
+        "idempotency_key"
+      ],
+      "title": "DecisionRequest",
+      "type": "object"
+    },
+    "DeclaredInterface": {
+      "additionalProperties": false,
+      "description": "A machine-checkable interface. ``compatible_with`` is computed only from these.",
+      "properties": {
+        "current_limit_a": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Current Limit A"
+        },
+        "dimensions_m": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Dimensions M",
+          "type": "object"
+        },
+        "interface_id": {
+          "title": "Interface Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "mechanical_bore",
+            "mechanical_bolt",
+            "electrical_dc",
+            "signal_pwm",
+            "mass_envelope"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "polarity": {
+          "default": "either",
+          "enum": [
+            "male",
+            "female",
+            "either"
+          ],
+          "title": "Polarity",
+          "type": "string"
+        },
+        "voltage_v": {
+          "anyOf": [
+            {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Inclusive (min, max) operating voltage.",
+          "title": "Voltage V"
+        }
+      },
+      "required": [
+        "interface_id",
+        "kind"
+      ],
+      "title": "DeclaredInterface",
+      "type": "object"
+    },
+    "DesignManifest": {
+      "additionalProperties": false,
+      "description": "``design_manifest.json`` - A -> B/C (architecture section 5).",
+      "properties": {
+        "design_id": {
+          "pattern": "^dsn_[a-z0-9][a-z0-9_-]{2,62}$",
+          "title": "Design Id",
+          "type": "string"
+        },
+        "display_name": {
+          "title": "Display Name",
+          "type": "string"
+        },
+        "excluded_alternatives": {
+          "description": "Variant bodies deliberately not installed. They must not count as mass.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Excluded Alternatives",
+          "type": "array"
+        },
+        "notes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Notes",
+          "type": "array"
+        },
+        "representation_mode": {
+          "enum": [
+            "reference_mesh",
+            "editable_reconstruction"
+          ],
+          "title": "Representation Mode",
+          "type": "string"
+        },
+        "revision_id": {
+          "title": "Revision Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source_archive_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Archive Sha256"
+        }
+      },
+      "required": [
+        "design_id",
+        "revision_id",
+        "display_name",
+        "representation_mode"
+      ],
+      "title": "DesignManifest",
+      "type": "object"
+    },
+    "EditOperation": {
+      "discriminator": {
+        "mapping": {
+          "replace_catalog_component": "#/$defs/ReplaceCatalogComponent",
+          "resize_spar": "#/$defs/ResizeSpar",
+          "set_wing_tip_extension": "#/$defs/SetWingTipExtension",
+          "translate_component": "#/$defs/TranslateComponent"
+        },
+        "propertyName": "operation"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/TranslateComponent"
+        },
+        {
+          "$ref": "#/$defs/ResizeSpar"
+        },
+        {
+          "$ref": "#/$defs/SetWingTipExtension"
+        },
+        {
+          "$ref": "#/$defs/ReplaceCatalogComponent"
+        }
+      ]
+    },
+    "ErrorEnvelope": {
+      "additionalProperties": false,
+      "description": "The single error shape every endpoint and CLI command returns.",
+      "properties": {
+        "code": {
+          "enum": [
+            "UNITS_UNCONFIRMED",
+            "ASSEMBLY_UNCONFIRMED",
+            "MISSING_EVIDENCE",
+            "UNSUPPORTED_EDIT",
+            "STALE_REVISION",
+            "GEOMETRY_INVALID",
+            "CONSTRAINT_FAILED",
+            "SOLVER_UNAVAILABLE",
+            "SOLVER_TIMEOUT",
+            "ARTIFACT_MISMATCH",
+            "NOT_FOUND",
+            "INVALID_REQUEST",
+            "CONFLICT",
+            "INTERNAL"
+          ],
+          "title": "Code",
+          "type": "string"
+        },
+        "details": {
+          "additionalProperties": true,
+          "title": "Details",
+          "type": "object"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "retryable": {
+          "default": false,
+          "title": "Retryable",
+          "type": "boolean"
+        },
+        "revision_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Revision Id"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "title": "ErrorEnvelope",
+      "type": "object"
+    },
+    "Evaluation": {
+      "additionalProperties": false,
+      "description": "``evaluation.json`` - C -> B/UI.",
+      "properties": {
+        "checks": {
+          "items": {
+            "$ref": "#/$defs/CheckResult"
+          },
+          "title": "Checks",
+          "type": "array"
+        },
+        "elapsed_s": {
+          "default": 0.0,
+          "minimum": 0.0,
+          "title": "Elapsed S",
+          "type": "number"
+        },
+        "evaluation_id": {
+          "title": "Evaluation Id",
+          "type": "string"
+        },
+        "fidelity": {
+          "enum": [
+            "analytic",
+            "vspaero_informed",
+            "replay"
+          ],
+          "title": "Fidelity",
+          "type": "string"
+        },
+        "inputs_used": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Claim"
+          },
+          "description": "Section 8: report inputs and unknowns before numbers.",
+          "title": "Inputs Used",
+          "type": "object"
+        },
+        "metrics": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Metrics",
+          "type": "object"
+        },
+        "mission_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Mission Hash",
+          "type": "string"
+        },
+        "omitted_physics": {
+          "description": "Openly listed. A short list here is what keeps the numbers honest.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Omitted Physics",
+          "type": "array"
+        },
+        "produced_by": {
+          "description": "B-stub marks the reference evaluator B uses until Team C's lands.",
+          "enum": [
+            "C",
+            "B-stub"
+          ],
+          "title": "Produced By",
+          "type": "string"
+        },
+        "registry_version": {
+          "title": "Registry Version",
+          "type": "string"
+        },
+        "revision_id": {
+          "title": "Revision Id",
+          "type": "string"
+        },
+        "run_input_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Run Input Hash",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "sensitivity": {
+          "items": {
+            "$ref": "#/$defs/SensitivityInterval"
+          },
+          "title": "Sensitivity",
+          "type": "array"
+        },
+        "solver": {
+          "$ref": "#/$defs/SolverManifest"
+        },
+        "unknown_inputs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Unknown Inputs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "evaluation_id",
+        "revision_id",
+        "mission_hash",
+        "registry_version",
+        "fidelity",
+        "solver",
+        "run_input_hash",
+        "produced_by"
+      ],
+      "title": "Evaluation",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "description": "One retrievable source record behind a claim.",
+      "properties": {
+        "accessed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "When the source was read. Display-only; excluded from hashes.",
+          "title": "Accessed At"
+        },
+        "content_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Hash of the source bytes when the source is a retrievable file.",
+          "title": "Content Sha256"
+        },
+        "evidence_id": {
+          "pattern": "^ev_[a-z0-9][a-z0-9_.-]{1,62}$",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "extraction_method": {
+          "description": "How the value was obtained: stl_bounds, manual_entry, catalog_field, ...",
+          "title": "Extraction Method",
+          "type": "string"
+        },
+        "locator": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Page, table, field, body name, or line range in the source.",
+          "title": "Locator"
+        },
+        "note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Display-only; excluded from hashes.",
+          "title": "Note"
+        },
+        "source_kind": {
+          "enum": [
+            "cad",
+            "bom",
+            "manual",
+            "catalog",
+            "computed",
+            "inferred",
+            "assumed"
+          ],
+          "title": "Source Kind",
+          "type": "string"
+        },
+        "source_uri": {
+          "description": "URI or repository-relative path of the source",
+          "title": "Source Uri",
+          "type": "string"
+        },
+        "valid_from": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valid From"
+        },
+        "valid_to": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Valid To"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "source_uri",
+        "source_kind",
+        "extraction_method"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "EvidenceGraph": {
+      "additionalProperties": false,
+      "description": "``graph.json`` - B -> UI/recommender.",
+      "properties": {
+        "edges": {
+          "items": {
+            "$ref": "#/$defs/GraphEdge"
+          },
+          "title": "Edges",
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "nodes": {
+          "items": {
+            "$ref": "#/$defs/GraphNode"
+          },
+          "title": "Nodes",
+          "type": "array"
+        },
+        "revision_id": {
+          "title": "Revision Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "unknown_relationships": {
+          "description": "Relationships the source material does not determine, stated openly rather than guessed. These drive the 'what evidence is missing' answers in the UI.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Unknown Relationships",
+          "type": "array"
+        }
+      },
+      "required": [
+        "revision_id",
+        "nodes",
+        "edges"
+      ],
+      "title": "EvidenceGraph",
+      "type": "object"
+    },
+    "EvidenceRequest": {
+      "additionalProperties": false,
+      "description": "A candidate that asks for a missing fact instead of proposing an edit.\n\nSection 7 step 2 names this explicitly: \"ask for missing battery mass before promising\nendurance.\" It is modelled separately from :class:`Recommendation` so the edit-operation union\nstays closed - the four operations in section 6 are the only things that can change geometry.",
+      "properties": {
+        "base_revision_id": {
+          "title": "Base Revision Id",
+          "type": "string"
+        },
+        "blocked_check_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Blocked Check Ids",
+          "type": "array"
+        },
+        "quantity": {
+          "description": "Dotted path of the claim to supply, e.g. prt_harness.mass_kg",
+          "title": "Quantity",
+          "type": "string"
+        },
+        "request_id": {
+          "pattern": "^req_[a-z0-9][a-z0-9_.-]{1,62}$",
+          "title": "Request Id",
+          "type": "string"
+        },
+        "suggested_source_kinds": {
+          "description": "What would count as adequate evidence. Never 'inferred' for a mass.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Suggested Source Kinds",
+          "type": "array"
+        },
+        "target_part_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Part Id"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "why_it_matters": {
+          "description": "Which checks are unknown until this is supplied.",
+          "title": "Why It Matters",
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "base_revision_id",
+        "title",
+        "quantity",
+        "unit",
+        "why_it_matters"
+      ],
+      "title": "EvidenceRequest",
+      "type": "object"
+    },
+    "ExplanationPath": {
+      "additionalProperties": false,
+      "description": "A short typed path answering one of the section 7 narrow queries.",
+      "properties": {
+        "conclusion": {
+          "title": "Conclusion",
+          "type": "string"
+        },
+        "missing_evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Missing Evidence",
+          "type": "array"
+        },
+        "question": {
+          "title": "Question",
+          "type": "string"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/PathStep"
+          },
+          "title": "Steps",
+          "type": "array"
+        },
+        "weakest_status": {
+          "description": "The least certain link on the path. An inferred hop caps the whole claim.",
+          "enum": [
+            "known",
+            "estimated",
+            "unknown",
+            "conflicted"
+          ],
+          "title": "Weakest Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "question",
+        "steps",
+        "conclusion",
+        "weakest_status"
+      ],
+      "title": "ExplanationPath",
+      "type": "object"
+    },
+    "GeometryFeatures": {
+      "additionalProperties": false,
+      "description": "``geometry_features.json`` - A -> C/B (architecture section 5).\n\nThe single source of wing/tail dimensions. Section 8 forbids the evaluator from maintaining its\nown copy, so anything downstream that needs a reference area reads it from here.",
+      "properties": {
+        "fit_error_m": {
+          "$ref": "#/$defs/Claim",
+          "description": "Deviation of the reconstruction from the reference silhouette."
+        },
+        "frame_confirmed": {
+          "description": "False until units, axes, nose datum, and symmetry have been confirmed.",
+          "title": "Frame Confirmed",
+          "type": "boolean"
+        },
+        "nose_datum_note": {
+          "title": "Nose Datum Note",
+          "type": "string"
+        },
+        "quality_limits": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Quality Limits",
+          "type": "array"
+        },
+        "reconstruction_confirmed": {
+          "default": false,
+          "description": "A recorded human decision. Engineering comparison is blocked until true.",
+          "title": "Reconstruction Confirmed",
+          "type": "boolean"
+        },
+        "revision_id": {
+          "title": "Revision Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "units_confirmed": {
+          "default": false,
+          "title": "Units Confirmed",
+          "type": "boolean"
+        },
+        "vtail_panels": {
+          "items": {
+            "$ref": "#/$defs/VTailPanel"
+          },
+          "title": "Vtail Panels",
+          "type": "array"
+        },
+        "wing_mac_m": {
+          "$ref": "#/$defs/Claim"
+        },
+        "wing_reference_area_m2": {
+          "$ref": "#/$defs/Claim"
+        },
+        "wing_span_m": {
+          "$ref": "#/$defs/Claim"
+        },
+        "wing_stations": {
+          "items": {
+            "$ref": "#/$defs/WingStation"
+          },
+          "title": "Wing Stations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "revision_id",
+        "frame_confirmed",
+        "nose_datum_note",
+        "wing_reference_area_m2",
+        "wing_span_m",
+        "wing_mac_m",
+        "fit_error_m"
+      ],
+      "title": "GeometryFeatures",
+      "type": "object"
+    },
+    "GraphEdge": {
+      "additionalProperties": false,
+      "description": "A typed relation carrying its own evidence, status, and revision scope.",
+      "properties": {
+        "basis": {
+          "anyOf": [
+            {
+              "enum": [
+                "declared_interfaces",
+                "not_computed"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Required for compatible_with. Anything other than declared_interfaces is a bug.",
+          "title": "Basis"
+        },
+        "edge_id": {
+          "title": "Edge Id",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "properties": {
+          "additionalProperties": true,
+          "title": "Properties",
+          "type": "object"
+        },
+        "relation": {
+          "enum": [
+            "instance_of",
+            "made_of",
+            "performs",
+            "exposes",
+            "mates_with",
+            "near",
+            "powers",
+            "controls",
+            "compatible_with",
+            "offered_by",
+            "constrained_by",
+            "applies_to",
+            "supported_by",
+            "evaluated_in"
+          ],
+          "title": "Relation",
+          "type": "string"
+        },
+        "revision_id": {
+          "title": "Revision Id",
+          "type": "string"
+        },
+        "source_id": {
+          "title": "Source Id",
+          "type": "string"
+        },
+        "status": {
+          "default": "known",
+          "enum": [
+            "known",
+            "estimated",
+            "unknown",
+            "conflicted"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "target_id": {
+          "title": "Target Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "edge_id",
+        "source_id",
+        "target_id",
+        "relation",
+        "revision_id"
+      ],
+      "title": "GraphEdge",
+      "type": "object"
+    },
+    "GraphNode": {
+      "additionalProperties": false,
+      "description": "A typed node, scoped to one revision.",
+      "properties": {
+        "claims": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Claims",
+          "type": "object"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "node_id": {
+          "title": "Node Id",
+          "type": "string"
+        },
+        "node_type": {
+          "enum": [
+            "PartOccurrence",
+            "PartDefinition",
+            "Material",
+            "Function",
+            "Interface",
+            "CatalogItem",
+            "Supplier",
+            "Constraint",
+            "Regulation",
+            "Mission",
+            "Evidence",
+            "AnalysisRun"
+          ],
+          "title": "Node Type",
+          "type": "string"
+        },
+        "properties": {
+          "additionalProperties": true,
+          "title": "Properties",
+          "type": "object"
+        },
+        "revision_id": {
+          "title": "Revision Id",
+          "type": "string"
+        },
+        "status": {
+          "default": "known",
+          "enum": [
+            "known",
+            "estimated",
+            "unknown",
+            "conflicted"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "node_id",
+        "node_type",
+        "label",
+        "revision_id"
+      ],
+      "title": "GraphNode",
+      "type": "object"
+    },
+    "InterferenceFinding": {
+      "additionalProperties": false,
+      "description": "An overlap that was *not* a declared mating, bonded, or nesting pair.",
+      "properties": {
+        "kind": {
+          "enum": [
+            "unintended_overlap",
+            "propeller_swept_volume"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "overlap_volume_m3": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Overlap Volume M3"
+        },
+        "part_id_a": {
+          "title": "Part Id A",
+          "type": "string"
+        },
+        "part_id_b": {
+          "title": "Part Id B",
+          "type": "string"
+        }
+      },
+      "required": [
+        "part_id_a",
+        "part_id_b",
+        "kind"
+      ],
+      "title": "InterferenceFinding",
+      "type": "object"
+    },
+    "JobRecord": {
+      "additionalProperties": false,
+      "description": "A queued unit of work. Long native work never runs inside an HTTP request thread.",
+      "properties": {
+        "artifact_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Artifact Ids",
+          "type": "array"
+        },
+        "cache_hit": {
+          "default": false,
+          "title": "Cache Hit",
+          "type": "boolean"
+        },
+        "cache_key": {
+          "description": "Covers revision content, mission, solver version and settings, model tier, and the relevant evidence/catalog snapshot hashes.",
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Cache Key",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "design_id": {
+          "title": "Design Id",
+          "type": "string"
+        },
+        "elapsed_s": {
+          "default": 0.0,
+          "minimum": 0.0,
+          "title": "Elapsed S",
+          "type": "number"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Code"
+        },
+        "error_message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Message"
+        },
+        "job_id": {
+          "pattern": "^job_[a-z0-9][a-z0-9_.-]{1,62}$",
+          "title": "Job Id",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "import",
+            "confirm",
+            "evaluate",
+            "recommend",
+            "preview",
+            "simulate",
+            "export"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "progress_note": {
+          "default": "",
+          "title": "Progress Note",
+          "type": "string"
+        },
+        "reused_job_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Set on a cache hit so the UI can show the reused run.",
+          "title": "Reused Job Id"
+        },
+        "revision_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Revision Id"
+        },
+        "status": {
+          "enum": [
+            "queued",
+            "running",
+            "succeeded",
+            "failed",
+            "cancelled"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "work_dir": {
+          "description": "Unique per job. Native solvers emit many same-named files, so they cannot share.",
+          "title": "Work Dir",
+          "type": "string"
+        }
+      },
+      "required": [
+        "job_id",
+        "kind",
+        "status",
+        "design_id",
+        "cache_key",
+        "work_dir"
+      ],
+      "title": "JobRecord",
+      "type": "object"
+    },
+    "Mission": {
+      "additionalProperties": false,
+      "description": "The locked mission. Its hash pins every evaluation and cache key.",
+      "properties": {
+        "air_density_kgm3": {
+          "exclusiveMinimum": 0,
+          "title": "Air Density Kgm3",
+          "type": "number"
+        },
+        "altitude_m": {
+          "minimum": 0,
+          "title": "Altitude M",
+          "type": "number"
+        },
+        "cg_envelope_station_m": {
+          "description": "Aft-positive station bounds (s = -x) for the centre of gravity.",
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Cg Envelope Station M",
+          "type": "array"
+        },
+        "cruise_speed_mps": {
+          "exclusiveMinimum": 0,
+          "title": "Cruise Speed Mps",
+          "type": "number"
+        },
+        "energy_reserve_fraction": {
+          "description": "Withheld before usable energy is computed.",
+          "exclusiveMaximum": 1.0,
+          "minimum": 0.0,
+          "title": "Energy Reserve Fraction",
+          "type": "number"
+        },
+        "load_factor_limit": {
+          "exclusiveMinimum": 0,
+          "title": "Load Factor Limit",
+          "type": "number"
+        },
+        "locked_part_ids": {
+          "default": [],
+          "description": "Mission payload occurrences that may not be removed or moved.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Locked Part Ids",
+          "type": "array"
+        },
+        "max_takeoff_mass_kg": {
+          "exclusiveMinimum": 0,
+          "title": "Max Takeoff Mass Kg",
+          "type": "number"
+        },
+        "mission_id": {
+          "title": "Mission Id",
+          "type": "string"
+        },
+        "objective": {
+          "const": "max_endurance",
+          "default": "max_endurance",
+          "title": "Objective",
+          "type": "string"
+        },
+        "payload_mass_kg": {
+          "minimum": 0,
+          "title": "Payload Mass Kg",
+          "type": "number"
+        },
+        "registry_version": {
+          "default": "fixed_wing_cruise/1.0",
+          "title": "Registry Version",
+          "type": "string"
+        },
+        "regulatory": {
+          "$ref": "#/$defs/RegulatoryProfile"
+        },
+        "route_length_km": {
+          "exclusiveMinimum": 0,
+          "title": "Route Length Km",
+          "type": "number"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "stall_margin_fraction": {
+          "description": "Required fraction by which cruise speed exceeds stall speed.",
+          "minimum": 0.0,
+          "title": "Stall Margin Fraction",
+          "type": "number"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "mission_id",
+        "title",
+        "cruise_speed_mps",
+        "altitude_m",
+        "air_density_kgm3",
+        "max_takeoff_mass_kg",
+        "payload_mass_kg",
+        "energy_reserve_fraction",
+        "route_length_km",
+        "load_factor_limit",
+        "cg_envelope_station_m",
+        "stall_margin_fraction",
+        "regulatory"
+      ],
+      "title": "Mission",
+      "type": "object"
+    },
+    "Neighborhood": {
+      "additionalProperties": false,
+      "description": "A bounded subgraph. The whole graph is never sent to a model or rendered at once.",
+      "properties": {
+        "center_id": {
+          "title": "Center Id",
+          "type": "string"
+        },
+        "edges": {
+          "items": {
+            "$ref": "#/$defs/GraphEdge"
+          },
+          "title": "Edges",
+          "type": "array"
+        },
+        "node_budget": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Node Budget",
+          "type": "integer"
+        },
+        "nodes": {
+          "items": {
+            "$ref": "#/$defs/GraphNode"
+          },
+          "title": "Nodes",
+          "type": "array"
+        },
+        "radius": {
+          "maximum": 4,
+          "minimum": 1,
+          "title": "Radius",
+          "type": "integer"
+        },
+        "revision_id": {
+          "title": "Revision Id",
+          "type": "string"
+        },
+        "truncated": {
+          "default": false,
+          "description": "True when the node budget cut the traversal short.",
+          "title": "Truncated",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "revision_id",
+        "center_id",
+        "radius",
+        "nodes",
+        "edges"
+      ],
+      "title": "Neighborhood",
+      "type": "object"
+    },
+    "PartDefinition": {
+      "additionalProperties": false,
+      "description": "Reusable geometry. Several occurrences may share one definition.",
+      "properties": {
+        "claims": {
+          "$ref": "#/$defs/ClaimSet"
+        },
+        "definition_id": {
+          "pattern": "^def_[a-z0-9][a-z0-9_.-]{1,62}$",
+          "title": "Definition Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "parameters": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "description": "Editable parameters in canonical SI, for reconstructed/generated geometry.",
+          "title": "Parameters",
+          "type": "object"
+        },
+        "representation": {
+          "enum": [
+            "reference_mesh",
+            "editable_reconstruction",
+            "catalog_envelope",
+            "generated"
+          ],
+          "title": "Representation",
+          "type": "string"
+        },
+        "role": {
+          "default": "unknown",
+          "enum": [
+            "wing",
+            "tail_panel",
+            "fuselage",
+            "spar",
+            "battery",
+            "motor",
+            "propeller",
+            "esc",
+            "servo",
+            "flight_controller",
+            "receiver",
+            "gps",
+            "payload",
+            "mount",
+            "fastener",
+            "harness",
+            "hatch",
+            "landing_gear",
+            "other",
+            "unknown"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/SourceRef"
+        }
+      },
+      "required": [
+        "definition_id",
+        "name",
+        "representation"
+      ],
+      "title": "PartDefinition",
+      "type": "object"
+    },
+    "PartOccurrence": {
+      "additionalProperties": false,
+      "description": "One installed instance of a definition, at a placement, with its own claims.",
+      "properties": {
+        "allowed_contact_part_ids": {
+          "description": "Declared mating/bonded/nesting partners. Overlap with these is intended engagement, not interference.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Contact Part Ids",
+          "type": "array"
+        },
+        "bounds_local_m": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AxisAlignedBox"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "claims": {
+          "$ref": "#/$defs/ClaimSet"
+        },
+        "definition_id": {
+          "pattern": "^def_[a-z0-9][a-z0-9_.-]{1,62}$",
+          "title": "Definition Id",
+          "type": "string"
+        },
+        "edit_capabilities": {
+          "items": {
+            "enum": [
+              "translate_component",
+              "resize_spar",
+              "set_wing_tip_extension",
+              "replace_catalog_component"
+            ],
+            "type": "string"
+          },
+          "title": "Edit Capabilities",
+          "type": "array"
+        },
+        "local_com_m": {
+          "anyOf": [
+            {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "$ref": "#/$defs/Claim"
+                },
+                {
+                  "$ref": "#/$defs/Claim"
+                },
+                {
+                  "$ref": "#/$defs/Claim"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Centre of mass in the occurrence's own frame, with its own evidence. Absent means the mass distribution is unknown, not that it coincides with the placement datum.",
+          "title": "Local Com M"
+        },
+        "locked": {
+          "default": false,
+          "description": "Mission payload or otherwise not removable/movable.",
+          "title": "Locked",
+          "type": "boolean"
+        },
+        "mass_kg": {
+          "$ref": "#/$defs/Claim"
+        },
+        "mirror_of": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The part_id this occurrence mirrors. Distinct identity, possibly shared asset.",
+          "title": "Mirror Of"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "parent_part_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Part Id"
+        },
+        "part_id": {
+          "pattern": "^prt_[a-z0-9][a-z0-9_.-]{1,62}$",
+          "title": "Part Id",
+          "type": "string"
+        },
+        "role": {
+          "default": "unknown",
+          "enum": [
+            "wing",
+            "tail_panel",
+            "fuselage",
+            "spar",
+            "battery",
+            "motor",
+            "propeller",
+            "esc",
+            "servo",
+            "flight_controller",
+            "receiver",
+            "gps",
+            "payload",
+            "mount",
+            "fastener",
+            "harness",
+            "hatch",
+            "landing_gear",
+            "other",
+            "unknown"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "transform": {
+          "$ref": "#/$defs/Transform"
+        },
+        "travel_corridor": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TravelCorridor"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "part_id",
+        "definition_id",
+        "name",
+        "mass_kg"
+      ],
+      "title": "PartOccurrence",
+      "type": "object"
+    },
+    "PartSignature": {
+      "additionalProperties": false,
+      "description": "A semantic fingerprint used to prove an unchanged part really did not change.\n\nSection 6 export acceptance: compare semantic geometry, not STEP byte hashes, and do not\nrequire entity numbers or face ordering to remain stable.",
+      "properties": {
+        "bounds_max_m": {
+          "anyOf": [
+            {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bounds Max M"
+        },
+        "bounds_min_m": {
+          "anyOf": [
+            {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bounds Min M"
+        },
+        "part_id": {
+          "title": "Part Id",
+          "type": "string"
+        },
+        "placement_translation_m": {
+          "anyOf": [
+            {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Placement Translation M"
+        },
+        "solid_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Solid Count",
+          "type": "integer"
+        },
+        "volume_m3": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Volume M3"
+        }
+      },
+      "required": [
+        "part_id"
+      ],
+      "title": "PartSignature",
+      "type": "object"
+    },
+    "PartsDocument": {
+      "additionalProperties": false,
+      "description": "``parts.json`` - A -> B/C. Installed occurrences plus their definitions and evidence.",
+      "properties": {
+        "definitions": {
+          "items": {
+            "$ref": "#/$defs/PartDefinition"
+          },
+          "title": "Definitions",
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "occurrences": {
+          "items": {
+            "$ref": "#/$defs/PartOccurrence"
+          },
+          "title": "Occurrences",
+          "type": "array"
+        },
+        "revision_id": {
+          "title": "Revision Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "revision_id",
+        "definitions",
+        "occurrences"
+      ],
+      "title": "PartsDocument",
+      "type": "object"
+    },
+    "PathStep": {
+      "additionalProperties": false,
+      "description": "One hop of an explanation path.",
+      "properties": {
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "from_id": {
+          "title": "From Id",
+          "type": "string"
+        },
+        "from_label": {
+          "title": "From Label",
+          "type": "string"
+        },
+        "relation": {
+          "enum": [
+            "instance_of",
+            "made_of",
+            "performs",
+            "exposes",
+            "mates_with",
+            "near",
+            "powers",
+            "controls",
+            "compatible_with",
+            "offered_by",
+            "constrained_by",
+            "applies_to",
+            "supported_by",
+            "evaluated_in"
+          ],
+          "title": "Relation",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "known",
+            "estimated",
+            "unknown",
+            "conflicted"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "to_id": {
+          "title": "To Id",
+          "type": "string"
+        },
+        "to_label": {
+          "title": "To Label",
+          "type": "string"
+        }
+      },
+      "required": [
+        "from_id",
+        "from_label",
+        "relation",
+        "to_id",
+        "to_label",
+        "status"
+      ],
+      "title": "PathStep",
+      "type": "object"
+    },
+    "PreviewResult": {
+      "additionalProperties": false,
+      "description": "The concrete, immutable child revision a proposal was actually evaluated on.\n\n``preview_hash`` is what an acceptance must quote. Accepting anything else is refused, which is\nhow \"accept commits precisely the reviewed preview\" becomes mechanical.",
+      "properties": {
+        "base_revision_id": {
+          "pattern": "^rev_[0-9a-f]{16}$",
+          "title": "Base Revision Id",
+          "type": "string"
+        },
+        "baseline_evaluation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Evaluation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "blocked_reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Blocked Reasons",
+          "type": "array"
+        },
+        "cad_ok": {
+          "title": "Cad Ok",
+          "type": "boolean"
+        },
+        "change_summary": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Change Summary",
+          "type": "array"
+        },
+        "evaluation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Evaluation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "preview_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Preview Hash",
+          "type": "string"
+        },
+        "preview_revision_id": {
+          "pattern": "^rev_[0-9a-f]{16}$",
+          "title": "Preview Revision Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "preview_revision_id",
+        "preview_hash",
+        "base_revision_id",
+        "cad_ok"
+      ],
+      "title": "PreviewResult",
+      "type": "object"
+    },
+    "ProposalContext": {
+      "additionalProperties": false,
+      "description": "Exactly what a provider adapter is allowed to see.\n\nSection 7: compute affected constraints with typed traversals; do not send the entire graph to\nthe model. This object is the whole input surface, and it carries no raw geometry.",
+      "properties": {
+        "catalog_item_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Catalog Item Ids",
+          "type": "array"
+        },
+        "design_id": {
+          "title": "Design Id",
+          "type": "string"
+        },
+        "editable_parts": {
+          "additionalProperties": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "description": "part_id -> the operations it supports.",
+          "title": "Editable Parts",
+          "type": "object"
+        },
+        "evidence_notes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Notes",
+          "type": "array"
+        },
+        "failing_checks": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Failing Checks",
+          "type": "array"
+        },
+        "metrics": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Claim"
+          },
+          "title": "Metrics",
+          "type": "object"
+        },
+        "mission_hash": {
+          "title": "Mission Hash",
+          "type": "string"
+        },
+        "objective": {
+          "title": "Objective",
+          "type": "string"
+        },
+        "part_summaries": {
+          "description": "Compact descriptors. Never triangle dumps.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Part Summaries",
+          "type": "array"
+        },
+        "revision_id": {
+          "title": "Revision Id",
+          "type": "string"
+        },
+        "unknown_checks": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Unknown Checks",
+          "type": "array"
+        }
+      },
+      "required": [
+        "design_id",
+        "revision_id",
+        "mission_hash",
+        "objective"
+      ],
+      "title": "ProposalContext",
+      "type": "object"
+    },
+    "Recommendation": {
+      "additionalProperties": false,
+      "description": "One bounded proposal, with its evidence, its preview, and its tradeoffs.",
+      "properties": {
+        "base_revision_id": {
+          "pattern": "^rev_[0-9a-f]{16}$",
+          "title": "Base Revision Id",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "design_id": {
+          "title": "Design Id",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "evidence_path": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ExplanationPath"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "expected_gain_note": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A provider's narrative expectation, kept only as text. It is never substituted for a computed result and never ranked on.",
+          "title": "Expected Gain Note"
+        },
+        "issue": {
+          "description": "The specific problem this addresses, in plain language.",
+          "title": "Issue",
+          "type": "string"
+        },
+        "mission_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Mission Hash",
+          "type": "string"
+        },
+        "operation": {
+          "discriminator": {
+            "mapping": {
+              "replace_catalog_component": "#/$defs/ReplaceCatalogComponent",
+              "resize_spar": "#/$defs/ResizeSpar",
+              "set_wing_tip_extension": "#/$defs/SetWingTipExtension",
+              "translate_component": "#/$defs/TranslateComponent"
+            },
+            "propertyName": "operation"
+          },
+          "oneOf": [
+            {
+              "$ref": "#/$defs/TranslateComponent"
+            },
+            {
+              "$ref": "#/$defs/ResizeSpar"
+            },
+            {
+              "$ref": "#/$defs/SetWingTipExtension"
+            },
+            {
+              "$ref": "#/$defs/ReplaceCatalogComponent"
+            }
+          ],
+          "title": "Operation"
+        },
+        "origin": {
+          "default": "deterministic",
+          "enum": [
+            "deterministic",
+            "provider"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "prerequisites": {
+          "description": "Facts that had to be known before this was proposable.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Prerequisites",
+          "type": "array"
+        },
+        "preview": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PreviewResult"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "proposal_id": {
+          "pattern": "^rec_[a-z0-9][a-z0-9_.-]{1,62}$",
+          "title": "Proposal Id",
+          "type": "string"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "state": {
+          "default": "proposed",
+          "enum": [
+            "proposed",
+            "previewing",
+            "review_ready",
+            "blocked",
+            "declined",
+            "committing",
+            "committed",
+            "stale",
+            "failed"
+          ],
+          "title": "State",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "tradeoffs": {
+          "items": {
+            "$ref": "#/$defs/Tradeoff"
+          },
+          "title": "Tradeoffs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "proposal_id",
+        "design_id",
+        "base_revision_id",
+        "mission_hash",
+        "title",
+        "issue",
+        "operation",
+        "rationale"
+      ],
+      "title": "Recommendation",
+      "type": "object"
+    },
+    "RecommendationSet": {
+      "additionalProperties": false,
+      "description": "``recommendations.json`` - B -> review UI. Budgeted per section 7.",
+      "properties": {
+        "base_revision_id": {
+          "title": "Base Revision Id",
+          "type": "string"
+        },
+        "budget_notes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Budget Notes",
+          "type": "array"
+        },
+        "displayed_proposal_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Displayed Proposal Ids",
+          "type": "array"
+        },
+        "evidence_requests": {
+          "description": "Asked for before promising a number. These are shown above edit proposals when a required check is unknown, because an edit ranked on unknown inputs is theatre.",
+          "items": {
+            "$ref": "#/$defs/EvidenceRequest"
+          },
+          "title": "Evidence Requests",
+          "type": "array"
+        },
+        "generated": {
+          "items": {
+            "$ref": "#/$defs/Recommendation"
+          },
+          "title": "Generated",
+          "type": "array"
+        },
+        "mission_hash": {
+          "title": "Mission Hash",
+          "type": "string"
+        },
+        "provider_calls_used": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Provider Calls Used",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "unevaluated_count": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Unevaluated Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "base_revision_id",
+        "mission_hash"
+      ],
+      "title": "RecommendationSet",
+      "type": "object"
+    },
+    "RegulatoryProfile": {
+      "additionalProperties": false,
+      "description": "One jurisdiction and operation profile, chosen in mission setup (architecture section 7).",
+      "properties": {
+        "beyond_visual_line_of_sight": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Beyond Visual Line Of Sight"
+        },
+        "evidence_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "in_friaa": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Operating within an FAA-Recognized Identification Area.",
+          "title": "In Friaa"
+        },
+        "jurisdiction": {
+          "const": "US",
+          "title": "Jurisdiction",
+          "type": "string"
+        },
+        "operation": {
+          "enum": [
+            "part_107_commercial",
+            "recreational_44809"
+          ],
+          "title": "Operation",
+          "type": "string"
+        },
+        "over_people": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "None means the fact was not supplied, not that it is false.",
+          "title": "Over People"
+        }
+      },
+      "required": [
+        "jurisdiction",
+        "operation"
+      ],
+      "title": "RegulatoryProfile",
+      "type": "object"
+    },
+    "ReplaceCatalogComponent": {
+      "additionalProperties": false,
+      "description": "Swap an envelope/part and its BOM entry atomically.\n\nUnresolved fit or current checks block the commit; they do not merely warn.",
+      "properties": {
+        "catalog_item_id": {
+          "title": "Catalog Item Id",
+          "type": "string"
+        },
+        "operation": {
+          "const": "replace_catalog_component",
+          "default": "replace_catalog_component",
+          "title": "Operation",
+          "type": "string"
+        },
+        "target_part_id": {
+          "pattern": "^prt_[a-z0-9][a-z0-9_.-]{1,62}$",
+          "title": "Target Part Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "target_part_id",
+        "catalog_item_id"
+      ],
+      "title": "ReplaceCatalogComponent",
+      "type": "object"
+    },
+    "RequiredCheck": {
+      "additionalProperties": false,
+      "description": "One check the mission profile requires every evaluation to report.",
+      "properties": {
+        "check_class": {
+          "enum": [
+            "hard_invariant",
+            "modeled_constraint",
+            "regulatory",
+            "informational"
+          ],
+          "title": "Check Class",
+          "type": "string"
+        },
+        "check_id": {
+          "title": "Check Id",
+          "type": "string"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "check_id",
+        "title",
+        "check_class",
+        "rationale"
+      ],
+      "title": "RequiredCheck",
+      "type": "object"
+    },
+    "ResizeSpar": {
+      "additionalProperties": false,
+      "description": "Regenerate a tubular spar, and any mounts included in the same reviewed transaction.\n\nPreconditions: the spar is a reconstructed tube, the material assumption is declared, and the\nshaft/wing-hole/connector limits are known.",
+      "properties": {
+        "inner_diameter_m": {
+          "minimum": 0,
+          "title": "Inner Diameter M",
+          "type": "number"
+        },
+        "operation": {
+          "const": "resize_spar",
+          "default": "resize_spar",
+          "title": "Operation",
+          "type": "string"
+        },
+        "outer_diameter_m": {
+          "exclusiveMinimum": 0,
+          "title": "Outer Diameter M",
+          "type": "number"
+        },
+        "regenerate_mount_part_ids": {
+          "description": "Compatible mounts regenerated inside the same transaction.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Regenerate Mount Part Ids",
+          "type": "array"
+        },
+        "target_part_id": {
+          "pattern": "^prt_[a-z0-9][a-z0-9_.-]{1,62}$",
+          "title": "Target Part Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "target_part_id",
+        "outer_diameter_m",
+        "inner_diameter_m"
+      ],
+      "title": "ResizeSpar",
+      "type": "object"
+    },
+    "Revision": {
+      "additionalProperties": false,
+      "description": "An immutable design state.",
+      "properties": {
+        "content_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Hash",
+          "type": "string"
+        },
+        "created_at": {
+          "format": "date-time",
+          "title": "Created At",
+          "type": "string"
+        },
+        "created_by_proposal_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Created By Proposal Id"
+        },
+        "created_cause": {
+          "enum": [
+            "import",
+            "confirm",
+            "manual_edit",
+            "proposal_preview",
+            "proposal_commit",
+            "undo"
+          ],
+          "title": "Created Cause",
+          "type": "string"
+        },
+        "design_id": {
+          "pattern": "^dsn_[a-z0-9][a-z0-9_-]{2,62}$",
+          "title": "Design Id",
+          "type": "string"
+        },
+        "label": {
+          "default": "",
+          "title": "Label",
+          "type": "string"
+        },
+        "mission_hash": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Hash of the locked mission. Null before a mission is set.",
+          "title": "Mission Hash"
+        },
+        "parent_revision_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Revision Id"
+        },
+        "revision_id": {
+          "pattern": "^rev_[0-9a-f]{16}$",
+          "title": "Revision Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "stage": {
+          "enum": [
+            "draft",
+            "staged_preview",
+            "committed"
+          ],
+          "title": "Stage",
+          "type": "string"
+        }
+      },
+      "required": [
+        "revision_id",
+        "design_id",
+        "stage",
+        "created_cause",
+        "content_hash"
+      ],
+      "title": "Revision",
+      "type": "object"
+    },
+    "RevisionManifest": {
+      "additionalProperties": false,
+      "description": "``revision_manifest.json`` - B -> all.\n\nThe coherent artifact set that became active atomically. A half-applied CAD/BOM/report\ncombination cannot be represented: either the manifest lists the full set or it does not exist.",
+      "properties": {
+        "affected_part_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Affected Part Ids",
+          "type": "array"
+        },
+        "artifacts": {
+          "items": {
+            "$ref": "#/$defs/Artifact"
+          },
+          "title": "Artifacts",
+          "type": "array"
+        },
+        "change_summary": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Change Summary",
+          "type": "array"
+        },
+        "is_active": {
+          "default": false,
+          "title": "Is Active",
+          "type": "boolean"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "revision"
+      ],
+      "title": "RevisionManifest",
+      "type": "object"
+    },
+    "RoundTripCheck": {
+      "additionalProperties": false,
+      "description": "The export/reimport result. A download is refused without a successful round trip.",
+      "properties": {
+        "bounds_match": {
+          "default": false,
+          "title": "Bounds Match",
+          "type": "boolean"
+        },
+        "notes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Notes",
+          "type": "array"
+        },
+        "performed": {
+          "title": "Performed",
+          "type": "boolean"
+        },
+        "placements_match": {
+          "default": false,
+          "title": "Placements Match",
+          "type": "boolean"
+        },
+        "reimport_worker_fresh": {
+          "default": false,
+          "description": "Reimport ran in a fresh worker, not the exporting process.",
+          "title": "Reimport Worker Fresh",
+          "type": "boolean"
+        },
+        "sidecar_identity_coverage": {
+          "default": 0.0,
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Sidecar Identity Coverage",
+          "type": "number"
+        },
+        "solids_match": {
+          "default": false,
+          "title": "Solids Match",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "performed"
+      ],
+      "title": "RoundTripCheck",
+      "type": "object"
+    },
+    "SensitivityInterval": {
+      "additionalProperties": false,
+      "description": "A low/nominal/high span over declared uncertain inputs.\n\nSection 8 is explicit that this is an \"assumption range\", not a calibrated confidence interval.\nThe field name and the required label keep that distinction visible downstream.",
+      "properties": {
+        "high": {
+          "title": "High",
+          "type": "number"
+        },
+        "label": {
+          "const": "assumption range",
+          "default": "assumption range",
+          "title": "Label",
+          "type": "string"
+        },
+        "low": {
+          "title": "Low",
+          "type": "number"
+        },
+        "metric": {
+          "title": "Metric",
+          "type": "string"
+        },
+        "nominal": {
+          "title": "Nominal",
+          "type": "number"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        },
+        "varied_inputs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Varied Inputs",
+          "type": "array"
+        }
+      },
+      "required": [
+        "metric",
+        "unit",
+        "low",
+        "nominal",
+        "high",
+        "varied_inputs"
+      ],
+      "title": "SensitivityInterval",
+      "type": "object"
+    },
+    "SetWingTipExtension": {
+      "additionalProperties": false,
+      "description": "Stretch a parameterised symmetric tip. Regenerates the paired surface too.",
+      "properties": {
+        "extension_m": {
+          "title": "Extension M",
+          "type": "number"
+        },
+        "operation": {
+          "const": "set_wing_tip_extension",
+          "default": "set_wing_tip_extension",
+          "title": "Operation",
+          "type": "string"
+        },
+        "paired_part_id": {
+          "description": "The mirrored occurrence regenerated in the same transaction.",
+          "pattern": "^prt_[a-z0-9][a-z0-9_.-]{1,62}$",
+          "title": "Paired Part Id",
+          "type": "string"
+        },
+        "target_part_id": {
+          "pattern": "^prt_[a-z0-9][a-z0-9_.-]{1,62}$",
+          "title": "Target Part Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "target_part_id",
+        "extension_m",
+        "paired_part_id"
+      ],
+      "title": "SetWingTipExtension",
+      "type": "object"
+    },
+    "SimulationRun": {
+      "additionalProperties": false,
+      "description": "``simulation_run.json`` - C -> UI. Never mutates the design it analysed.",
+      "properties": {
+        "assumptions": {
+          "description": "Section 8: straight-and-level v1 omits maneuver loads and turn drag; animated turns are not a tested turning-flight envelope.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Assumptions",
+          "type": "array"
+        },
+        "completed_route": {
+          "description": "False marks an energy-limited run. The route is not silently shortened.",
+          "title": "Completed Route",
+          "type": "boolean"
+        },
+        "elapsed_s": {
+          "default": 0.0,
+          "minimum": 0.0,
+          "title": "Elapsed S",
+          "type": "number"
+        },
+        "fidelity": {
+          "enum": [
+            "analytic",
+            "vspaero_informed",
+            "replay"
+          ],
+          "title": "Fidelity",
+          "type": "string"
+        },
+        "flight_model_tier": {
+          "default": "reduced_order_mission",
+          "enum": [
+            "reduced_order_mission",
+            "dynamics_engine"
+          ],
+          "title": "Flight Model Tier",
+          "type": "string"
+        },
+        "log_artifact_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Log Artifact Ids",
+          "type": "array"
+        },
+        "mission_hash": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Mission Hash",
+          "type": "string"
+        },
+        "recorded_fallback": {
+          "default": false,
+          "description": "A visibly labelled 'Recorded run', not a fresh computation.",
+          "title": "Recorded Fallback",
+          "type": "boolean"
+        },
+        "revision_id": {
+          "pattern": "^rev_[0-9a-f]{16}$",
+          "title": "Revision Id",
+          "type": "string"
+        },
+        "run_id": {
+          "pattern": "^run_[a-z0-9][a-z0-9_.-]{1,62}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "samples": {
+          "items": {
+            "$ref": "#/$defs/TelemetrySample"
+          },
+          "title": "Samples",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0",
+          "default": "1.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "solver": {
+          "$ref": "#/$defs/SolverManifest"
+        },
+        "telemetry_artifact_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Telemetry Artifact Id"
+        },
+        "termination_reason": {
+          "enum": [
+            "route_complete",
+            "energy_limited",
+            "cancelled",
+            "error"
+          ],
+          "title": "Termination Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "run_id",
+        "revision_id",
+        "mission_hash",
+        "fidelity",
+        "solver",
+        "completed_route",
+        "termination_reason"
+      ],
+      "title": "SimulationRun",
+      "type": "object"
+    },
+    "SolverManifest": {
+      "additionalProperties": false,
+      "description": "Exactly which binary produced a result. Required before a solver label may be shown.",
+      "properties": {
+        "binary_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Binary Sha256"
+        },
+        "geometry_hash": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Hash of the geometry actually handed to the solver.",
+          "title": "Geometry Hash"
+        },
+        "inputs_discovered_at_runtime": {
+          "default": false,
+          "description": "Analysis inputs were enumerated from the installed build, not hardcoded.",
+          "title": "Inputs Discovered At Runtime",
+          "type": "boolean"
+        },
+        "raw_output_artifact_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Raw Output Artifact Ids",
+          "type": "array"
+        },
+        "solver": {
+          "enum": [
+            "vspaero",
+            "none"
+          ],
+          "title": "Solver",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "solver",
+        "version"
+      ],
+      "title": "SolverManifest",
+      "type": "object"
+    },
+    "SourceRef": {
+      "additionalProperties": false,
+      "description": "Where an occurrence's geometry came from, preserved so identity survives re-import.",
+      "properties": {
+        "body_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Body or occurrence path inside the source assembly.",
+          "title": "Body Path"
+        },
+        "original_filename": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Original Filename"
+        },
+        "source_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Sha256"
+        },
+        "variant_decision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Which alternative was selected, when the source offered several.",
+          "title": "Variant Decision"
+        }
+      },
+      "title": "SourceRef",
+      "type": "object"
+    },
+    "TelemetrySample": {
+      "additionalProperties": false,
+      "description": "One state along the reduced-order mission model.",
+      "properties": {
+        "altitude_m": {
+          "title": "Altitude M",
+          "type": "number"
+        },
+        "bank_rad": {
+          "default": 0.0,
+          "title": "Bank Rad",
+          "type": "number"
+        },
+        "distance_km": {
+          "minimum": 0,
+          "title": "Distance Km",
+          "type": "number"
+        },
+        "position_frd_m": {
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Position Frd M",
+          "type": "array"
+        },
+        "power_w": {
+          "minimum": 0,
+          "title": "Power W",
+          "type": "number"
+        },
+        "remaining_energy_wh": {
+          "description": "Energy usable after the mission reserve has already been withheld. The run terminates at zero; the display is never clamped while flight continues.",
+          "minimum": 0,
+          "title": "Remaining Energy Wh",
+          "type": "number"
+        },
+        "speed_mps": {
+          "minimum": 0,
+          "title": "Speed Mps",
+          "type": "number"
+        },
+        "t_s": {
+          "minimum": 0,
+          "title": "T S",
+          "type": "number"
+        }
+      },
+      "required": [
+        "t_s",
+        "distance_km",
+        "speed_mps",
+        "altitude_m",
+        "power_w",
+        "remaining_energy_wh",
+        "position_frd_m"
+      ],
+      "title": "TelemetrySample",
+      "type": "object"
+    },
+    "Tradeoff": {
+      "additionalProperties": false,
+      "description": "One metric that moves, in either direction.\n\nSection 10: a proposal that increases spar margin but increases mass must show both. A\nrecommendation with only improving tradeoffs and a nonzero mass change is rejected below.",
+      "properties": {
+        "baseline": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Baseline"
+        },
+        "candidate": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Candidate"
+        },
+        "direction": {
+          "enum": [
+            "improves",
+            "worsens",
+            "unchanged",
+            "unknown"
+          ],
+          "title": "Direction",
+          "type": "string"
+        },
+        "metric": {
+          "title": "Metric",
+          "type": "string"
+        },
+        "unit": {
+          "title": "Unit",
+          "type": "string"
+        }
+      },
+      "required": [
+        "metric",
+        "unit",
+        "direction"
+      ],
+      "title": "Tradeoff",
+      "type": "object"
+    },
+    "Transform": {
+      "additionalProperties": false,
+      "description": "``T_parent_from_local``: row-major 4x4 homogeneous, applied to column vectors.\n\nTranslation in metres. A rigid rotation has determinant +1; reflections are rejected here so\nthat a mirror cannot be smuggled in as a placement.",
+      "properties": {
+        "matrix": {
+          "items": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "title": "Matrix",
+          "type": "array"
+        }
+      },
+      "title": "Transform",
+      "type": "object"
+    },
+    "TranslateComponent": {
+      "additionalProperties": false,
+      "description": "Move an unlocked movable component along its declared travel corridor.\n\nPreconditions (section 6): the corridor, harness allowance, and mount positions are known.\nCAD effect: change the instance placement only. Geometry shapes stay identical, which the\nexport acceptance check verifies by comparing unchanged-part signatures.",
+      "properties": {
+        "axis": {
+          "enum": [
+            "x",
+            "y",
+            "z"
+          ],
+          "title": "Axis",
+          "type": "string"
+        },
+        "delta_m": {
+          "title": "Delta M",
+          "type": "number"
+        },
+        "operation": {
+          "const": "translate_component",
+          "default": "translate_component",
+          "title": "Operation",
+          "type": "string"
+        },
+        "target_part_id": {
+          "pattern": "^prt_[a-z0-9][a-z0-9_.-]{1,62}$",
+          "title": "Target Part Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "target_part_id",
+        "axis",
+        "delta_m"
+      ],
+      "title": "TranslateComponent",
+      "type": "object"
+    },
+    "TravelCorridor": {
+      "additionalProperties": false,
+      "description": "The modelled envelope inside which a movable component may be repositioned.\n\nArchitecture section 6 makes this a precondition of ``translate_component``: the corridor,\nharness allowance, and mount positions must be known before a move is proposable.",
+      "properties": {
+        "axis": {
+          "enum": [
+            "x",
+            "y",
+            "z"
+          ],
+          "title": "Axis",
+          "type": "string"
+        },
+        "harness_allowance_m": {
+          "$ref": "#/$defs/Claim"
+        },
+        "max_m": {
+          "title": "Max M",
+          "type": "number"
+        },
+        "min_m": {
+          "title": "Min M",
+          "type": "number"
+        },
+        "mount_positions_m": {
+          "items": {
+            "type": "number"
+          },
+          "title": "Mount Positions M",
+          "type": "array"
+        }
+      },
+      "required": [
+        "axis",
+        "min_m",
+        "max_m",
+        "harness_allowance_m"
+      ],
+      "title": "TravelCorridor",
+      "type": "object"
+    },
+    "VTailPanel": {
+      "additionalProperties": false,
+      "description": "A canted tail panel. This airframe has no conventional horizontal-plus-vertical tail.",
+      "properties": {
+        "area_m2": {
+          "exclusiveMinimum": 0,
+          "title": "Area M2",
+          "type": "number"
+        },
+        "arm_m": {
+          "description": "Longitudinal distance from the wing quarter-chord to the panel, aft-positive.",
+          "title": "Arm M",
+          "type": "number"
+        },
+        "cant_rad": {
+          "title": "Cant Rad",
+          "type": "number"
+        },
+        "mean_chord_m": {
+          "exclusiveMinimum": 0,
+          "title": "Mean Chord M",
+          "type": "number"
+        },
+        "part_id": {
+          "title": "Part Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "part_id",
+        "area_m2",
+        "cant_rad",
+        "arm_m",
+        "mean_chord_m"
+      ],
+      "title": "VTailPanel",
+      "type": "object"
+    },
+    "WingStation": {
+      "additionalProperties": false,
+      "description": "One spanwise station of the editable parameterisation (architecture section 6).",
+      "properties": {
+        "chord_m": {
+          "exclusiveMinimum": 0,
+          "title": "Chord M",
+          "type": "number"
+        },
+        "leading_edge_x_m": {
+          "title": "Leading Edge X M",
+          "type": "number"
+        },
+        "span_y_m": {
+          "title": "Span Y M",
+          "type": "number"
+        },
+        "twist_rad": {
+          "default": 0.0,
+          "title": "Twist Rad",
+          "type": "number"
+        },
+        "z_m": {
+          "default": 0.0,
+          "title": "Z M",
+          "type": "number"
+        }
+      },
+      "required": [
+        "span_y_m",
+        "leading_edge_x_m",
+        "chord_m"
+      ],
+      "title": "WingStation",
+      "type": "object"
+    }
+  },
+  "$id": "https://dronebench.local/schema/1.0/dronebench.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Generated from packages/contracts. Do not hand-edit; run python -m dronebench_contracts.schema instead.",
+  "title": "DroneBench contracts",
+  "x-contract-version": "1.0"
+}
