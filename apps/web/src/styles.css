@@ -1,0 +1,29 @@
+:root {
+  --bg: #10140f;
+  --panel: #181d16;
+  --ink: #e7f0d8;
+  --muted: #8a9378;
+  --phosphor: #c6f54a;
+  --caution: #ff7a18;
+  --line: #2a3124;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+button,
+input[type="range"] {
+  font-family: inherit;
+}
