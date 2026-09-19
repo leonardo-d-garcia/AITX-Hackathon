@@ -470,42 +470,92 @@ def compute_tail(geometry: dict) -> dict[str, Any]:
     return info
 
 
-def extract_solver_cl_cdi(solver_result: dict, cl_trim: float | None) -> tuple[float | None, float | None]:
-    cl = as_float(solver_result.get("CL"))
-    cdi = as_float(first_present(solver_result, "CDi", "CD_induced", "CDi_CL"))
-    if cl is not None and cdi is not None:
-        return cl, cdi
+def _row_alpha_rad(row: dict) -> float | None:
+    rad = as_float(row.get("alpha_rad"))
+    if rad is not None:
+        return rad
+    deg = as_float(row.get("alpha_deg"))
+    if deg is not None:
+        return math.radians(deg)
+    return as_float(first_present(row, "alpha", "a"))
+
+
+def _interp_at(xs: list[float], ys: list[float], x: float) -> float:
+    if x <= xs[0]:
+        return ys[0]
+    if x >= xs[-1]:
+        return ys[-1]
+    for i in range(1, len(xs)):
+        if xs[i] >= x:
+            span = xs[i] - xs[i - 1]
+            if span == 0:
+                return ys[i]
+            t = (x - xs[i - 1]) / span
+            return ys[i - 1] + t * (ys[i] - ys[i - 1])
+    return ys[-1]
+
+
+def _solver_polar_points(solver_result: dict) -> list[tuple[float, float, float]]:
+    """(alpha_rad, CL, CDi) from a C4 polar or parallel CL/CDi arrays."""
+    pts: list[tuple[float, float, float]] = []
     polar = solver_result.get("polar")
     if not isinstance(polar, list) or not polar:
         polar = solver_result.get("CL_alpha")
-    if isinstance(polar, list) and polar:
-        pts: list[tuple[float, float, float]] = []
+    if isinstance(polar, list):
         for row in polar:
             if not isinstance(row, dict):
                 continue
-            alpha = as_float(first_present(row, "alpha_rad", "alpha", "a"))
             pcl = as_float(row.get("CL"))
             pcdi = as_float(first_present(row, "CDi", "CD_induced"))
             if pcl is None or pcdi is None:
                 continue
+            alpha = _row_alpha_rad(row)
             pts.append((0.0 if alpha is None else alpha, pcl, pcdi))
-        if not pts:
-            return None, None
+    if pts:
+        return pts
+    cls = solver_result.get("CL")
+    cdis = first_present(solver_result, "CDi", "CD_induced")
+    if not isinstance(cls, (list, tuple)) or not isinstance(cdis, (list, tuple)):
+        return []
+    if len(cls) == 0 or len(cls) != len(cdis):
+        return []
+    alphas_rad = solver_result.get("alphas_rad")
+    if not isinstance(alphas_rad, list):
+        alphas_deg = solver_result.get("alphas_deg")
+        alphas_rad = []
+        if isinstance(alphas_deg, list):
+            for raw in alphas_deg:
+                deg = as_float(raw)
+                alphas_rad.append(math.radians(deg) if deg is not None else None)
+    for i, (cl_raw, cdi_raw) in enumerate(zip(cls, cdis, strict=True)):
+        pcl = as_float(cl_raw)
+        pcdi = as_float(cdi_raw)
+        if pcl is None or pcdi is None:
+            continue
+        alpha = as_float(alphas_rad[i]) if i < len(alphas_rad) else None
+        pts.append((0.0 if alpha is None else alpha, pcl, pcdi))
+    return pts
+
+
+def extract_solver_cl_cdi(solver_result: dict, cl_trim: float | None) -> tuple[float | None, float | None]:
+    """Lift and induced drag from a solver result.
+
+    Polar path: CDi is linearly interpolated vs CL at trim CL (W/qS). Level-flight
+    CL stays the trim value; analytic k*CL^2 is not used. Scalar CL/CDi are a
+    fallback when no polar is present.
+    """
+    pts = _solver_polar_points(solver_result)
+    if pts:
         if cl_trim is not None:
-            # Interpolate induced drag at the trim CL; lift metric uses solver polar CL nearest trim.
-            pts_cl = sorted(pts, key=lambda p: p[1])
-            cls = [p[1] for p in pts_cl]
-            cdis = [p[2] for p in pts_cl]
-            if cl_trim <= cls[0]:
-                return cl_trim, cdis[0]
-            if cl_trim >= cls[-1]:
-                return cl_trim, cdis[-1]
-            for i in range(1, len(cls)):
-                if cls[i] >= cl_trim:
-                    t = (cl_trim - cls[i - 1]) / (cls[i] - cls[i - 1]) if cls[i] != cls[i - 1] else 0.0
-                    return cl_trim, cdis[i - 1] + t * (cdis[i] - cdis[i - 1])
+            ordered = sorted(pts, key=lambda p: p[1])
+            cdi = _interp_at([p[1] for p in ordered], [p[2] for p in ordered], cl_trim)
+            return cl_trim, cdi
         nearest = min(pts, key=lambda p: abs(p[0]))
         return nearest[1], nearest[2]
+    cl = as_float(solver_result.get("CL"))
+    cdi = as_float(first_present(solver_result, "CDi", "CD_induced", "CDi_CL"))
+    if cl is not None and cdi is not None:
+        return cl, cdi
     if cdi is not None:
         return cl, cdi
     return None, None
@@ -607,7 +657,10 @@ def aero_metrics(
     if cl_use is None:
         out["CL"] = unknown_claim(missing_fields=unique(cl_miss), source=src)
     else:
-        out["CL"] = make_claim(cl_use, "known", source=src)
+        cl_notes = None
+        if solver_cl is not None:
+            cl_notes = "solver-informed CL; CDi is solver CDi, not k*CL^2"
+        out["CL"] = make_claim(cl_use, "known", source=src, notes=cl_notes)
 
     cdi = None
     if solver_cdi is not None:
@@ -616,7 +669,7 @@ def aero_metrics(
             cdi,
             "known",
             source="vspaero",
-            notes="induced drag replaced from solver; not added to an analytic k*CL^2 term",
+            notes="induced drag replaced from solver CDi; analytic k*CL^2 is not added",
         )
     elif k is not None and cl_use is not None:
         cdi = k * cl_use * cl_use

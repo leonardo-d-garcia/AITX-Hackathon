@@ -17,7 +17,7 @@ def _load_json(path: Path) -> dict:
 
 
 def cmd_evaluate(args: argparse.Namespace) -> int:
-    from evaluate import evaluate_revision  # type: ignore
+    from evaluate import evaluate_revision, load_solver_result  # type: ignore
 
     geometry = _load_json(Path(args.geometry))
     parts_raw = json.loads(Path(args.parts).read_text(encoding="utf-8"))
@@ -29,10 +29,14 @@ def cmd_evaluate(args: argparse.Namespace) -> int:
         raise SystemExit(f"{args.parts} must be a list or object")
     mission = _load_json(Path(args.mission)) if args.mission else geometry.get("mission")
     design_manifest = _load_json(Path(args.design_manifest)) if args.design_manifest else None
+    solver_result = None
+    if args.solver:
+        solver_result = load_solver_result(args.solver, geometry=geometry)
     result = evaluate_revision(
         geometry,
         parts,
         mission=mission,
+        solver_result=solver_result,
         design_manifest=design_manifest,
     )
     text = json.dumps(result, indent=2)
@@ -81,6 +85,7 @@ def main(argv: list[str] | None = None) -> int:
     p_eval.add_argument("--parts", required=True)
     p_eval.add_argument("--mission")
     p_eval.add_argument("--design-manifest")
+    p_eval.add_argument("--solver", help="VSPAERO sweep JSON (C4 summary)")
     p_eval.add_argument("--out")
     p_eval.set_defaults(func=cmd_evaluate)
 

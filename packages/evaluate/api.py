@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 import math
+from pathlib import Path
 from typing import Any
 
 from contracts import validate_instance
@@ -40,6 +42,23 @@ from .physics import (
 _CONTRACT_STATUSES = {"known", "estimated", "unknown", "conflicted", "not_applicable"}
 _CONTRACT_SOURCE_KINDS = {"cad", "bom", "manual", "catalog", "computed", "inferred", "assumed"}
 _NONE_HASH = "none"
+
+
+def load_solver_result(path: str | Path, geometry: dict | None = None) -> dict:
+    """Load a C4 VSPAERO sweep JSON for evaluate_revision(solver_result=...).
+
+    If `geometry` is given, geometry_hash is taken from evaluate.hashing.geometry_hash
+    of that dict so a sweep binds to the fixture it was generated from.
+    """
+    p = Path(path)
+    with p.open(encoding="utf-8") as f:
+        data = json.load(f)
+    if not isinstance(data, dict):
+        raise TypeError(f"{p} is not a JSON object")
+    out = dict(data)
+    if geometry is not None:
+        out["geometry_hash"] = geometry_hash(geometry)
+    return out
 
 
 def evaluate_revision(
@@ -136,7 +155,19 @@ def evaluate_revision(
                     or solver_result.get("versions")
                     or {}
                 )
-                assumptions.append("Lift and induced drag replaced from VSPAERO; profile/fuselage/interference kept analytic.")
+                assumptions.append(
+                    "Lift and induced drag replaced from VSPAERO; profile/fuselage/interference kept analytic."
+                )
+                assumptions.append(
+                    "Static margin stays unknown: solver_result has no validated VSPAERO derivatives."
+                )
+                for i, text in enumerate(assumptions):
+                    if text.startswith("CD = CD_profile"):
+                        assumptions[i] = (
+                            "CD = CD_profile + CD_fuselage + CD_interference + CDi(VSPAERO polar at trim CL); "
+                            "analytic k*CL^2 is not added."
+                        )
+                        break
 
     fidelity = "vspaero" if solver_used else "analytic"
     aero = aero_metrics(
