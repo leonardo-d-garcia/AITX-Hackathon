@@ -21,7 +21,12 @@ def cmd_evaluate(args: argparse.Namespace) -> int:
 
     geometry = _load_json(Path(args.geometry))
     parts_raw = json.loads(Path(args.parts).read_text(encoding="utf-8"))
-    parts = parts_raw if isinstance(parts_raw, list) else parts_raw.get("parts", parts_raw)
+    if isinstance(parts_raw, list):
+        parts = parts_raw
+    elif isinstance(parts_raw, dict):
+        parts = parts_raw.get("occurrences", parts_raw.get("parts", parts_raw))
+    else:
+        raise SystemExit(f"{args.parts} must be a list or object")
     mission = _load_json(Path(args.mission)) if args.mission else geometry.get("mission")
     result = evaluate_revision(geometry, parts, mission=mission)
     text = json.dumps(result, indent=2)
@@ -37,7 +42,12 @@ def cmd_simulate(args: argparse.Namespace) -> int:
 
     geometry = _load_json(Path(args.geometry))
     parts_raw = json.loads(Path(args.parts).read_text(encoding="utf-8"))
-    parts = parts_raw if isinstance(parts_raw, list) else parts_raw.get("parts", parts_raw)
+    if isinstance(parts_raw, list):
+        parts = parts_raw
+    elif isinstance(parts_raw, dict):
+        parts = parts_raw.get("occurrences", parts_raw.get("parts", parts_raw))
+    else:
+        raise SystemExit(f"{args.parts} must be a list or object")
     run = simulate_mission(geometry, parts)
     out = Path(args.out) if args.out else Path("simulation_run.json")
     write_simulation_run(out, run)

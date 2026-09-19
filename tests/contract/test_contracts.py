@@ -28,6 +28,7 @@ FIXTURE_SCHEMA = {
     "parts_conflicted.json": "parts",
     "geometry_features.json": "geometry_features",
     "part_map.json": "part_map",
+    "simulation_run.json": "simulation_run",
 }
 
 

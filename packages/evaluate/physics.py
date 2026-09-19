@@ -26,7 +26,13 @@ def dig(obj: Any, *keys: str, default: Any = None) -> Any:
     return cur
 
 
+def is_claim(value: Any) -> bool:
+    return isinstance(value, dict) and "value" in value and "status" in value
+
+
 def as_float(value: Any) -> float | None:
+    if is_claim(value):
+        return as_float(value.get("value"))
     if value is None or isinstance(value, bool):
         return None
     try:
@@ -36,6 +42,14 @@ def as_float(value: Any) -> float | None:
     if not math.isfinite(out):
         return None
     return out
+
+
+def explicit_null(value: Any) -> bool:
+    if value is None:
+        return True
+    if is_claim(value):
+        return value.get("value") is None
+    return False
 
 
 def finite(value: Any) -> bool:
@@ -66,16 +80,20 @@ def part_specs(part: dict) -> dict:
     return specs if isinstance(specs, dict) else {}
 
 
+def part_id_of(part: dict) -> str:
+    return str(part.get("id") or part.get("part_id") or part.get("type") or "part")
+
+
 def part_mass_kg(part: dict) -> tuple[float | None, str | None, bool]:
     """Return (mass, field_path, explicit_null)."""
-    pid = str(part.get("id") or part.get("type") or "part")
+    pid = part_id_of(part)
     specs = part_specs(part)
     if "mass_kg" in part:
         val = as_float(part.get("mass_kg"))
-        return val, f"parts.{pid}.mass_kg", part.get("mass_kg") is None
+        return val, f"parts.{pid}.mass_kg", explicit_null(part.get("mass_kg"))
     if "mass" in part:
         val = as_float(part.get("mass"))
-        return val, f"parts.{pid}.mass", part.get("mass") is None
+        return val, f"parts.{pid}.mass", explicit_null(part.get("mass"))
     if "mass_g" in part:
         raw = part.get("mass_g")
         val = as_float(raw)
@@ -91,8 +109,14 @@ def part_mass_kg(part: dict) -> tuple[float | None, str | None, bool]:
 
 
 def part_xyz(part: dict) -> tuple[list[float] | None, list[str]]:
-    pid = str(part.get("id") or part.get("type") or "part")
+    pid = part_id_of(part)
     missing: list[str] = []
+    frd = part.get("position_frd_m")
+    if isinstance(frd, dict):
+        comps = [as_float(frd.get("x_m")), as_float(frd.get("y_m")), as_float(frd.get("z_m"))]
+        if any(c is None for c in comps):
+            return None, [f"parts.{pid}.position_frd_m"]
+        return [float(comps[0]), float(comps[1]), float(comps[2])], []
     for key in ("cg_m", "r_m", "position_m", "xyz"):
         if key in part:
             vec = part.get(key)
@@ -120,9 +144,9 @@ def reference_sbc(geometry: dict) -> tuple[float | None, float | None, float | N
     missing: list[str] = []
     if not isinstance(ref, dict):
         return None, None, None, ["geometry.reference"]
-    s = as_float(first_present(ref, "S", "area_m2", "area"))
-    b = as_float(first_present(ref, "b", "span_m", "span"))
-    c = as_float(first_present(ref, "c", "mac_m", "chord", "c_ref"))
+    s = as_float(first_present(ref, "S_m2", "S", "area_m2", "area"))
+    b = as_float(first_present(ref, "b_m", "b", "span_m", "span"))
+    c = as_float(first_present(ref, "c_m", "c", "mac_m", "chord", "c_ref"))
     if s is None:
         missing.append("geometry.reference.S")
     if b is None:
@@ -151,11 +175,15 @@ def mission_float(mission: dict | None, geometry: dict, *keys: str, path: str) -
 
 def aero_coeff(geometry: dict, name: str, *alts: str) -> tuple[float | None, list[str]]:
     aero = geometry.get("aero") if isinstance(geometry.get("aero"), dict) else {}
+    assumed = geometry.get("aero_assumptions") if isinstance(geometry.get("aero_assumptions"), dict) else {}
     keys = (name, *alts)
     for key in keys:
         if key in aero:
             val = as_float(aero.get(key))
             return val, ([] if val is not None else [f"geometry.aero.{key}"])
+        if key in assumed:
+            val = as_float(assumed.get(key))
+            return val, ([] if val is not None else [f"geometry.aero_assumptions.{key}"])
         if key in geometry:
             val = as_float(geometry.get(key))
             return val, ([] if val is not None else [f"geometry.{key}"])
@@ -243,7 +271,7 @@ def battery_energy_claims(parts: list[dict]) -> tuple[Claim, Claim, list[Claim]]
             continue
         if str(part.get("type") or "").lower() != "battery":
             continue
-        pid = str(part.get("id") or "battery")
+        pid = part_id_of(part)
         specs = part_specs(part)
         raw = first_present(specs, "energy_wh", "energy_Wh", "wh")
         if raw is None:
@@ -344,6 +372,7 @@ def compute_tail(geometry: dict) -> dict[str, Any]:
     layout, layout_missing = layout_of(geometry)
     vtail = geometry.get("vtail") if isinstance(geometry.get("vtail"), dict) else {}
     tail = geometry.get("tail") if isinstance(geometry.get("tail"), dict) else {}
+    src = vtail or tail
     htail = geometry.get("htail") if isinstance(geometry.get("htail"), dict) else {}
     vfin = geometry.get("vfin") if isinstance(geometry.get("vfin"), dict) else {}
     missing: list[str] = list(layout_missing)
@@ -364,18 +393,18 @@ def compute_tail(geometry: dict) -> dict[str, Any]:
         info["heuristic"] = "not_applicable"
         # Cant is the panel angle from HORIZONTAL (40 deg V-tail => each panel 40 deg
         # from horizontal). Then S_h_eff = 2*A*cos(cant), S_v_eff = 2*A*sin(cant).
-        if "cant_rad" not in vtail or vtail.get("cant_rad") is None:
+        if "cant_rad" not in src:
             missing.append("vtail.cant_rad")
             info["missing"] = unique(missing)
             return info
-        cant = as_float(vtail.get("cant_rad"))
+        cant = as_float(src.get("cant_rad"))
         if cant is None:
             missing.append("vtail.cant_rad")
             info["missing"] = unique(missing)
             return info
-        panel_area = as_float(first_present(vtail, "panel_area", "panel_area_m2", "area_each"))
-        if panel_area is None and isinstance(vtail.get("panels"), list):
-            areas = [as_float(p.get("area") if isinstance(p, dict) else p) for p in vtail["panels"]]
+        panel_area = as_float(first_present(src, "panel_area", "panel_area_m2", "area_each"))
+        if panel_area is None and isinstance(src.get("panels"), list):
+            areas = [as_float(p.get("area") if isinstance(p, dict) else p) for p in src["panels"]]
             if areas and all(a is not None for a in areas):
                 s_h = 0.0
                 s_v = 0.0
@@ -391,9 +420,9 @@ def compute_tail(geometry: dict) -> dict[str, Any]:
             else:
                 info["S_h_eff"] = 2.0 * panel_area * math.cos(cant)
                 info["S_v_eff"] = 2.0 * panel_area * math.sin(cant)
-        arm = as_float(first_present(vtail, "tail_arm", "arm", "l_t", "lv"))
+        arm = as_float(first_present(src, "tail_arm", "tail_arm_m", "arm", "l_t", "lv"))
         if arm is None:
-            arm = as_float(first_present(tail, "tail_arm", "arm", "l_h", "l_v"))
+            arm = as_float(first_present(tail, "tail_arm", "tail_arm_m", "arm", "l_h", "l_v"))
         if arm is None:
             missing.append("vtail.tail_arm")
         missing.extend(ref_missing)
@@ -411,15 +440,15 @@ def compute_tail(geometry: dict) -> dict[str, Any]:
     s_h = as_float(first_present(htail, "S", "area", "area_m2"))
     s_v = as_float(first_present(vfin, "S", "area", "area_m2"))
     if s_h is None:
-        s_h = as_float(first_present(tail, "S_h", "sh", "horizontal_area"))
+        s_h = as_float(first_present(tail, "S_h", "sh", "horizontal_area", "horizontal_area_m2"))
     if s_v is None:
-        s_v = as_float(first_present(tail, "S_v", "sv", "vertical_area"))
-    l_h = as_float(first_present(htail, "arm", "l_h", "tail_arm"))
-    l_v = as_float(first_present(vfin, "arm", "l_v", "tail_arm"))
+        s_v = as_float(first_present(tail, "S_v", "sv", "vertical_area", "vertical_area_m2"))
+    l_h = as_float(first_present(htail, "arm", "l_h", "tail_arm", "tail_arm_m"))
+    l_v = as_float(first_present(vfin, "arm", "l_v", "tail_arm", "tail_arm_m"))
     if l_h is None:
-        l_h = as_float(first_present(tail, "l_h", "arm", "tail_arm"))
+        l_h = as_float(first_present(tail, "l_h", "arm", "tail_arm", "tail_arm_m"))
     if l_v is None:
-        l_v = as_float(first_present(tail, "l_v", "arm", "tail_arm"))
+        l_v = as_float(first_present(tail, "l_v", "arm", "tail_arm", "tail_arm_m"))
     if s_h is None:
         missing.append("tail.S_h")
     if s_v is None:
@@ -496,7 +525,7 @@ def aero_metrics(
     s, b, c, ref_missing = reference_sbc(geometry)
     cd_profile, miss_p = aero_coeff(geometry, "CD_profile", "cd_profile", "CD0_profile")
     cd_fuse, miss_f = aero_coeff(geometry, "CD_fuselage", "cd_fuselage", "CD0_fuselage")
-    cd_int, miss_i = aero_coeff(geometry, "CD_interference", "cd_interference")
+    cd_int, miss_i = aero_coeff(geometry, "CD_interference", "cd_interference", "CD0_interference")
     e, miss_e = aero_coeff(geometry, "e", "oswald_e")
     out: dict[str, Claim] = {}
     src = "vspaero" if fidelity == "vspaero" else "analytic"

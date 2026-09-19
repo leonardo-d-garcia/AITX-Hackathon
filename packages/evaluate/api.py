@@ -41,9 +41,16 @@ def evaluate_revision(
     """
     if not isinstance(geometry, dict):
         raise TypeError("geometry must be a dict")
+    if isinstance(parts, dict):
+        if isinstance(parts.get("occurrences"), list):
+            parts = parts["occurrences"]
+        elif isinstance(parts.get("parts"), list):
+            parts = parts["parts"]
+        else:
+            raise TypeError("parts dict must contain occurrences or parts list")
     if not isinstance(parts, list):
         raise TypeError("parts must be a list")
-    mission_dict = mission if isinstance(mission, dict) else None
+    mission_dict = mission if isinstance(mission, dict) else geometry.get("mission")
     assumptions: list[str] = [
         "Straight and level, no wind.",
         "Reference S, b, c taken exactly once from geometry.reference.",
@@ -66,10 +73,17 @@ def evaluate_revision(
     cg_claim = center_of_gravity(annotated, mass_claim)
     energy_claim, _raw_energy, quarantined = battery_energy_claims(parts)
 
-    rho, miss_rho = mission_float(mission_dict, geometry, "rho", path="mission.rho")
+    rho, miss_rho = mission_float(mission_dict, geometry, "rho", "rho_kgm3", path="mission.rho")
     v_cruise, miss_v = mission_float(mission_dict, geometry, "cruise_mps", "V", "v_mps", path="mission.cruise_mps")
-    g_acc, miss_g = mission_float(mission_dict, geometry, "g", path="mission.g")
-    reserve, miss_res = mission_float(mission_dict, geometry, "reserve_fraction", "reserve", path="mission.reserve_fraction")
+    g_acc, miss_g = mission_float(mission_dict, geometry, "g", "g_mps2", path="mission.g")
+    reserve, miss_res = mission_float(
+        mission_dict,
+        geometry,
+        "reserve_fraction",
+        "reserve",
+        "reserve_wh_fraction",
+        path="mission.reserve_fraction",
+    )
     missing.extend(miss_rho + miss_v + miss_g + miss_res)
     e_usable = usable_energy(energy_claim, reserve, miss_res)
 
