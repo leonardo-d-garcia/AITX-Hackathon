@@ -1,6 +1,6 @@
 """C3 OpenVSP worker: live install state, no hardcoded analysis input names."""
 
-from openvsp_worker import analysis_inputs, available, status_dict, versions
+from openvsp_worker import analysis_inputs, available, generate_and_sweep, status_dict, versions
 
 
 def test_available_true_after_c3_install() -> None:
@@ -29,3 +29,7 @@ def test_status_dict_keys() -> None:
     assert status["installed"] is True
     assert status["host"] == "wsl-ubuntu"
     assert status["error"] in (None, "")
+
+
+def test_generate_and_sweep_is_exported() -> None:
+    assert callable(generate_and_sweep)

@@ -1,8 +1,8 @@
 """OpenVSP/VSPAERO worker. JSON in, artifacts out. Isolated native ABI.
 
 C3 gate: bindings live in WSL Ubuntu 26.04 Python 3.14 (cp314), not Windows 3.11.
-This adapter records install state and enumerates analysis inputs at runtime.
-It does not generate aircraft geometry (C4).
+C4: generate_and_sweep builds aircraft.vsp3 from geometry_features.json and runs
+VSPAEROSweep in that same WSL interpreter.
 """
 
 from __future__ import annotations
@@ -145,6 +145,239 @@ def analysis_inputs() -> dict[str, list[str]]:
 def run_shipped_example() -> dict[str, Any]:
     """Run tests/test.py shipped with this OpenVSP 3.51.3 build."""
     return _run_probe(run_example=True, refresh=True)
+
+
+def _run_script() -> Path:
+    return Path(__file__).resolve().parent / "_vsp_run.py"
+
+
+def _repo_root() -> Path:
+    return Path(__file__).resolve().parents[2]
+
+
+def _geometry_hash(geometry: dict[str, Any]) -> str:
+    from .geometry import geometry_hash as _hash
+
+    return _hash(geometry)
+
+
+def _candidate_run_commands(geometry_path: Path, out_dir: Path, geometry_hash: str) -> list[list[str]]:
+    script = _run_script()
+    cmds: list[list[str]] = []
+    wsl = shutil.which("wsl")
+    if wsl:
+        cmds.append(
+            [
+                wsl,
+                "-d",
+                WSL_DISTRO,
+                "--",
+                WSL_PYTHON,
+                _to_wsl_path(script),
+                "--geometry",
+                _to_wsl_path(geometry_path),
+                "--out",
+                _to_wsl_path(out_dir),
+                "--hash",
+                geometry_hash,
+            ]
+        )
+    if Path(WSL_PYTHON).exists():
+        cmds.append(
+            [
+                WSL_PYTHON,
+                str(script),
+                "--geometry",
+                str(geometry_path),
+                "--out",
+                str(out_dir),
+                "--hash",
+                geometry_hash,
+            ]
+        )
+    cmds.append(
+        [
+            sys.executable,
+            str(script),
+            "--geometry",
+            str(geometry_path),
+            "--out",
+            str(out_dir),
+            "--hash",
+            geometry_hash,
+        ]
+    )
+    return cmds
+
+
+def _parse_c4_stdout(stdout: str) -> dict[str, Any] | None:
+    text = stdout or ""
+    start = text.find("C4_RESULT_BEGIN")
+    end = text.find("C4_RESULT_END")
+    if start >= 0 and end > start:
+        blob = text[start + len("C4_RESULT_BEGIN") : end].strip()
+        try:
+            payload = json.loads(blob)
+        except json.JSONDecodeError:
+            return None
+        return payload if isinstance(payload, dict) else None
+    return None
+
+
+def _fail_result(*, geometry_hash: str | None, error: str) -> dict[str, Any]:
+    return {
+        "geometry_hash": geometry_hash,
+        "alphas_deg": [],
+        "CL": [],
+        "CDi": [],
+        "Sref": None,
+        "bref": None,
+        "cref": None,
+        "mesh_delta": {},
+        "raw": {},
+        "versions": {},
+        "error": error,
+        "validation": {
+            "all_passed": False,
+            "checks": [{"name": "generate", "pass": False, "numbers": error.splitlines()[0]}],
+        },
+    }
+
+
+def _write_docs(result: dict[str, Any]) -> None:
+    from .report import format_validation_markdown
+
+    docs = _repo_root() / "docs"
+    docs.mkdir(parents=True, exist_ok=True)
+    (docs / "openvsp-c4-validation.md").write_text(
+        format_validation_markdown(result), encoding="utf-8"
+    )
+    summary = {
+        "geometry_hash": result.get("geometry_hash"),
+        "alphas_deg": result.get("alphas_deg"),
+        "alphas_deg_result": result.get("alphas_deg_result"),
+        "CL": result.get("CL"),
+        "CDi": result.get("CDi"),
+        "Sref": result.get("Sref"),
+        "bref": result.get("bref"),
+        "cref": result.get("cref"),
+        "Vinf": result.get("Vinf"),
+        "Rho": result.get("Rho"),
+        "altitude_m": result.get("altitude_m"),
+        "mesh_delta": {
+            k: (result.get("mesh_delta") or {}).get(k)
+            for k in (
+                "alpha_deg",
+                "tess_u_baseline",
+                "tess_u_refined",
+                "tess_w_baseline",
+                "tess_w_refined",
+                "CL_baseline",
+                "CL_refined",
+                "dCL",
+                "CDi_baseline",
+                "CDi_refined",
+                "dCDi",
+                "note",
+                "error",
+            )
+        },
+        "polar": [
+            {k: v for k, v in row.items() if k != "result_id"}
+            for row in (result.get("polar") or [])
+            if isinstance(row, dict)
+        ],
+        "versions": result.get("versions") or result.get("solver_versions"),
+        "alpha_unit": result.get("alpha_unit"),
+        "validation": result.get("validation"),
+        "error": result.get("error"),
+        "raw": result.get("raw"),
+        "notes": result.get("notes"),
+    }
+    text = json.dumps(summary, indent=2) + "\n"
+    (docs / "openvsp-c4-sweep-summary.json").write_text(text, encoding="utf-8")
+    (Path(__file__).resolve().parent / "c4_sweep_summary.json").write_text(text, encoding="utf-8")
+
+
+def generate_and_sweep(
+    geometry_path: str | Path, out_dir: str | Path, *, write_docs: bool = True
+) -> dict[str, Any]:
+    """Build aircraft.vsp3 from geometry_features.json and run the C4 alpha sweep.
+
+    Returns a dict for evaluate_revision(solver_result=...): geometry_hash, alphas_deg,
+    CL, CDi, Sref, bref, cref, mesh_delta, raw paths, versions.
+    """
+    geometry_path = Path(geometry_path)
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    try:
+        geometry = json.loads(geometry_path.read_text(encoding="utf-8"))
+        if not isinstance(geometry, dict):
+            raise TypeError(f"{geometry_path} is not a JSON object")
+        ghash = _geometry_hash(geometry)
+        from .geometry import load_spec
+
+        load_spec(geometry)
+    except Exception as exc:  # noqa: BLE001
+        result = _fail_result(geometry_hash=None, error=f"{type(exc).__name__}: {exc}")
+        if "ghash" in locals():
+            result["geometry_hash"] = ghash
+        if write_docs:
+            _write_docs(result)
+        return result
+
+    errors: list[str] = []
+    result_file = out_dir / "sweep_result.json"
+    for cmd in _candidate_run_commands(geometry_path, out_dir, ghash):
+        if result_file.is_file():
+            result_file.unlink()
+        try:
+            proc = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=1800,
+                check=False,
+                env={**os.environ, "PYTHONIOENCODING": "utf-8"},
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            errors.append(f"{cmd!r}: {exc!r}")
+            continue
+        payload = None
+        if result_file.is_file():
+            try:
+                loaded = json.loads(result_file.read_text(encoding="utf-8"))
+                if isinstance(loaded, dict):
+                    payload = loaded
+            except json.JSONDecodeError:
+                payload = None
+        if payload is None:
+            payload = _parse_c4_stdout(proc.stdout or "")
+        if payload is None:
+            errors.append(
+                f"{cmd!r} exit {proc.returncode} stdout={((proc.stdout or '')[-800:])!r} "
+                f"stderr={((proc.stderr or '')[-800:])!r}"
+            )
+            continue
+        err = str(payload.get("error") or "")
+        import_miss = "No module named 'openvsp'" in err or "No module named openvsp" in err
+        if import_miss and not payload.get("CL"):
+            errors.append(err.splitlines()[0] if err else "openvsp import failed")
+            continue
+        payload.setdefault("geometry_hash", ghash)
+        payload.setdefault("versions", payload.get("solver_versions") or {})
+        if write_docs:
+            _write_docs(payload)
+        return payload
+
+    result = _fail_result(
+        geometry_hash=ghash,
+        error=" | ".join(errors) if errors else "generate_and_sweep produced no result",
+    )
+    if write_docs:
+        _write_docs(result)
+    return result
 
 
 def status_dict() -> dict[str, Any]:
