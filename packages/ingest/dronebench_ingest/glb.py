@@ -41,7 +41,16 @@ def shade(mesh: trimesh.Trimesh) -> trimesh.Trimesh:
     angle exceeds the crease angle and averaged only within a smooth patch.
     """
     shaded = trimesh.graph.smooth_shade(mesh, angle=CREASE_ANGLE_RAD)
-    shaded.vertex_normals  # noqa: B018 - force the accessor so the exporter finds them
+    normals = np.array(shaded.vertex_normals, dtype=float)
+    lengths = np.linalg.norm(normals, axis=1)
+    bad = ~np.isfinite(lengths) | (lengths < 1e-8)
+    if bad.any():
+        # a vertex whose only faces are degenerate, or whose face normals cancel, averages to zero,
+        # and a zero normal renders as black as a missing one; point it away from the body instead
+        radial = shaded.vertices[bad] - shaded.centroid
+        scale = np.linalg.norm(radial, axis=1, keepdims=True)
+        normals[bad] = np.where(scale > 1e-12, radial / np.maximum(scale, 1e-12), [0.0, 0.0, 1.0])
+        shaded.vertex_normals = normals
     return shaded
 
 

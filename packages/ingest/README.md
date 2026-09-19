@@ -12,6 +12,14 @@ Stage a mesh archive, QA it, let a human confirm what it means, then measure it.
 .venv/bin/python -m dronebench_ingest.cli export-reference --design-dir /tmp/avenger --out ref.glb
 ```
 
+.venv/bin/python -m dronebench_ingest.cli viewer --design-dir /tmp/avenger \
+    [--reconstruction reconstruction.glb] [--out inspector.html]
+```
+
+`viewer` renders A4's standalone inspector (`packages/viewer`) from the revision's own artifacts;
+it does not reimplement one. Pass `--reconstruction` once A2 has a GLB to overlay.
+
+```
 JSON on stdout, logs on stderr. A non-zero exit means the command could not run; an *unconfirmed*
 design is a valid report and exits 0 with an `ErrorEnvelope`.
 
@@ -24,8 +32,14 @@ design is a valid report and exits 0 with an `ErrorEnvelope`.
     revision_manifest.json                   sha256 of each artifact
 ```
 
-The revision id is derived from the source hashes plus the confirmed choices, so re-confirming the
-same thing returns the same revision instead of mutating it.
+The GLB carries an explicit NORMAL attribute per primitive — glTF never computes normals, and a
+primitive without them renders black in three.js. Vertices are split at edges sharper than 30 deg
+so a printed part's hard edges are not smeared. That costs size: the Avenger's reference GLB is
+about 19 MB for 580k triangles, and A4's self-contained inspector that embeds it is about 26 MB.
+
+The revision id is derived from the source hashes, the confirmed choices and `PIPELINE_VERSION`, so
+re-confirming the same thing returns the same revision instead of mutating it — and a change to what
+the artifacts contain produces a new revision rather than leaving stale bytes behind a familiar id.
 
 ## What this package refuses to do
 

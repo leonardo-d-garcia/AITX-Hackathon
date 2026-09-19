@@ -31,6 +31,9 @@ from .manifest import build_manifest, canonical_json
 from .staging import StagedArchive, load_staged, sha256_file
 
 MASS_MODELS = ("none", "shell_estimate")
+# Bumped whenever the artifacts a revision contains change shape (not just the inputs), so a
+# re-confirm produces a new revision instead of pointing at stale bytes. v2: GLB vertex normals.
+PIPELINE_VERSION = "a1.2"
 MANIFEST_NAME = "design_manifest.json"
 PARTS_NAME = "parts.json"
 FEATURES_NAME = "geometry_features.json"
@@ -98,6 +101,7 @@ def _content_hash(staged: StagedArchive, frame: FrameConfirmation, variants: lis
     for group in variants:
         h.update(f"{group.group_id}={group.selected}\0".encode())
     h.update(mass_model.encode())
+    h.update(PIPELINE_VERSION.encode())
     h.update(sha256_file(DEMO_BOM_PATH).encode())
     return h.hexdigest()
 

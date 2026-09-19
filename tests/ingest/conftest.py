@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 REPO = Path(__file__).resolve().parents[2]
-for pkg in ("packages/ingest", "packages/contracts"):
+for pkg in ("packages/ingest", "packages/contracts", "packages/viewer"):
     path = str(REPO / pkg)
     if path not in sys.path:
         sys.path.insert(0, path)

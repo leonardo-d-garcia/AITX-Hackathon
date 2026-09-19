@@ -12,14 +12,15 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from dronebench_contracts.models import ErrorEnvelope
+from dronebench_contracts.models import ErrorCode, ErrorEnvelope
 
 from .errors import IngestError
 from .features import geometry_features
 from .frame import propose_frame
 from .glb import GLB_NAME, export_reference_glb
 from .inspection import inspect_sources
-from .revisions import confirm, load_manifest, preview_manifest, revision_dir
+from .revisions import (FEATURES_NAME, MANIFEST_NAME, confirm, load_manifest, preview_manifest,
+                        revision_dir)
 from .staging import load_staged, stage_archive
 from .variants import detect_variants
 
@@ -122,6 +123,46 @@ def _cmd_export_reference(args) -> int:
     return 0
 
 
+def _render_inspector():
+    """A4's standalone inspector renderer, with a repo-layout fallback when it is not installed."""
+    try:
+        from dronebench_viewer.inspector import render_inspector
+    except ImportError:
+        sibling = Path(__file__).resolve().parents[3] / "viewer"
+        if sibling.is_dir() and str(sibling) not in sys.path:
+            sys.path.insert(0, str(sibling))
+        try:
+            from dronebench_viewer.inspector import render_inspector
+        except ImportError as exc:
+            raise IngestError(ErrorEnvelope(
+                code=ErrorCode.INPUT_REJECTED,
+                message=f"the viewer package (packages/viewer) is not importable: {exc}",
+                details={"fix": "install packages/viewer or run with it on PYTHONPATH"})) from exc
+    return render_inspector
+
+
+def _cmd_viewer(args) -> int:
+    """Render A4's standalone static inspector for a confirmed revision."""
+    render_inspector = _render_inspector()
+    directory = revision_dir(args.design_dir, args.revision)
+    out = Path(args.out) if args.out else directory / "inspector.html"
+    features = directory / FEATURES_NAME
+    path = render_inspector(
+        directory / MANIFEST_NAME,
+        {"reference": directory / GLB_NAME, "reconstruction": args.reconstruction},
+        out,
+        features_json=features if features.is_file() else None,
+        fit_report=args.fit_report,
+        edit_result=args.edit_result,
+    )
+    _log(f"wrote {path}")
+    _emit({"inspector_html": str(Path(path).resolve()),
+           "url": Path(path).resolve().as_uri(),
+           "revision_id": directory.name,
+           "label": "Original mesh reference — not a reconstruction, not Titan CAD"})
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="dronebench-a", description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -163,6 +204,15 @@ def build_parser() -> argparse.ArgumentParser:
     add_design_dir(p)
     p.add_argument("--out", default=None, type=Path)
     p.set_defaults(func=_cmd_export_reference)
+
+    p = sub.add_parser("viewer", help="render the standalone static inspector (packages/viewer)")
+    add_design_dir(p)
+    p.add_argument("--out", default=None, type=Path)
+    p.add_argument("--reconstruction", default=None, type=Path,
+                   help="reconstruction GLB to overlay (A2); omitted means reference only")
+    p.add_argument("--fit-report", default=None, type=Path)
+    p.add_argument("--edit-result", default=None, type=Path)
+    p.set_defaults(func=_cmd_viewer)
     return parser
 
 
