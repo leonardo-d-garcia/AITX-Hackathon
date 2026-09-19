@@ -1,0 +1,299 @@
+schema_version: 0.1.0
+design_id: titan_avenger
+revision_id: recon-baseline
+source_features_revision_id: fixture-0001
+frame: FRD
+surfaces:
+- surface_id: wing
+  stations:
+  - span_y_m: 0.07
+    leading_edge_x_m: -0.40664
+    chord_m: 0.21389
+    z_m: -0.01668
+    twist_rad: 0.0
+    thickness_ratio: 0.14826
+  - span_y_m: 0.15
+    leading_edge_x_m: -0.41084
+    chord_m: 0.2069
+    z_m: -0.01689
+    twist_rad: 0.0
+    thickness_ratio: 0.14459
+  - span_y_m: 0.25
+    leading_edge_x_m: -0.4161
+    chord_m: 0.19816
+    z_m: -0.01706
+    twist_rad: 0.0
+    thickness_ratio: 0.14073
+  - span_y_m: 0.4
+    leading_edge_x_m: -0.42398
+    chord_m: 0.18506
+    z_m: -0.01714
+    twist_rad: 0.0
+    thickness_ratio: 0.13603
+  - span_y_m: 0.55
+    leading_edge_x_m: -0.43186
+    chord_m: 0.17195
+    z_m: -0.01722
+    twist_rad: 0.0
+    thickness_ratio: 0.13064
+  - span_y_m: 0.7
+    leading_edge_x_m: -0.43973
+    chord_m: 0.15885
+    z_m: -0.0173
+    twist_rad: 0.0
+    thickness_ratio: 0.12441
+  - span_y_m: 0.9
+    leading_edge_x_m: -0.45023
+    chord_m: 0.1414
+    z_m: -0.01739
+    twist_rad: 0.0
+    thickness_ratio: 0.11446
+  - span_y_m: 1.05
+    leading_edge_x_m: -0.4581
+    chord_m: 0.1283
+    z_m: -0.01745
+    twist_rad: 0.0
+    thickness_ratio: 0.1054
+  - span_y_m: 1.09
+    leading_edge_x_m: -0.46019
+    chord_m: 0.12481
+    z_m: -0.01746
+    twist_rad: 0.0
+    thickness_ratio: 0.10271
+  - span_y_m: 1.1105
+    leading_edge_x_m: -0.47753
+    chord_m: 0.04788
+    z_m: -0.01751
+    twist_rad: 0.0
+    thickness_ratio: 0.13452
+  mirror: true
+  cant_rad: 0.0
+  camber: 0.04
+  camber_pos: 0.4
+  fit_thickness_envelope: true
+  n_points_per_side: 41
+  part_id_right: recon_wing_right
+  part_id_left: recon_wing_left
+  category: wing
+- surface_id: vtail_right
+  stations:
+  - span_y_m: 0.0555
+    leading_edge_x_m: -0.83182
+    chord_m: 0.14962
+    z_m: -0.01574
+    twist_rad: 0.0
+    thickness_ratio: 0.1
+  - span_y_m: 0.09
+    leading_edge_x_m: -0.84031
+    chord_m: 0.13973
+    z_m: -0.03378
+    twist_rad: 0.0
+    thickness_ratio: 0.1
+  - span_y_m: 0.13
+    leading_edge_x_m: -0.85017
+    chord_m: 0.12826
+    z_m: -0.05713
+    twist_rad: 0.0
+    thickness_ratio: 0.1
+  - span_y_m: 0.17
+    leading_edge_x_m: -0.86002
+    chord_m: 0.1168
+    z_m: -0.08049
+    twist_rad: 0.0
+    thickness_ratio: 0.1
+  - span_y_m: 0.21
+    leading_edge_x_m: -0.86988
+    chord_m: 0.10533
+    z_m: -0.10384
+    twist_rad: 0.0
+    thickness_ratio: 0.1
+  - span_y_m: 0.245
+    leading_edge_x_m: -0.8785
+    chord_m: 0.0953
+    z_m: -0.12428
+    twist_rad: 0.0
+    thickness_ratio: 0.1
+  - span_y_m: 0.265
+    leading_edge_x_m: -0.88342
+    chord_m: 0.08957
+    z_m: -0.13595
+    twist_rad: 0.0
+    thickness_ratio: 0.1
+  - span_y_m: 0.2855
+    leading_edge_x_m: -0.89321
+    chord_m: 0.04917
+    z_m: -0.1473
+    twist_rad: 0.0
+    thickness_ratio: 0.1
+  mirror: true
+  cant_rad: 0.5235
+  camber: 0.0
+  camber_pos: 0.4
+  fit_thickness_envelope: true
+  n_points_per_side: 41
+  part_id_right: recon_vtail_right
+  part_id_left: recon_vtail_left
+  category: vtail
+fuselage:
+- x_m: 0.0
+  width_m: 0.004
+  height_m: 0.004
+  z_center_m: 0.0
+  exponent: null
+- x_m: -0.0431
+  width_m: 0.08462
+  height_m: 0.06549
+  z_center_m: -0.00663
+  exponent: null
+- x_m: -0.0843
+  width_m: 0.11355
+  height_m: 0.09013
+  z_center_m: -0.01064
+  exponent: null
+- x_m: -0.1254
+  width_m: 0.13098
+  height_m: 0.10727
+  z_center_m: -0.01401
+  exponent: null
+- x_m: -0.1665
+  width_m: 0.14092
+  height_m: 0.11747
+  z_center_m: -0.01617
+  exponent: null
+- x_m: -0.2077
+  width_m: 0.14396
+  height_m: 0.1207
+  z_center_m: -0.01692
+  exponent: null
+- x_m: -0.25
+  width_m: 0.14065
+  height_m: 0.11603
+  z_center_m: -0.01458
+  exponent: null
+- x_m: -0.29
+  width_m: 0.13434
+  height_m: 0.10682
+  z_center_m: -0.00998
+  exponent: null
+- x_m: -0.3311
+  width_m: 0.12709
+  height_m: 0.09687
+  z_center_m: -0.005
+  exponent: null
+- x_m: -0.3722
+  width_m: 0.12154
+  height_m: 0.08904
+  z_center_m: -0.00109
+  exponent: null
+- x_m: -0.4134
+  width_m: 0.14
+  height_m: 0.08686
+  z_center_m: 0.0
+  exponent: null
+- x_m: -0.4956
+  width_m: 0.14
+  height_m: 0.0864
+  z_center_m: 0.00023
+  exponent: null
+- x_m: -0.5779
+  width_m: 0.14
+  height_m: 0.08686
+  z_center_m: 0.0
+  exponent: null
+- x_m: -0.6602
+  width_m: 0.12
+  height_m: 0.08686
+  z_center_m: -0.0
+  exponent: null
+- x_m: -0.7424
+  width_m: 0.12
+  height_m: 0.08686
+  z_center_m: -0.0
+  exponent: null
+- x_m: -0.7836
+  width_m: 0.11834
+  height_m: 0.09731
+  z_center_m: -0.00542
+  exponent: null
+- x_m: -0.8247
+  width_m: 0.11172
+  height_m: 0.09146
+  z_center_m: -0.00348
+  exponent: null
+- x_m: -0.8659
+  width_m: 0.11462
+  height_m: 0.08296
+  z_center_m: -0.00128
+  exponent: null
+- x_m: -0.907
+  width_m: 0.11812
+  height_m: 0.07346
+  z_center_m: -0.0
+  exponent: null
+- x_m: -0.9481
+  width_m: 0.10791
+  height_m: 0.05892
+  z_center_m: -0.0
+  exponent: null
+- x_m: -0.989
+  width_m: 0.05153
+  height_m: 0.05153
+  z_center_m: 0.0
+  exponent: null
+fuselage_exponent: 2.0
+fuselage_part_id: recon_fuselage
+fuselage_n_points: 48
+spar:
+  enabled: true
+  part_id: recon_spar
+  outer_diameter_m: 0.016
+  inner_diameter_m: 0.012
+  span_m: 1.22155
+  x_m: -0.47081
+  z_m: -0.01668
+  mass_kg: null
+  material_note: unknown; a tube is drawn, no material is claimed
+battery:
+  enabled: true
+  part_id: recon_battery
+  length_m: 0.155
+  width_m: 0.055
+  height_m: 0.045
+  center_m:
+  - -0.2
+  - 0.0
+  - -0.005
+  mass_kg: null
+  category: battery
+motor:
+  enabled: true
+  part_id: recon_motor
+  mount_part_id: recon_motor_mount
+  prop_part_id: recon_prop
+  x_m: -1.001
+  z_m: 0.0
+  diameter_m: 0.045
+  length_m: 0.04
+  mount_length_m: 0.012
+  mount_size_m: 0.052
+  prop_diameter_m: 0.305
+  prop_thickness_m: 0.01
+  prop_clearance_m: 0.012
+  mass_kg: null
+  prop_mass_kg: null
+wing_bay_plate_enabled: true
+wing_bay_plate_part_id: recon_wing_bay_plate
+wing_bay_plate_extent_m:
+- - -0.5461
+  - 0.5486
+  - -0.0191
+- - -0.4835
+  - 0.6976
+  - -0.0078
+tip_extension_m: 0.0
+assumptions:
+- Airfoil sections are an assumed NACA 4-digit family, not an identified section.
+- Fuselage cross sections are superellipses fitted only to station width/height.
+- Spar, battery, motor, prop and their masses are a synthetic demo envelope; none
+  of them appear in the source archive.
+- Holes, latches, hinges, print details and internal structure are not reconstructed.

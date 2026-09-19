@@ -1,0 +1,1623 @@
+{
+  "schema_version": "0.1.0",
+  "design_id": "titan_avenger_mock",
+  "revision_id": "rev_mock_0001",
+  "title": "Titan Avenger (mock artifacts \u2014 not the real archive)",
+  "frame": {
+    "units": "mm",
+    "native_to_frd": [
+      [
+        0,
+        -1,
+        0
+      ],
+      [
+        -1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        -1
+      ]
+    ],
+    "scale_to_m": 0.001,
+    "nose_datum_native": [
+      0.0,
+      -403.07,
+      0.0
+    ],
+    "mirror_plane_native": "x=0",
+    "confirmed": false,
+    "confirmed_by": null,
+    "notes": [
+      "Units and axes are a hypothesis until a human confirms them in this viewer.",
+      "Positive native X is treated as the left side; confirm before publishing any metric."
+    ]
+  },
+  "sources": [],
+  "variants": [
+    {
+      "group_id": "wing3",
+      "options": [
+        "wing3_12mm_hole.stl",
+        "wing3_16mm_hole.stl",
+        "wing3_no_hole.stl"
+      ],
+      "selected": "wing3_16mm_hole.stl",
+      "reason": "mock selection for the demo"
+    },
+    {
+      "group_id": "fuse3",
+      "options": [
+        "fuse3.stl",
+        "fuse3_belly_cam.stl",
+        "fuse3_clean.stl"
+      ],
+      "selected": "fuse3_clean.stl",
+      "reason": "mock selection for the demo"
+    }
+  ],
+  "excluded_sources": [
+    "wing3_12mm_hole.stl",
+    "wing3_no_hole.stl",
+    "fuse3.stl",
+    "fuse3_belly_cam.stl"
+  ],
+  "parts": [
+    {
+      "part_id": "fuse_nose",
+      "definition_id": "def_fuse_nose",
+      "name": "Fuselage nose",
+      "category": "fuselage",
+      "side": "center",
+      "mirror_of": null,
+      "representation": "reference_mesh",
+      "source": "fuse1.stl",
+      "T_parent_from_local": [
+        [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          1.0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          1.0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          0,
+          1.0
+        ]
+      ],
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "no mass model selected at confirm"
+        ]
+      },
+      "local_com_m": {
+        "value": null,
+        "unit": "m",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "mesh is not watertight; centroid would be invalid"
+        ]
+      },
+      "material": {
+        "value": "High Temp PETG / ABS / ASA (folder hint)",
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "inferred",
+        "evidence_ids": [
+          "ev_folder_material"
+        ],
+        "confidence": 0.4,
+        "assumptions": [
+          "folder name is evidence of a suggestion, not of what was printed"
+        ]
+      },
+      "function": {
+        "value": "Fuselage nose",
+        "unit": null,
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [
+          "ev_bounds_wing"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "edit_capabilities": [
+        "none"
+      ],
+      "allowed_overlap_with": [],
+      "locked": false,
+      "labels": {}
+    },
+    {
+      "part_id": "fuse_mid",
+      "definition_id": "def_fuse_mid",
+      "name": "Fuselage mid (fuse3 clean variant)",
+      "category": "fuselage",
+      "side": "center",
+      "mirror_of": null,
+      "representation": "reference_mesh",
+      "source": "fuse3_clean.stl",
+      "T_parent_from_local": [
+        [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          1.0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          1.0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          0,
+          1.0
+        ]
+      ],
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "no mass model selected at confirm"
+        ]
+      },
+      "local_com_m": {
+        "value": null,
+        "unit": "m",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "mesh is not watertight; centroid would be invalid"
+        ]
+      },
+      "material": {
+        "value": "High Temp PETG / ABS / ASA (folder hint)",
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "inferred",
+        "evidence_ids": [
+          "ev_folder_material"
+        ],
+        "confidence": 0.4,
+        "assumptions": [
+          "folder name is evidence of a suggestion, not of what was printed"
+        ]
+      },
+      "function": {
+        "value": "Fuselage mid (fuse3 clean variant)",
+        "unit": null,
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [
+          "ev_bounds_wing"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "edit_capabilities": [
+        "none"
+      ],
+      "allowed_overlap_with": [],
+      "locked": false,
+      "labels": {
+        "variant_group": "fuse3",
+        "selected": "fuse3_clean"
+      }
+    },
+    {
+      "part_id": "fuse_tail",
+      "definition_id": "def_fuse_tail",
+      "name": "Fuselage tail boom",
+      "category": "fuselage",
+      "side": "center",
+      "mirror_of": null,
+      "representation": "reference_mesh",
+      "source": "fuse5.stl",
+      "T_parent_from_local": [
+        [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          1.0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          1.0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          0,
+          1.0
+        ]
+      ],
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "no mass model selected at confirm"
+        ]
+      },
+      "local_com_m": {
+        "value": null,
+        "unit": "m",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "mesh is not watertight; centroid would be invalid"
+        ]
+      },
+      "material": {
+        "value": "High Temp PETG / ABS / ASA (folder hint)",
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "inferred",
+        "evidence_ids": [
+          "ev_folder_material"
+        ],
+        "confidence": 0.4,
+        "assumptions": [
+          "folder name is evidence of a suggestion, not of what was printed"
+        ]
+      },
+      "function": {
+        "value": "Fuselage tail boom",
+        "unit": null,
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [
+          "ev_bounds_wing"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "edit_capabilities": [
+        "none"
+      ],
+      "allowed_overlap_with": [],
+      "locked": false,
+      "labels": {}
+    },
+    {
+      "part_id": "canopy_1",
+      "definition_id": "def_canopy_1",
+      "name": "Canopy",
+      "category": "canopy",
+      "side": "center",
+      "mirror_of": null,
+      "representation": "reference_mesh",
+      "source": "canopy1.stl",
+      "T_parent_from_local": [
+        [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          1.0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          1.0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          0,
+          1.0
+        ]
+      ],
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "no mass model selected at confirm"
+        ]
+      },
+      "local_com_m": {
+        "value": null,
+        "unit": "m",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "mesh is not watertight; centroid would be invalid"
+        ]
+      },
+      "material": {
+        "value": "High Temp PETG / ABS / ASA (folder hint)",
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "inferred",
+        "evidence_ids": [
+          "ev_folder_material"
+        ],
+        "confidence": 0.4,
+        "assumptions": [
+          "folder name is evidence of a suggestion, not of what was printed"
+        ]
+      },
+      "function": {
+        "value": "Canopy",
+        "unit": null,
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [
+          "ev_bounds_wing"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "edit_capabilities": [
+        "none"
+      ],
+      "allowed_overlap_with": [],
+      "locked": false,
+      "labels": {}
+    },
+    {
+      "part_id": "hatch_1",
+      "definition_id": "def_hatch_1",
+      "name": "Wing bay hatch",
+      "category": "hatch",
+      "side": "center",
+      "mirror_of": null,
+      "representation": "reference_mesh",
+      "source": "hatch1.stl",
+      "T_parent_from_local": [
+        [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          1.0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          1.0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          0,
+          1.0
+        ]
+      ],
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "no mass model selected at confirm"
+        ]
+      },
+      "local_com_m": {
+        "value": null,
+        "unit": "m",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "mesh is not watertight; centroid would be invalid"
+        ]
+      },
+      "material": {
+        "value": "High Temp PETG / ABS / ASA (folder hint)",
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "inferred",
+        "evidence_ids": [
+          "ev_folder_material"
+        ],
+        "confidence": 0.4,
+        "assumptions": [
+          "folder name is evidence of a suggestion, not of what was printed"
+        ]
+      },
+      "function": {
+        "value": "Wing bay hatch",
+        "unit": null,
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [
+          "ev_bounds_wing"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "edit_capabilities": [
+        "none"
+      ],
+      "allowed_overlap_with": [],
+      "locked": false,
+      "labels": {}
+    },
+    {
+      "part_id": "wing_right",
+      "definition_id": "def_wing_right",
+      "name": "Wing (right)",
+      "category": "wing",
+      "side": "right",
+      "mirror_of": null,
+      "representation": "reference_mesh",
+      "source": "wing1.stl",
+      "T_parent_from_local": [
+        [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          1.0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          1.0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          0,
+          1.0
+        ]
+      ],
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "no mass model selected at confirm"
+        ]
+      },
+      "local_com_m": {
+        "value": null,
+        "unit": "m",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "mesh is not watertight; centroid would be invalid"
+        ]
+      },
+      "material": {
+        "value": "High Temp PETG / ABS / ASA (folder hint)",
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "inferred",
+        "evidence_ids": [
+          "ev_folder_material"
+        ],
+        "confidence": 0.4,
+        "assumptions": [
+          "folder name is evidence of a suggestion, not of what was printed"
+        ]
+      },
+      "function": {
+        "value": "Wing (right)",
+        "unit": null,
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [
+          "ev_bounds_wing"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "edit_capabilities": [
+        "set_wing_tip_extension"
+      ],
+      "allowed_overlap_with": [],
+      "locked": false,
+      "labels": {}
+    },
+    {
+      "part_id": "wing_left",
+      "definition_id": "def_wing_left",
+      "name": "Wing (left, mirrored)",
+      "category": "wing",
+      "side": "left",
+      "mirror_of": "wing_right",
+      "representation": "reference_mesh",
+      "source": "wing1.stl",
+      "T_parent_from_local": [
+        [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          1.0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          1.0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          0,
+          1.0
+        ]
+      ],
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "no mass model selected at confirm"
+        ]
+      },
+      "local_com_m": {
+        "value": null,
+        "unit": "m",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "mesh is not watertight; centroid would be invalid"
+        ]
+      },
+      "material": {
+        "value": "High Temp PETG / ABS / ASA (folder hint)",
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "inferred",
+        "evidence_ids": [
+          "ev_folder_material"
+        ],
+        "confidence": 0.4,
+        "assumptions": [
+          "folder name is evidence of a suggestion, not of what was printed"
+        ]
+      },
+      "function": {
+        "value": "Wing (left, mirrored)",
+        "unit": null,
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [
+          "ev_bounds_wing"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "edit_capabilities": [
+        "set_wing_tip_extension"
+      ],
+      "allowed_overlap_with": [],
+      "locked": false,
+      "labels": {}
+    },
+    {
+      "part_id": "aileron_right",
+      "definition_id": "def_aileron_right",
+      "name": "Aileron (right)",
+      "category": "aileron",
+      "side": "right",
+      "mirror_of": null,
+      "representation": "reference_mesh",
+      "source": "aileron.stl",
+      "T_parent_from_local": [
+        [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          1.0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          1.0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          0,
+          1.0
+        ]
+      ],
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "no mass model selected at confirm"
+        ]
+      },
+      "local_com_m": {
+        "value": null,
+        "unit": "m",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "mesh is not watertight; centroid would be invalid"
+        ]
+      },
+      "material": {
+        "value": "High Temp PETG / ABS / ASA (folder hint)",
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "inferred",
+        "evidence_ids": [
+          "ev_folder_material"
+        ],
+        "confidence": 0.4,
+        "assumptions": [
+          "folder name is evidence of a suggestion, not of what was printed"
+        ]
+      },
+      "function": {
+        "value": "Aileron (right)",
+        "unit": null,
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [
+          "ev_bounds_wing"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "edit_capabilities": [
+        "none"
+      ],
+      "allowed_overlap_with": [],
+      "locked": false,
+      "labels": {}
+    },
+    {
+      "part_id": "aileron_left",
+      "definition_id": "def_aileron_left",
+      "name": "Aileron (left, mirrored)",
+      "category": "aileron",
+      "side": "left",
+      "mirror_of": "aileron_right",
+      "representation": "reference_mesh",
+      "source": "aileron.stl",
+      "T_parent_from_local": [
+        [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          1.0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          1.0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          0,
+          1.0
+        ]
+      ],
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "no mass model selected at confirm"
+        ]
+      },
+      "local_com_m": {
+        "value": null,
+        "unit": "m",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "mesh is not watertight; centroid would be invalid"
+        ]
+      },
+      "material": {
+        "value": "High Temp PETG / ABS / ASA (folder hint)",
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "inferred",
+        "evidence_ids": [
+          "ev_folder_material"
+        ],
+        "confidence": 0.4,
+        "assumptions": [
+          "folder name is evidence of a suggestion, not of what was printed"
+        ]
+      },
+      "function": {
+        "value": "Aileron (left, mirrored)",
+        "unit": null,
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [
+          "ev_bounds_wing"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "edit_capabilities": [
+        "none"
+      ],
+      "allowed_overlap_with": [],
+      "locked": false,
+      "labels": {}
+    },
+    {
+      "part_id": "vtail_right",
+      "definition_id": "def_vtail_right",
+      "name": "V-tail panel (right)",
+      "category": "vtail",
+      "side": "right",
+      "mirror_of": null,
+      "representation": "reference_mesh",
+      "source": "vtail1.stl",
+      "T_parent_from_local": [
+        [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          1.0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          1.0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          0,
+          1.0
+        ]
+      ],
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "no mass model selected at confirm"
+        ]
+      },
+      "local_com_m": {
+        "value": null,
+        "unit": "m",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "mesh is not watertight; centroid would be invalid"
+        ]
+      },
+      "material": {
+        "value": "ASA",
+        "unit": null,
+        "status": "conflicted",
+        "source_kind": "inferred",
+        "evidence_ids": [
+          "ev_folder_material",
+          "ev_cant_vtail"
+        ],
+        "confidence": null,
+        "assumptions": [
+          "folder hint says PETG/ABS/ASA; the tail folder note says ASA only"
+        ]
+      },
+      "function": {
+        "value": "V-tail panel (right)",
+        "unit": null,
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [
+          "ev_bounds_wing"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "edit_capabilities": [
+        "none"
+      ],
+      "allowed_overlap_with": [],
+      "locked": false,
+      "labels": {}
+    },
+    {
+      "part_id": "vtail_left",
+      "definition_id": "def_vtail_left",
+      "name": "V-tail panel (left, mirrored)",
+      "category": "vtail",
+      "side": "left",
+      "mirror_of": "vtail_right",
+      "representation": "reference_mesh",
+      "source": "vtail1.stl",
+      "T_parent_from_local": [
+        [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          1.0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          1.0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          0,
+          1.0
+        ]
+      ],
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "no mass model selected at confirm"
+        ]
+      },
+      "local_com_m": {
+        "value": null,
+        "unit": "m",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "mesh is not watertight; centroid would be invalid"
+        ]
+      },
+      "material": {
+        "value": "ASA",
+        "unit": null,
+        "status": "conflicted",
+        "source_kind": "inferred",
+        "evidence_ids": [
+          "ev_folder_material",
+          "ev_cant_vtail"
+        ],
+        "confidence": null,
+        "assumptions": [
+          "folder hint says PETG/ABS/ASA; the tail folder note says ASA only"
+        ]
+      },
+      "function": {
+        "value": "V-tail panel (left, mirrored)",
+        "unit": null,
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [
+          "ev_bounds_wing"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "edit_capabilities": [
+        "none"
+      ],
+      "allowed_overlap_with": [],
+      "locked": false,
+      "labels": {}
+    },
+    {
+      "part_id": "motor_mount",
+      "definition_id": "def_motor_mount",
+      "name": "Motor mount (pusher)",
+      "category": "mount",
+      "side": "center",
+      "mirror_of": null,
+      "representation": "reference_mesh",
+      "source": "motor_mount.stl",
+      "T_parent_from_local": [
+        [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          1.0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          1.0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          0,
+          1.0
+        ]
+      ],
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "no mass model selected at confirm"
+        ]
+      },
+      "local_com_m": {
+        "value": null,
+        "unit": "m",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "mesh is not watertight; centroid would be invalid"
+        ]
+      },
+      "material": {
+        "value": "High Temp PETG / ABS / ASA (folder hint)",
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "inferred",
+        "evidence_ids": [
+          "ev_folder_material"
+        ],
+        "confidence": 0.4,
+        "assumptions": [
+          "folder name is evidence of a suggestion, not of what was printed"
+        ]
+      },
+      "function": {
+        "value": "Motor mount (pusher)",
+        "unit": null,
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [
+          "ev_bounds_wing"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "edit_capabilities": [
+        "none"
+      ],
+      "allowed_overlap_with": [],
+      "locked": false,
+      "labels": {}
+    },
+    {
+      "part_id": "wing_bay_plate",
+      "definition_id": "def_wing_bay_plate",
+      "name": "Wing bay plate",
+      "category": "mount",
+      "side": "center",
+      "mirror_of": null,
+      "representation": "reference_mesh",
+      "source": "wing_bay_plate.stl",
+      "T_parent_from_local": [
+        [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          1.0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          1.0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          0,
+          1.0
+        ]
+      ],
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "no mass model selected at confirm"
+        ]
+      },
+      "local_com_m": {
+        "value": null,
+        "unit": "m",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "mesh is not watertight; centroid would be invalid"
+        ]
+      },
+      "material": {
+        "value": null,
+        "unit": null,
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": []
+      },
+      "function": {
+        "value": "Wing bay plate",
+        "unit": null,
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [
+          "ev_bounds_wing"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "edit_capabilities": [
+        "none"
+      ],
+      "allowed_overlap_with": [],
+      "locked": false,
+      "labels": {}
+    },
+    {
+      "part_id": "battery_pack",
+      "definition_id": "def_battery_6s5000",
+      "name": "Battery 6S 5000 mAh (synthetic demo BOM)",
+      "category": "battery",
+      "side": "center",
+      "mirror_of": null,
+      "representation": "envelope",
+      "source": null,
+      "T_parent_from_local": [
+        [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          1.0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          1.0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          0,
+          1.0
+        ]
+      ],
+      "mass_kg": {
+        "value": 0.72,
+        "unit": "kg",
+        "status": "estimated",
+        "source_kind": "catalog",
+        "evidence_ids": [
+          "ev_bom_battery"
+        ],
+        "confidence": 0.6,
+        "assumptions": [
+          "catalog mass for a generic 6S 5000 mAh pack; not weighed"
+        ]
+      },
+      "local_com_m": {
+        "value": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "unit": "m",
+        "status": "estimated",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "uniform density inside the declared envelope"
+        ]
+      },
+      "material": {
+        "value": "LiPo (catalog)",
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "catalog",
+        "evidence_ids": [
+          "ev_bom_battery"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "function": {
+        "value": "Main flight battery",
+        "unit": null,
+        "status": "known",
+        "source_kind": "bom",
+        "evidence_ids": [
+          "ev_bom_battery"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "edit_capabilities": [
+        "translate_component",
+        "replace_catalog_component"
+      ],
+      "allowed_overlap_with": [
+        "fuse_mid",
+        "wing_bay_plate"
+      ],
+      "locked": false,
+      "labels": {
+        "synthetic": "true",
+        "corridor_m": "x 0.24 -> 0.42"
+      }
+    },
+    {
+      "part_id": "spar_main",
+      "definition_id": "def_spar_tube",
+      "name": "Main spar tube (synthetic demo BOM)",
+      "category": "spar",
+      "side": "center",
+      "mirror_of": null,
+      "representation": "reconstruction",
+      "source": null,
+      "T_parent_from_local": [
+        [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          1.0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          1.0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          0,
+          1.0
+        ]
+      ],
+      "mass_kg": {
+        "value": 0.104,
+        "unit": "kg",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [],
+        "confidence": 0.5,
+        "assumptions": [
+          "carbon tube 16 mm OD / 14 mm ID at 1600 kg/m^3"
+        ]
+      },
+      "local_com_m": {
+        "value": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "unit": "m",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": []
+      },
+      "material": {
+        "value": "Carbon fibre tube",
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "catalog",
+        "evidence_ids": [
+          "ev_bom_battery"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "function": {
+        "value": "Wing bending spar through both wing roots",
+        "unit": null,
+        "status": "known",
+        "source_kind": "bom",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": []
+      },
+      "edit_capabilities": [
+        "resize_spar"
+      ],
+      "allowed_overlap_with": [
+        "wing_left",
+        "wing_right",
+        "fuse_mid"
+      ],
+      "locked": false,
+      "labels": {
+        "synthetic": "true",
+        "hole_limit_mm": "16 (wing3_16mm_hole selected)"
+      }
+    },
+    {
+      "part_id": "motor_pusher",
+      "definition_id": "def_motor_env",
+      "name": "Pusher motor envelope (synthetic demo BOM)",
+      "category": "motor",
+      "side": "center",
+      "mirror_of": null,
+      "representation": "envelope",
+      "source": null,
+      "T_parent_from_local": [
+        [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          1.0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          1.0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          0,
+          1.0
+        ]
+      ],
+      "mass_kg": {
+        "value": 0.195,
+        "unit": "kg",
+        "status": "estimated",
+        "source_kind": "catalog",
+        "evidence_ids": [
+          "ev_bom_battery"
+        ],
+        "confidence": 0.5,
+        "assumptions": [
+          "catalog mass for a generic 42 mm outrunner"
+        ]
+      },
+      "local_com_m": {
+        "value": null,
+        "unit": "m",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": []
+      },
+      "material": {
+        "value": null,
+        "unit": null,
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": []
+      },
+      "function": {
+        "value": "Pusher propulsion",
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "inferred",
+        "evidence_ids": [
+          "ev_bounds_wing"
+        ],
+        "confidence": null,
+        "assumptions": [
+          "motor_mount sits at the tail (native Y 588-598), so pusher"
+        ]
+      },
+      "edit_capabilities": [
+        "replace_catalog_component"
+      ],
+      "allowed_overlap_with": [
+        "motor_mount"
+      ],
+      "locked": false,
+      "labels": {
+        "synthetic": "true"
+      }
+    },
+    {
+      "part_id": "prop_pusher",
+      "definition_id": "def_prop_env",
+      "name": "Propeller swept volume (synthetic demo BOM)",
+      "category": "prop",
+      "side": "center",
+      "mirror_of": null,
+      "representation": "envelope",
+      "source": null,
+      "T_parent_from_local": [
+        [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          1.0,
+          0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          1.0,
+          0.0
+        ],
+        [
+          0,
+          0,
+          0,
+          1.0
+        ]
+      ],
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "no propeller is specified anywhere in the archive"
+        ]
+      },
+      "local_com_m": {
+        "value": null,
+        "unit": "m",
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": []
+      },
+      "material": {
+        "value": null,
+        "unit": null,
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": []
+      },
+      "function": {
+        "value": "Swept volume used for the airframe clearance check",
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "13 inch diameter assumed for the demo"
+        ]
+      },
+      "edit_capabilities": [
+        "replace_catalog_component"
+      ],
+      "allowed_overlap_with": [],
+      "locked": true,
+      "labels": {
+        "synthetic": "true"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "ev_bounds_wing",
+      "uri": "sources/wing/wing1.stl",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "locator": "bounds",
+      "method": "stl_bounds",
+      "note": "native X 70.0 -> 1112.2 mm, one side only"
+    },
+    {
+      "evidence_id": "ev_slice_wing",
+      "uri": "artifacts/wing_stations.json",
+      "locator": "stations[0..7]",
+      "method": "slice_fit",
+      "note": "chord fit residual reported in geometry_features.quality"
+    },
+    {
+      "evidence_id": "ev_folder_material",
+      "uri": "sources/High Temp PETG or ABS or ASA/",
+      "locator": "folder",
+      "method": "folder_hint",
+      "note": "folder name is a suggestion, not proof: </script> characters kept verbatim"
+    },
+    {
+      "evidence_id": "ev_bom_battery",
+      "uri": "demo_bom.yaml",
+      "locator": "items[battery]",
+      "method": "catalog_lookup",
+      "note": "SYNTHETIC demo BOM, not shipped with the archive"
+    },
+    {
+      "evidence_id": "ev_cant_vtail",
+      "uri": "sources/tail/vtail1.stl",
+      "locator": "principal_axes",
+      "method": "panel_normal_fit",
+      "note": "panel canted about 32 deg from horizontal"
+    }
+  ],
+  "warnings": [
+    "MOCK DATA: geometry and claims are stand-ins for A1/A2 output, not measurements of the archive.",
+    "Frame is unconfirmed, so no metric on this page may be published."
+  ]
+}

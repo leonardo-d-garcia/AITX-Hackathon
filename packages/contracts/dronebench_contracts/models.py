@@ -197,6 +197,8 @@ class DesignManifest(_Model):
     revision_id: str
     title: str
     frame: FrameConfirmation
+    sources_root: Optional[str] = None        # where the staged, byte-identical sources live (local path)
+    mass_model: Literal["none", "shell_estimate"] = "none"
     sources: list[SourceFile] = Field(default_factory=list)
     variants: list[VariantGroup] = Field(default_factory=list)
     excluded_sources: list[str] = Field(default_factory=list)
