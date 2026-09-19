@@ -84,14 +84,21 @@ def build_bundle() -> dict[str, Any]:
     defs: dict[str, Any] = {}
 
     for model in EXPORTED_MODELS:
-        schema = model.model_json_schema(ref_template="#/$defs/{model}")
+        # Serialization mode, not validation mode. The consumers of this bundle read what the API
+        # *emits*, and model_dump always emits every field - so a field with a default is present
+        # in the payload rather than optional. It also includes computed fields such as
+        # Evaluation.verified_feasible, which validation mode would omit and which the UI must not
+        # re-derive for itself.
+        schema = model.model_json_schema(
+            ref_template="#/$defs/{model}", mode="serialization"
+        )
         nested = schema.pop("$defs", {})
         defs.update(nested)
         defs[model.__name__] = schema
 
     for name, union in EXPORTED_UNIONS.items():
         adapter = TypeAdapter(union)
-        schema = adapter.json_schema(ref_template="#/$defs/{model}")
+        schema = adapter.json_schema(ref_template="#/$defs/{model}", mode="serialization")
         nested = schema.pop("$defs", {})
         defs.update(nested)
         defs[name] = schema

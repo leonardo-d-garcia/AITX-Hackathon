@@ -1474,6 +1474,12 @@
           },
           "title": "Unknown Inputs",
           "type": "array"
+        },
+        "verified_feasible": {
+          "description": "True only when nothing blocking fails and nothing blocking is unknown.\n\nSerialised deliberately. The UI must not re-derive feasibility from the check list: that\nwould put a second definition of \"verified\" in the codebase, and the two would drift.",
+          "readOnly": true,
+          "title": "Verified Feasible",
+          "type": "boolean"
         }
       },
       "required": [
@@ -1484,7 +1490,8 @@
         "fidelity",
         "solver",
         "run_input_hash",
-        "produced_by"
+        "produced_by",
+        "verified_feasible"
       ],
       "title": "Evaluation",
       "type": "object"
@@ -1792,6 +1799,18 @@
           "description": "False until units, axes, nose datum, and symmetry have been confirmed.",
           "title": "Frame Confirmed",
           "type": "boolean"
+        },
+        "neutral_point_station_m": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Claim"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Aft-positive station of the neutral point. Architecture section 8 permits a documented synthetic fixture to supply this as an assumption for illustrating the workflow, and requires the report to identify it as assumed. A wing quarter-chord guess does not qualify for a V-tail aircraft, so the validator below refuses any source kind other than 'assumed' until a real stability method produces one."
         },
         "nose_datum_note": {
           "title": "Nose Datum Note",
@@ -2304,6 +2323,25 @@
           "minimum": 0.0,
           "title": "Stall Margin Fraction",
           "type": "number"
+        },
+        "static_margin_bounds": {
+          "default": [
+            0.08,
+            0.25
+          ],
+          "description": "Acceptable (min, max) static margin as a fraction of MAC. Must be consistent with cg_envelope_station_m and the neutral point, or the two checks contradict each other; the validator below enforces that.",
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "title": "Static Margin Bounds",
+          "type": "array"
         },
         "title": {
           "title": "Title",
@@ -4019,6 +4057,19 @@
           "default": null,
           "title": "Baseline"
         },
+        "basis": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Why this direction was assigned, when it came from a check status rather than from the sign of the change.",
+          "title": "Basis"
+        },
         "candidate": {
           "anyOf": [
             {
@@ -4036,6 +4087,7 @@
             "improves",
             "worsens",
             "unchanged",
+            "informational",
             "unknown"
           ],
           "title": "Direction",

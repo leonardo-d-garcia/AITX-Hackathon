@@ -349,3 +349,57 @@ def test_mission_rejects_contradictory_cg_and_static_margin_bounds():
     payload["static_margin_bounds"] = [0.4, 0.2]
     with pytest.raises(ValidationError):
         Mission.model_validate(payload)
+
+
+# ---------------------------------------------------------------------------------------------
+# Derived fields
+# ---------------------------------------------------------------------------------------------
+
+
+def test_evaluation_round_trips_through_its_own_artifact():
+    """`verified_feasible` is serialised for the UI but must not be accepted as input.
+
+    Without the before-validator that drops it, an evaluation could not be re-read from the
+    artifact it was written to - which is how the revision store loads every result.
+    """
+    from dronebench_api.stubs import AnalyticEvaluator
+
+    parts = PartsDocument.model_validate(fixture_json("parts"))
+    features = GeometryFeatures.model_validate(fixture_json("geometry_features"))
+    mission = Mission.model_validate(fixture_json("mission"))
+
+    evaluation = AnalyticEvaluator().evaluate(
+        revision_id=parts.revision_id,
+        parts=parts,
+        features=features,
+        mission=mission,
+        fidelity="analytic",
+    )
+    payload = evaluation.model_dump(mode="json")
+    assert "verified_feasible" in payload, "the UI needs one definition of verified"
+
+    from dronebench_contracts import Evaluation
+
+    reparsed = Evaluation.model_validate(payload)
+    assert reparsed.verified_feasible == evaluation.verified_feasible
+
+
+def test_a_caller_cannot_assert_feasibility_the_checks_do_not_support():
+    from dronebench_api.stubs import AnalyticEvaluator
+    from dronebench_contracts import Evaluation
+
+    parts = PartsDocument.model_validate(fixture_json("parts"))
+    evaluation = AnalyticEvaluator().evaluate(
+        revision_id=parts.revision_id,
+        parts=parts,
+        features=GeometryFeatures.model_validate(fixture_json("geometry_features")),
+        mission=Mission.model_validate(fixture_json("mission")),
+        fidelity="analytic",
+    )
+    assert evaluation.verified_feasible is False  # the harness mass is unknown
+
+    payload = evaluation.model_dump(mode="json")
+    payload["verified_feasible"] = True
+    assert Evaluation.model_validate(payload).verified_feasible is False, (
+        "a supplied value must not override the checks"
+    )

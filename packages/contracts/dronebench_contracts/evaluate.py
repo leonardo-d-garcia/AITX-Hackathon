@@ -13,7 +13,7 @@ from __future__ import annotations
 import math
 from typing import Literal, Self
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, computed_field, model_validator
 
 from .claims import Claim
 from .mission import CheckClass, CheckStatus, REGISTRIES
@@ -134,6 +134,19 @@ class Evaluation(BaseModel):
     )
     elapsed_s: float = Field(default=0.0, ge=0.0)
 
+    @model_validator(mode="before")
+    @classmethod
+    def _drop_derived(cls, data):
+        """Ignore ``verified_feasible`` on the way in.
+
+        It is serialised so the UI has one definition of "verified", but it is derived from the
+        checks, so accepting it as input would let a caller assert a feasibility the checks do not
+        support. Dropping it here is what makes an evaluation round-trip through its own artifact.
+        """
+        if isinstance(data, dict) and "verified_feasible" in data:
+            data = {key: value for key, value in data.items() if key != "verified_feasible"}
+        return data
+
     @model_validator(mode="after")
     def _registry_coverage_and_tier_honesty(self) -> Self:
         registry = REGISTRIES.get(self.registry_version)
@@ -195,9 +208,14 @@ class Evaluation(BaseModel):
             if c.check_id in blocking_ids and c.status in ("fail", "unknown")
         ]
 
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def verified_feasible(self) -> bool:
-        """True only when nothing blocking fails and nothing blocking is unknown."""
+        """True only when nothing blocking fails and nothing blocking is unknown.
+
+        Serialised deliberately. The UI must not re-derive feasibility from the check list: that
+        would put a second definition of "verified" in the codebase, and the two would drift.
+        """
         return not self.blocking()
 
     @property
