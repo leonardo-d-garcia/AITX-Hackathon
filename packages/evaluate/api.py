@@ -5,9 +5,19 @@ from __future__ import annotations
 import math
 from typing import Any
 
+from contracts import validate_instance
+
 from .checks import run_checks
 from .hashing import canonical_hash, geometry_hash, normalize_hash
-from .models import Claim, Evaluation, FidelityMismatch, make_claim, unknown_claim
+from .models import (
+    CHECK_CONTRACT_NAMES,
+    Check,
+    Claim,
+    Evaluation,
+    FidelityMismatch,
+    make_claim,
+    unknown_claim,
+)
 from .physics import (
     aero_metrics,
     as_float,
@@ -27,12 +37,17 @@ from .physics import (
     usable_energy,
 )
 
+_CONTRACT_STATUSES = {"known", "estimated", "unknown", "conflicted", "not_applicable"}
+_CONTRACT_SOURCE_KINDS = {"cad", "bom", "manual", "catalog", "computed", "inferred", "assumed"}
+_NONE_HASH = "none"
+
 
 def evaluate_revision(
     geometry: dict,
-    parts: list[dict],
+    parts: list[dict] | dict,
     mission: dict | None = None,
     solver_result: dict | None = None,
+    design_manifest: dict | None = None,
 ) -> dict:
     """Evaluate one revision. Returns an evaluation.json-shaped dict.
 
@@ -41,6 +56,7 @@ def evaluate_revision(
     """
     if not isinstance(geometry, dict):
         raise TypeError("geometry must be a dict")
+    parts_input: Any = parts
     if isinstance(parts, dict):
         if isinstance(parts.get("occurrences"), list):
             parts = parts["occurrences"]
@@ -66,6 +82,7 @@ def evaluate_revision(
     revision_id = str(
         geometry.get("revision_id")
         or (mission_dict or {}).get("revision_id")
+        or (design_manifest or {}).get("revision_id")
         or "unspecified"
     )
 
@@ -202,10 +219,11 @@ def evaluate_revision(
     )
 
     input_hashes = {
-        "geometry": g_hash,
-        "parts": canonical_hash(parts),
-        "mission": canonical_hash(mission_dict) if mission_dict is not None else None,
-        "solver_result": canonical_hash(solver_result) if solver_result is not None else None,
+        "design_manifest": (
+            canonical_hash(design_manifest) if design_manifest is not None else _NONE_HASH
+        ),
+        "parts": canonical_hash(parts_input),
+        "geometry_features": g_hash,
     }
     evaluation = Evaluation(
         revision_id=revision_id,
@@ -219,15 +237,17 @@ def evaluate_revision(
         missing_fields=unique(missing),
         quarantined=quarantined,
     )
-    return _sanitize(evaluation.model_dump(mode="json"))
+    doc = _sanitize(_to_evaluation_document(evaluation))
+    validate_instance("evaluation", doc)
+    return doc
 
 
 def compare_evaluations(a: dict, b: dict) -> dict:
     """Compare two evaluations of the same fidelity. Mixed tiers raise FidelityMismatch."""
     if not isinstance(a, dict) or not isinstance(b, dict):
         raise TypeError("compare_evaluations expects evaluation dicts")
-    ta = a.get("fidelity_tier")
-    tb = b.get("fidelity_tier")
+    ta = _fidelity_of(a)
+    tb = _fidelity_of(b)
     if ta != tb:
         raise FidelityMismatch(
             f"cannot compare fidelity_tier {ta!r} against {tb!r}; recompute both sides at one tier"
@@ -254,6 +274,15 @@ def _claim_value(claim: Any) -> Any:
     return getattr(claim, "value", None)
 
 
+def _fidelity_of(doc: dict) -> Any:
+    if "fidelity_tier" in doc:
+        return doc.get("fidelity_tier")
+    meta = doc.get("meta")
+    if isinstance(meta, dict):
+        return meta.get("fidelity_tier")
+    return None
+
+
 def _sanitize(obj: Any) -> Any:
     if isinstance(obj, dict):
         return {str(k): _sanitize(v) for k, v in obj.items()}
@@ -264,3 +293,170 @@ def _sanitize(obj: Any) -> Any:
             return None
         return obj
     return obj
+
+
+def _to_evaluation_document(evaluation: Evaluation) -> dict[str, Any]:
+    meta: dict[str, Any] = {
+        "revision_id": evaluation.revision_id,
+        "geometry_hash": evaluation.geometry_hash,
+        "fidelity_tier": evaluation.fidelity_tier,
+        "input_hashes": {
+            "design_manifest": str(
+                (evaluation.input_hashes or {}).get("design_manifest") or _NONE_HASH
+            ),
+            "parts": str((evaluation.input_hashes or {}).get("parts") or _NONE_HASH),
+            "geometry_features": str(
+                (evaluation.input_hashes or {}).get("geometry_features")
+                or evaluation.geometry_hash
+            ),
+        },
+        "assumptions": list(evaluation.assumptions or []),
+    }
+    solver_versions = _contract_solver_versions(evaluation.solver_versions)
+    if solver_versions:
+        meta["solver_versions"] = solver_versions
+    doc: dict[str, Any] = {
+        "schema_version": 1,
+        "meta": meta,
+        "metrics": {
+            name: _dump_claim(claim) for name, claim in evaluation.metrics.items()
+        },
+        "checks": _dump_checks(evaluation.checks),
+    }
+    quarantine = _dump_quarantine(evaluation.quarantined)
+    if quarantine:
+        doc["quarantine"] = quarantine
+    return doc
+
+
+def _contract_solver_versions(raw: Any) -> dict[str, str | None] | None:
+    if not isinstance(raw, dict) or not raw:
+        return None
+    out: dict[str, str | None] = {}
+    for key in ("openvsp", "vspaero"):
+        if key not in raw:
+            continue
+        val = raw[key]
+        out[key] = None if val is None else str(val)
+    return out or None
+
+
+def _scalar_value(value: Any) -> float | None:
+    if isinstance(value, (list, tuple)):
+        return as_float(value[0]) if value else None
+    return as_float(value)
+
+
+def _dump_claim(claim: Claim, *, default_unit: str = "1") -> dict[str, Any]:
+    value = _scalar_value(claim.value)
+    unit = claim.unit if isinstance(claim.unit, str) and claim.unit.strip() else default_unit
+    status, source_kind = _contract_status_and_source(claim, value)
+    if status == "unknown":
+        value = None
+    if status in {"known", "estimated"} and value is None:
+        status = "unknown"
+    assumptions: list[str] = []
+    if claim.notes:
+        assumptions.append(claim.notes)
+    for field in claim.missing_fields or []:
+        if field not in assumptions:
+            assumptions.append(field)
+    dumped: dict[str, Any] = {
+        "value": value,
+        "unit": unit,
+        "status": status,
+        "source_kind": source_kind,
+        "evidence_ids": [],
+        "assumptions": assumptions,
+    }
+    if value is not None and claim.assumption_range is not None:
+        dumped["assumption_range"] = {
+            "low": claim.assumption_range.low,
+            "nominal": claim.assumption_range.nominal,
+            "high": claim.assumption_range.high,
+        }
+    return dumped
+
+
+def _contract_status_and_source(claim: Claim, value: float | None) -> tuple[str, str]:
+    status = str(claim.status or "unknown")
+    source = str(claim.source or "")
+    if status == "assumed":
+        mapped_status = "estimated" if value is not None else "unknown"
+        return mapped_status, "assumed"
+    if status not in _CONTRACT_STATUSES:
+        mapped_status = "unknown" if value is None else "estimated"
+    else:
+        mapped_status = status
+    if source in _CONTRACT_SOURCE_KINDS:
+        return mapped_status, source
+    if source in {"analytic", "vspaero"}:
+        return mapped_status, "computed"
+    if source.startswith("parts"):
+        return mapped_status, "computed"
+    if "geometry" in source:
+        return mapped_status, "inferred" if mapped_status in {"known", "estimated", "conflicted"} else "assumed"
+    if mapped_status in {"known", "estimated", "conflicted"}:
+        return mapped_status, "computed"
+    return mapped_status, "assumed"
+
+
+def _dump_checks(checks: list[Check]) -> list[dict[str, Any]]:
+    dumped: list[dict[str, Any]] = []
+    for check in checks:
+        mapped = CHECK_CONTRACT_NAMES.get(check.id, check.id)
+        names = mapped if isinstance(mapped, tuple) else (mapped,)
+        for name in names:
+            dumped.append(_dump_check(check, name))
+    return dumped
+
+
+def _dump_check(check: Check, name: str) -> dict[str, Any]:
+    item: dict[str, Any] = {"name": name, "status": check.status}
+    metric = _dump_check_metric(check)
+    if metric is not None:
+        item["metric"] = metric
+    if check.limit is not None and len(check.limit) >= 1:
+        item["limit_low"] = check.limit[0]
+    if check.limit is not None and len(check.limit) >= 2:
+        item["limit_high"] = check.limit[1]
+    detail_parts: list[str] = []
+    if check.message:
+        detail_parts.append(check.message)
+    if check.missing_fields:
+        detail_parts.append("missing: " + ", ".join(check.missing_fields))
+    if detail_parts:
+        item["detail"] = "; ".join(detail_parts)
+    return item
+
+
+def _dump_check_metric(check: Check) -> dict[str, Any] | None:
+    value = _scalar_value(check.value)
+    if value is None and not check.missing_fields:
+        return None
+    if value is None:
+        return {
+            "value": None,
+            "unit": "1",
+            "status": "unknown",
+            "source_kind": "computed",
+            "evidence_ids": [],
+            "assumptions": list(check.missing_fields or []),
+        }
+    return {
+        "value": value,
+        "unit": "1",
+        "status": "known",
+        "source_kind": "computed",
+        "evidence_ids": [],
+        "assumptions": list(check.missing_fields or []),
+    }
+
+
+def _dump_quarantine(items: list[Claim]) -> list[dict[str, Any]]:
+    dumped: list[dict[str, Any]] = []
+    for item in items:
+        path = item.source or "quarantine"
+        reason = item.notes or "quarantined"
+        dumped.append({"path": path, "reason": reason, "raw": item.value})
+    return dumped

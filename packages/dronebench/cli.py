@@ -24,11 +24,17 @@ def cmd_evaluate(args: argparse.Namespace) -> int:
     if isinstance(parts_raw, list):
         parts = parts_raw
     elif isinstance(parts_raw, dict):
-        parts = parts_raw.get("occurrences", parts_raw.get("parts", parts_raw))
+        parts = parts_raw
     else:
         raise SystemExit(f"{args.parts} must be a list or object")
     mission = _load_json(Path(args.mission)) if args.mission else geometry.get("mission")
-    result = evaluate_revision(geometry, parts, mission=mission)
+    design_manifest = _load_json(Path(args.design_manifest)) if args.design_manifest else None
+    result = evaluate_revision(
+        geometry,
+        parts,
+        mission=mission,
+        design_manifest=design_manifest,
+    )
     text = json.dumps(result, indent=2)
     if args.out:
         Path(args.out).write_text(text + "\n", encoding="utf-8")
@@ -74,6 +80,7 @@ def main(argv: list[str] | None = None) -> int:
     p_eval.add_argument("--geometry", required=True)
     p_eval.add_argument("--parts", required=True)
     p_eval.add_argument("--mission")
+    p_eval.add_argument("--design-manifest")
     p_eval.add_argument("--out")
     p_eval.set_defaults(func=cmd_evaluate)
 

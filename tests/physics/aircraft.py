@@ -115,9 +115,47 @@ def default_parts(
     ]
 
 
+CHECK_CONTRACT_ALIASES = {
+    "tail_volume_h": "tail_volume_horizontal",
+    "tail_volume_v": "tail_volume_vertical",
+    "servos": "servo_torque",
+    "wiring_chains": "propulsion_chain",
+}
+CHECK_LEGACY_ALIASES = {
+    "tail_volume_horizontal": "tail_volume_h",
+    "tail_volume_vertical": "tail_volume_v",
+    "servo_torque": "servos",
+    "propulsion_chain": "wiring_chains",
+    "control_chain": "wiring_chains",
+}
+
+
+def result_meta(result: dict) -> dict:
+    meta = result.get("meta")
+    return meta if isinstance(meta, dict) else result
+
+
+def fidelity_of(result: dict) -> str | None:
+    if result.get("fidelity_tier") is not None:
+        return result.get("fidelity_tier")
+    return result_meta(result).get("fidelity_tier")
+
+
+def geometry_hash_of(result: dict) -> str | None:
+    if result.get("geometry_hash") is not None:
+        return result.get("geometry_hash")
+    return result_meta(result).get("geometry_hash")
+
+
 def check_by_id(result: dict, check_id: str) -> dict:
+    want = {
+        check_id,
+        CHECK_CONTRACT_ALIASES.get(check_id, check_id),
+        CHECK_LEGACY_ALIASES.get(check_id, check_id),
+    }
     for item in result["checks"]:
-        if item["id"] == check_id:
+        name = item.get("name") or item.get("id")
+        if name in want:
             return item
     raise KeyError(check_id)
 
@@ -126,14 +164,33 @@ def metric(result: dict, name: str) -> dict:
     return result["metrics"][name]
 
 
+def _claim_missing(claim: dict) -> list[str]:
+    found: list[str] = list(claim.get("missing_fields") or [])
+    found.extend(claim.get("assumptions") or [])
+    return found
+
+
 def all_missing_fields(result: dict) -> list[str]:
     found: list[str] = list(result.get("missing_fields") or [])
+    found.extend(result_meta(result).get("assumptions") or [])
     for item in result.get("checks") or []:
         found.extend(item.get("missing_fields") or [])
+        metric_claim = item.get("metric")
+        if isinstance(metric_claim, dict):
+            found.extend(_claim_missing(metric_claim))
+        detail = item.get("detail")
+        if isinstance(detail, str):
+            prefix = "missing: "
+            if prefix in detail:
+                listed = detail.split(prefix, 1)[1]
+                found.extend(part.strip() for part in listed.split(",") if part.strip())
     for claim in (result.get("metrics") or {}).values():
         if isinstance(claim, dict):
-            found.extend(claim.get("missing_fields") or [])
+            found.extend(_claim_missing(claim))
     for claim in result.get("quarantined") or []:
         if isinstance(claim, dict):
-            found.extend(claim.get("missing_fields") or [])
+            found.extend(_claim_missing(claim))
+    for item in result.get("quarantine") or []:
+        if isinstance(item, dict) and item.get("path"):
+            found.append(item["path"])
     return found

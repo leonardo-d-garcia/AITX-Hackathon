@@ -10,6 +10,24 @@ ClaimStatus = Literal["known", "unknown", "conflicted", "assumed", "estimated"]
 CheckStatus = Literal["pass", "fail", "unknown", "not_applicable"]
 FidelityTier = Literal["analytic", "vspaero"]
 
+# Internal check ids -> evaluation.schema.json check.name (wiring emits both chains).
+CHECK_CONTRACT_NAMES: dict[str, str | tuple[str, ...]] = {
+    "static_margin": "static_margin",
+    "stall": "stall",
+    "climb": "climb",
+    "spar": "spar",
+    "tail_volume_h": "tail_volume_horizontal",
+    "tail_volume_v": "tail_volume_vertical",
+    "servos": "servo_torque",
+    "motor_current": "motor_current",
+    "esc_current": "esc_current",
+    "battery_current": "battery_current",
+    "wiring_chains": ("propulsion_chain", "control_chain"),
+    "payload": "payload",
+    "clearance": "clearance",
+    "vtail_or_tail_layout": "vtail_or_tail_layout",
+}
+
 
 class FidelityMismatch(ValueError):
     """Raised when an analytic evaluation is compared to a vspaero one (or vice versa)."""
@@ -68,6 +86,8 @@ class Check(BaseModel):
 
 
 class Evaluation(BaseModel):
+    """Internal evaluator result. Dump through api._to_evaluation_document, not model_dump."""
+
     revision_id: str
     geometry_hash: str
     fidelity_tier: FidelityTier

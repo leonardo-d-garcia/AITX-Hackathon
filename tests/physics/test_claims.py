@@ -38,6 +38,7 @@ def test_battery_energy_quarantined_not_clamped():
     assert energy["status"] == "conflicted"
     assert energy["value"] != 200
     quarantined_values = [q.get("value") for q in result.get("quarantined") or []]
+    quarantined_values.extend(q.get("raw") for q in result.get("quarantine") or [])
     assert 500.0 in quarantined_values or energy["value"] == 500.0
     q = quarantine_input(500.0, field="parts.battery.specs.energy_wh", reason="over limit", unit="Wh")
     assert q.status == "conflicted"

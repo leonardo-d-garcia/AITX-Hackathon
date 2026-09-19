@@ -436,3 +436,46 @@ def test_get_validator_round_trips_claim_with_range():
     model = Claim.model_validate(claim)
     assert model.assumption_range is not None
     assert model.assumption_range.low == pytest.approx(0.70)
+
+
+def test_vtail_or_tail_layout_is_a_valid_check_name():
+    doc = {
+        "schema_version": 1,
+        "meta": {
+            "revision_id": "rev_synthetic_vtail_001",
+            "geometry_hash": "sha256:" + "0" * 64,
+            "fidelity_tier": "analytic",
+            "input_hashes": {
+                "design_manifest": "none",
+                "parts": "none",
+                "geometry_features": "sha256:" + "3" * 64,
+            },
+            "assumptions": [],
+        },
+        "metrics": {},
+        "checks": [{"name": "vtail_or_tail_layout", "status": "pass", "detail": "layout=vtail"}],
+    }
+    validate_instance("evaluation", doc)
+
+
+def test_evaluate_revision_emits_evaluation_schema(vtail_dir: Path):
+    from evaluate import evaluate_revision
+
+    geometry = load_json(vtail_dir / "geometry_features.json")
+    parts = load_json(vtail_dir / "parts.json")
+    manifest = load_json(vtail_dir / "design_manifest.json")
+    result = evaluate_revision(geometry, parts, design_manifest=manifest)
+    validate_instance("evaluation", result)
+    assert result["schema_version"] == 1
+    assert result["meta"]["fidelity_tier"] == "analytic"
+    names = {item["name"] for item in result["checks"]}
+    assert "tail_volume_horizontal" in names
+    assert "tail_volume_vertical" in names
+    assert "propulsion_chain" in names
+    assert "control_chain" in names
+    assert "vtail_or_tail_layout" in names
+    assert "servo_torque" in names
+    for _path, claim in iter_claims(result):
+        assert claim["status"] != "assumed"
+        assert "source" not in claim
+        assert claim["unit"]

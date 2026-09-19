@@ -10,20 +10,28 @@ from tests.physics.aircraft import (
     conventional_geometry,
     default_mission,
     default_parts,
+    result_meta,
     vtail_geometry,
 )
 
 
 def test_vtail_reaches_verdict_without_conventional_heuristic_fail():
     result = evaluate_revision(vtail_geometry(), default_parts(), default_mission())
-    assert result["revision_id"]
-    assert len(result["checks"]) == 14
+    assert result.get("revision_id") or result_meta(result).get("revision_id")
+    # wiring_chains dumps as propulsion_chain + control_chain
+    assert len(result["checks"]) == 15
     h = check_by_id(result, "tail_volume_h")
     v = check_by_id(result, "tail_volume_v")
     assert h["status"] == "not_applicable"
     assert v["status"] == "not_applicable"
     for item in result["checks"]:
-        if item["id"] in {"tail_volume_h", "tail_volume_v"}:
+        name = item.get("name") or item.get("id")
+        if name in {
+            "tail_volume_h",
+            "tail_volume_v",
+            "tail_volume_horizontal",
+            "tail_volume_vertical",
+        }:
             assert item["status"] != "fail"
 
 

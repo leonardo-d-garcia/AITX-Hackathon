@@ -94,7 +94,8 @@
             "propulsion_chain",
             "control_chain",
             "payload",
-            "clearance"
+            "clearance",
+            "vtail_or_tail_layout"
           ]
         },
         "status": {

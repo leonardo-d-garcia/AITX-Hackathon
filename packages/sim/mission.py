@@ -165,7 +165,10 @@ def _mission_params(
 ) -> dict[str, Any]:
     route = route or {}
     evaluation = evaluation or {}
-    solvers = evaluation.get("solver_versions") if isinstance(evaluation.get("solver_versions"), Mapping) else {}
+    meta = evaluation.get("meta") if isinstance(evaluation.get("meta"), Mapping) else {}
+    solvers = evaluation.get("solver_versions")
+    if not isinstance(solvers, Mapping):
+        solvers = meta.get("solver_versions") if isinstance(meta.get("solver_versions"), Mapping) else {}
     level_power = float(route.get("power_level_w", evaluation.get("power_w", power_level_w)))
     return {
         "dt_s": float(route.get("dt_s", dt_s)),
@@ -188,10 +191,16 @@ def _mission_params(
         "g_mps2": float(route.get("g_mps2", g_mps2)),
         "stress_dt_s": float(route.get("stress_dt_s", stress_dt_s)),
         "revision_id": str(
-            route.get("revision_id", evaluation.get("revision_id", revision_id))
+            route.get(
+                "revision_id",
+                evaluation.get("revision_id", meta.get("revision_id", revision_id)),
+            )
         ),
         "fidelity_tier": str(
-            evaluation.get("fidelity_tier", route.get("fidelity_tier", fidelity_tier))
+            evaluation.get(
+                "fidelity_tier",
+                meta.get("fidelity_tier", route.get("fidelity_tier", fidelity_tier)),
+            )
         ),
         "openvsp_version": solvers.get("openvsp"),
         "vspaero_version": solvers.get("vspaero"),

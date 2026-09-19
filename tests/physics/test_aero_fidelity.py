@@ -9,7 +9,14 @@ import pytest
 
 from evaluate import FidelityMismatch, compare_evaluations, evaluate_revision
 
-from tests.physics.aircraft import default_mission, default_parts, metric, vtail_geometry
+from tests.physics.aircraft import (
+    default_mission,
+    default_parts,
+    fidelity_of,
+    geometry_hash_of,
+    metric,
+    vtail_geometry,
+)
 
 
 def _walk_numbers(obj, found: list) -> None:
@@ -55,15 +62,15 @@ def test_compare_evaluations_raises_fidelity_mismatch():
     parts = default_parts()
     mission = default_mission()
     analytic = evaluate_revision(geo, parts, mission)
-    assert analytic["fidelity_tier"] == "analytic"
+    assert fidelity_of(analytic) == "analytic"
     solver = {
-        "geometry_hash": analytic["geometry_hash"],
+        "geometry_hash": geometry_hash_of(analytic),
         "CL": 0.50,
         "CDi": 0.010,
         "versions": {"vspaero": "test"},
     }
     vspaero = evaluate_revision(geo, parts, mission, solver_result=solver)
-    assert vspaero["fidelity_tier"] == "vspaero"
+    assert fidelity_of(vspaero) == "vspaero"
     with pytest.raises(FidelityMismatch):
         compare_evaluations(analytic, vspaero)
 
@@ -80,7 +87,7 @@ def test_geometry_hash_stable():
     }
     a = evaluate_revision(geo_a, default_parts(), default_mission())
     b = evaluate_revision(geo_b, default_parts(), default_mission())
-    assert a["geometry_hash"] == b["geometry_hash"]
-    assert len(a["geometry_hash"]) == 64
+    assert geometry_hash_of(a) == geometry_hash_of(b)
+    assert len(geometry_hash_of(a) or "") == 64
     again = evaluate_revision(geo_a, default_parts(), default_mission())
-    assert again["geometry_hash"] == a["geometry_hash"]
+    assert geometry_hash_of(again) == geometry_hash_of(a)
