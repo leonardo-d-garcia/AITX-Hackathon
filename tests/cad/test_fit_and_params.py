@@ -96,10 +96,35 @@ def test_fit_report_compares_areas_like_for_like(model, avenger_dir, features):
     assert abs(area["relative_difference_vs_exposed"]) < 0.03
 
 
+def test_fit_report_exposes_the_flat_keys_the_viewer_reads(model, avenger_dir):
+    """A4's static inspector reads rms_m / max_m / per_part / note off the top level."""
+    report = fit_report(model, avenger_dir, samples=300)
+    assert report["rms_m"] > 0 and report["max_m"] >= report["rms_m"]
+    assert {p["part_id"] for p in report["per_part"]} == {p.part_id for p in model.parts}
+    assert "confirm" in report["note"].lower()
+    for row in report["per_part"]:
+        assert set(row) == {"part_id", "rms_m", "max_m", "note"}
+        assert row["rms_m"] is not None or row["note"], "an uncompared part must say why"
+
+
+def test_fit_report_raises_when_it_cannot_find_the_reference(model, tmp_path):
+    with pytest.raises(ValueError, match="not available"):
+        fit_report(model, tmp_path / "not_here", samples=100)
+
+
+def test_fit_report_raises_when_nothing_matches_rather_than_returning_nulls(model, tmp_path):
+    """An empty but existing directory used to come back as a report full of nulls."""
+    empty = tmp_path / "empty_sources"
+    empty.mkdir()
+    with pytest.raises(ValueError, match="nothing was compared"):
+        fit_report(model, empty, samples=100)
+
+
 def test_fit_report_degrades_cleanly_without_the_reference(model, tmp_path):
-    report = fit_report(model, tmp_path / "not_here", samples=100)
+    report = fit_report(model, tmp_path / "not_here", samples=100, strict=False)
     assert report["confirmed"] is False
     assert report["parts"] == {} and report["overall"] == {}
+    assert report["rms_m"] is None and report["per_part"] == []
     assert any("not available" in note for note in report["notes"])
 
 

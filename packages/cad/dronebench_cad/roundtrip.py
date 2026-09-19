@@ -41,7 +41,9 @@ def reimport_check(
 
     `expected` is a part_map: a `CadModel`, a part_map dict, or a path to `part_map.json`.
     """
-    step_path = Path(step_path)
+    # The worker runs with its own cwd, so a path relative to *our* cwd would not resolve
+    # there. Resolve before handing anything over.
+    step_path = Path(step_path).resolve()
     part_map = _as_part_map(expected)
 
     if not step_path.exists():
@@ -94,7 +96,7 @@ def _as_part_map(expected: Any) -> dict[str, Any]:
     if hasattr(expected, "part_map"):
         return expected.part_map()
     if isinstance(expected, (str, Path)):
-        return json.loads(Path(expected).read_text(encoding="utf-8"))
+        return json.loads(Path(expected).resolve().read_text(encoding="utf-8"))
     if isinstance(expected, dict) and "parts" in expected:
         return expected
     raise TypeError(

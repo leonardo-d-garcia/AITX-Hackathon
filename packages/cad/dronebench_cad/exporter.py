@@ -104,7 +104,9 @@ def export(
     The returned dicts validate against `dronebench_contracts.models.Artifact`; this package
     does not import the contracts so that A2 stays usable while B reshapes them.
     """
-    out = Path(out_dir)
+    # Absolute from here on: the STEP and GLB writers and the reimport worker all run with
+    # their own working directory.
+    out = Path(out_dir).resolve()
     out.mkdir(parents=True, exist_ok=True)
     part_ids = [p.part_id for p in model.parts]
 

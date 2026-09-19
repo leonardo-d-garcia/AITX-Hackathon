@@ -203,8 +203,25 @@ def revision_dir(design_dir: str | Path, revision_id: Optional[str] = None) -> P
 
 
 def load_manifest(design_dir: str | Path, revision_id: Optional[str] = None) -> DesignManifest:
-    return DesignManifest.model_validate_json(
-        (revision_dir(design_dir, revision_id) / MANIFEST_NAME).read_text())
+    """Read a revision's manifest, relocating its ``sources_root`` if the design dir has moved.
+
+    The stored path is absolute, but a design directory can be copied, mounted elsewhere, or have
+    been written by an older build that stored it relative to a working directory. The sources sit
+    next to the revision by construction, so that is the authority when the stored path is gone.
+    The file on disk is never rewritten — revisions are immutable; only the in-memory copy is fixed.
+    """
+    directory = revision_dir(design_dir, revision_id)
+    manifest = DesignManifest.model_validate_json((directory / MANIFEST_NAME).read_text())
+    recorded = Path(manifest.sources_root) if manifest.sources_root else None
+    if recorded is None or not recorded.is_dir():
+        for candidate in (Path(design_dir) / "sources", directory.parent.parent / "sources"):
+            if candidate.is_dir():
+                manifest.sources_root = str(candidate.resolve())
+                manifest.warnings = [*manifest.warnings,
+                                     f"sources_root {str(recorded)!r} was not readable; relocated to "
+                                     f"{manifest.sources_root!r} next to the revision"]
+                break
+    return manifest
 
 
 def load_features(design_dir: str | Path, revision_id: Optional[str] = None) -> GeometryFeatures:

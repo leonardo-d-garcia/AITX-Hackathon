@@ -15,6 +15,7 @@ engineering comparison (architecture §6, step 8).
 """
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any, Iterable, Optional
 
@@ -98,8 +99,12 @@ def _load_group(reference_dir: Path, files: Iterable[str], frame: dict[str, Any]
     for rel in files:
         path = reference_dir / rel
         if not path.exists():
-            missing.append(rel)
-            continue
+            # A staged tree may have been flattened; fall back to the file name.
+            found = next(reference_dir.rglob(Path(rel).name), None)
+            if found is None:
+                missing.append(rel)
+                continue
+            path = found
         meshes.append(to_frd_mesh(trimesh.load(str(path), process=False), frame))
     if not meshes:
         return None, missing
@@ -185,14 +190,21 @@ def fit_report(
     samples: int = 4000,
     seed: int = 20260919,
     features: Any = None,
+    strict: bool = True,
 ) -> dict[str, Any]:
     """Compare the reconstruction with the reference meshes. Numbers only, no verdict.
 
-    `reference` is the directory holding the original STL tree, or a DesignManifest (object
-    or dict) carrying a confirmed frame and source paths — in which case its frame is used
-    and its `reference_dir` / the given directory supplies the files.
+    `reference` may be any of: the directory holding the original STL tree, a staged
+    `sources` root, a revision directory or design directory written by `packages/ingest`,
+    a `design_manifest.json` path, or a `DesignManifest` object/dict. A manifest supplies
+    the confirmed frame, its `sources_root`, and the selected variants — so the comparison
+    uses the parts that were actually confirmed as installed, not a hard-coded file list.
+
+    With `strict` (the default), a reference that cannot be resolved, or that ends up
+    comparing nothing, raises `ValueError` instead of returning a report full of nulls.
+    Pass `strict=False` to get the soft report back (useful in a UI that wants the notes).
     """
-    reference_dir, frame = _resolve_reference(reference, frame)
+    reference_dir, frame, manifest = _resolve_reference(reference, frame)
 
     report: dict[str, Any] = {
         "schema_version": "0.1.0",
@@ -216,14 +228,27 @@ def fit_report(
         "surfaces": {},
         "area": _area_comparison(model, features),
         "overall": {},
+        # Flat keys for A4's inspector; filled in once there is something to compare.
+        "rms_m": None,
+        "max_m": None,
+        "per_part": [],
+        "note": (
+            "Not usable for engineering comparison until a human confirms the reconstruction."
+        ),
         "notes": [],
         "warnings": list(model.warnings),
     }
 
+    report["reference_source"] = "design_manifest" if manifest else "directory"
+
     if reference_dir is None or not Path(reference_dir).exists():
-        report["notes"].append(
-            f"reference geometry not available at {reference_dir!r}; no fit computed"
+        message = (
+            f"reference geometry not available at {str(reference_dir)!r} "
+            f"(from {reference!r}); no fit computed"
         )
+        if strict:
+            raise ValueError(message)
+        report["notes"].append(message)
         return report
 
     if not frame.get("confirmed", False):
@@ -232,8 +257,10 @@ def fit_report(
             "candidate alignment and must not be published as aircraft metrics."
         )
 
+    groups = _groups_from_manifest(manifest) if manifest else REFERENCE_GROUPS
+    report["reference_groups"] = {k: list(v["files"]) for k, v in groups.items()}
     group_meshes: dict[str, Optional[trimesh.Trimesh]] = {}
-    for key, spec in REFERENCE_GROUPS.items():
+    for key, spec in groups.items():
         mesh, missing = _load_group(Path(reference_dir), spec["files"], frame)
         group_meshes[key] = mesh
         if missing:
@@ -262,7 +289,7 @@ def fit_report(
             report["parts"][part.part_id]["reference"] = None
             continue
 
-        group_key = _group_for(part)
+        group_key = _group_for(part, groups)
         ref = group_meshes.get(group_key) if group_key else None
         if ref is None:
             entry["skipped"] = f"no reference group for category {part.category!r}"
@@ -346,6 +373,38 @@ def fit_report(
         "parts_compared": sum(1 for v in report["parts"].values() if "reference_group" in v),
         "parts_without_reference": sum(1 for v in report["parts"].values() if "skipped" in v),
     }
+
+    if report["overall"]["parts_compared"] == 0:
+        message = (
+            f"nothing was compared: no reference mesh under {reference_dir} matched any "
+            f"reconstructed part. Groups tried: "
+            f"{ {k: len(v['files']) for k, v in groups.items()} }. Notes: {report['notes']}"
+        )
+        if strict:
+            raise ValueError(message)
+        report["notes"].append(message)
+    # Flat view for A4's static inspector: {rms_m, max_m, per_part[], note}. Same numbers,
+    # one level up, so the viewer does not have to know this report's full shape.
+    per_part = []
+    for part_id, entry in report["parts"].items():
+        if "reference_to_reconstruction" in entry:
+            a, b = entry["reference_to_reconstruction"], entry["reconstruction_to_reference"]
+            per_part.append(
+                {
+                    "part_id": part_id,
+                    "rms_m": max(a["rms_m"], b["rms_m"]),
+                    "max_m": max(a["max_m"], b["max_m"]),
+                    "note": entry.get("compared_mirrored", ""),
+                }
+            )
+        else:
+            per_part.append({"part_id": part_id, "rms_m": None, "max_m": None,
+                             "note": entry.get("skipped", "")})
+    report["per_part"] = per_part
+    report["rms_m"] = _rms(all_ref_d + all_recon_d)
+    report["max_m"] = report["overall"]["surface_distance_max_m"]
+    report["note"] = report["confirmation_note"]
+
     report["notes"].append(
         "Several reference meshes are open shells (fuse2, fuse4, fuse5, hatch2, wing1, wing3*, "
         "motor_mount). Surface distance is still meaningful; any volume comparison is not."
@@ -386,14 +445,59 @@ def _area_comparison(model: CadModel, features: Any) -> dict[str, Any]:
         out["relative_difference_vs_exposed"] = (exposed - claimed) / claimed
         out["relative_difference_vs_gross"] = (exposed + carry_through - claimed) / claimed
         out["assumptions"] = (data.get("reference_area_m2") or {}).get("assumptions", [])
+
+    # A1 publishes its own exposed figure (midpoint rule over every station). Re-integrating
+    # the station list instead drops half a bin at the root and the tip, so compare against
+    # the published number when there is one.
+    published_exposed = ((data.get("quality") or {}).get("wing") or {}).get("exposed_area_m2")
+    if published_exposed:
+        out["features_exposed_area_m2"] = published_exposed
+        out["relative_difference_vs_features_exposed"] = (
+            exposed - published_exposed
+        ) / published_exposed
     return out
 
 
-def _group_for(part: ReconPart) -> Optional[str]:
-    for key, spec in REFERENCE_GROUPS.items():
-        if "part_ids" in spec and part.part_id in spec["part_ids"]:
+MANIFEST_CATEGORY_TO_GROUP = {
+    "wing": "wing", "aileron": "wing",
+    "vtail": "vtail", "ruddervator": "vtail",
+    "fuselage": "fuselage", "canopy": "fuselage", "hatch": "fuselage",
+}
+
+
+def _groups_from_manifest(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Reference groups taken from the confirmed occurrences, not from a hard-coded list.
+
+    This is what makes the comparison honour the variant that was actually selected
+    (fuse3 vs fuse3_clean vs fuse3_belly_cam, and the wing3 hole size). Mirrored
+    occurrences share their parent's source file, so sources are de-duplicated.
+    """
+    groups: dict[str, dict[str, Any]] = {}
+    for part in manifest.get("parts") or []:
+        source = part.get("source")
+        if not source or part.get("representation") != "reference_mesh":
+            continue
+        category = part.get("category", "")
+        if category == "mount":
+            name = Path(source).stem
+            key = "plate" if "plate" in name else "mount"
+        else:
+            key = MANIFEST_CATEGORY_TO_GROUP.get(category)
+        if not key:
+            continue
+        spec = groups.setdefault(key, {"files": [], "surface_id": None, "part_ids": []})
+        if source not in spec["files"]:
+            spec["files"].append(source)
+    for key, spec in groups.items():
+        spec["part_ids"] = list(REFERENCE_GROUPS.get(key, {}).get("part_ids") or ())
+    return groups or dict(REFERENCE_GROUPS)
+
+
+def _group_for(part: ReconPart, groups: dict[str, dict[str, Any]]) -> Optional[str]:
+    for key, spec in groups.items():
+        if part.part_id in (spec.get("part_ids") or ()):
             return key
-    return part.category if part.category in REFERENCE_GROUPS else None
+    return part.category if part.category in groups else None
 
 
 def _surface_params(model: CadModel, part: ReconPart):
@@ -406,14 +510,63 @@ def _surface_params(model: CadModel, part: ReconPart):
     return None
 
 
+MANIFEST_FILE = "design_manifest.json"
+MESH_TREE_HINTS = ("Wings", "Fuselage", "Tail")
+
+
 def _resolve_reference(reference: Any, frame: Optional[dict[str, Any]]):
-    """Accept a directory, or a DesignManifest object/dict carrying a confirmed frame."""
+    """Work out where the reference meshes are, and which frame to read them in.
+
+    Accepts a mesh directory, a staged `sources` root, a revision directory, a design
+    directory (newest revision wins), a `design_manifest.json` path, or a DesignManifest
+    object/dict. Returns `(reference_dir, frame, manifest_or_None)`.
+    """
     if isinstance(reference, (str, Path)):
-        return Path(reference), dict(frame or CANDIDATE_FRAME)
+        return _resolve_path(Path(reference).expanduser(), frame)
 
     data = reference if isinstance(reference, dict) else getattr(reference, "model_dump", dict)()
     if callable(data):
         data = data()
+    return _from_manifest(data, base_dir=None, frame=frame)
+
+
+def _resolve_path(path: Path, frame: Optional[dict[str, Any]], _depth: int = 0):
+    if _depth > 3:
+        return None, dict(frame or CANDIDATE_FRAME), None
+
+    if path.is_file() and path.suffix == ".json":
+        return _from_manifest(
+            json.loads(path.read_text(encoding="utf-8")), base_dir=path.parent, frame=frame
+        )
+
+    if not path.is_dir():
+        return path, dict(frame or CANDIDATE_FRAME), None
+
+    # A revision directory (or any directory holding the manifest).
+    manifest_path = path / MANIFEST_FILE
+    if manifest_path.is_file():
+        return _from_manifest(
+            json.loads(manifest_path.read_text(encoding="utf-8")), base_dir=path, frame=frame
+        )
+
+    # A design directory: use the newest revision that carries a manifest.
+    revisions = path / "revisions"
+    if revisions.is_dir():
+        candidates = sorted(
+            (d for d in revisions.iterdir() if (d / MANIFEST_FILE).is_file()),
+            key=lambda d: d.stat().st_mtime,
+        )
+        if candidates:
+            return _resolve_path(candidates[-1], frame, _depth + 1)
+
+    # A design directory with staged sources but no manifest yet.
+    if (path / "sources").is_dir() and not any((path / h).is_dir() for h in MESH_TREE_HINTS):
+        return (path / "sources"), dict(frame or CANDIDATE_FRAME), None
+
+    return path, dict(frame or CANDIDATE_FRAME), None
+
+
+def _from_manifest(data: dict[str, Any], base_dir: Optional[Path], frame: Optional[dict[str, Any]]):
     manifest_frame = data.get("frame") or {}
     resolved = dict(frame or {})
     if manifest_frame and not frame:
@@ -425,5 +578,20 @@ def _resolve_reference(reference: Any, frame: Optional[dict[str, Any]]):
             "native_to_frd": manifest_frame.get("native_to_frd"),
             "from_manifest": True,
         }
-    ref_dir = data.get("sources_root") or data.get("reference_dir") or data.get("staged_dir")
-    return (Path(ref_dir) if ref_dir else None), (resolved or dict(CANDIDATE_FRAME))
+
+    declared = data.get("sources_root") or data.get("reference_dir") or data.get("staged_dir")
+    candidates: list[Path] = []
+    if declared:
+        # sources_root may be relative to the caller's cwd, or to the revision directory.
+        candidates.append(Path(declared))
+        if base_dir is not None and not Path(declared).is_absolute():
+            candidates += [base_dir / declared, base_dir.parent.parent / declared]
+    if base_dir is not None:
+        # revisions/<id>/ -> design/sources, and design/sources for a design directory.
+        candidates += [base_dir / "sources", base_dir.parent.parent / "sources"]
+
+    for candidate in candidates:
+        if candidate.is_dir():
+            return candidate.resolve(), (resolved or dict(CANDIDATE_FRAME)), data
+
+    return None, (resolved or dict(CANDIDATE_FRAME)), data

@@ -28,7 +28,7 @@ class StagedFile(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     source_path: str          # path relative to the archive root, original filename preserved
-    staged_path: str          # absolute path of the staged byte-identical copy
+    staged_path: str          # ABSOLUTE path of the staged byte-identical copy
     sha256: str
     size_bytes: int
     folder_hint: Optional[str] = None
@@ -37,7 +37,7 @@ class StagedFile(BaseModel):
 class StagedArchive(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    root: str                 # absolute path of <design_dir>/sources
+    root: str                 # ABSOLUTE path of <design_dir>/sources
     origin: str               # absolute path of the zip or folder that was staged
     origin_sha256: Optional[str] = None       # hash of the zip itself, when a zip was given
     files: list[StagedFile] = Field(default_factory=list)
@@ -64,7 +64,7 @@ def sha256_file(path: Path) -> str:
 
 def load_staged(design_dir: str | Path) -> StagedArchive:
     """Re-read an already staged design directory (``<design_dir>/sources``) and rehash it."""
-    root = Path(design_dir) / "sources"
+    root = (Path(design_dir) / "sources").resolve()
     if not root.is_dir():
         raise rejected("design directory has no staged sources", path=str(root))
     files, content = [], hashlib.sha256()
@@ -162,7 +162,8 @@ def stage_archive(zip_or_dir: str | Path, out_dir: str | Path) -> StagedArchive:
     Nothing from the archive is executed or parsed here.
     """
     origin = Path(zip_or_dir).resolve()
-    out_dir = Path(out_dir)
+    out_dir = Path(out_dir).resolve()   # staged paths are recorded absolute: a consumer of the
+                                        # manifest has no reason to share this process's cwd
     root = out_dir / "sources"
     if not origin.exists():
         raise rejected("input does not exist", path=str(origin))

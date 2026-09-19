@@ -92,6 +92,23 @@ def test_round_trip_notices_an_edited_design_against_a_stale_part_map(exported, 
     assert "volume_relative_difference" in failed or "bounds_within_tolerance" in failed
 
 
+def test_glb_carries_vertex_normals(exported, model):
+    """No NORMAL attribute means every part renders black in three.js (A4's viewer)."""
+    import struct
+
+    out, _ = exported
+    raw = (out / GLB_NAME).read_bytes()
+    json_length = struct.unpack("<I", raw[12:16])[0]
+    gltf = json.loads(raw[20 : 20 + json_length])
+    primitives = [p for mesh in gltf["meshes"] for p in mesh["primitives"]]
+    assert primitives, "GLB has no mesh primitives"
+    for primitive in primitives:
+        assert "NORMAL" in primitive["attributes"], primitive["attributes"]
+        assert "POSITION" in primitive["attributes"]
+    names = {node.get("name") for node in gltf["nodes"]}
+    assert {p.part_id for p in model.parts} <= names
+
+
 def test_glb_loads_with_a_node_for_every_part(exported, model):
     out, _ = exported
     scene = trimesh.load(str(out / GLB_NAME))
@@ -123,6 +140,30 @@ def test_a_truncated_step_fails_fast(exported, tmp_path):
     truncated.write_bytes(good[: len(good) // 2])
     checks = reimport_check(truncated, out / PART_MAP_NAME, timeout_s=60)
     assert any(not c["passed"] for c in checks)
+
+
+def test_relative_paths_work_from_any_working_directory(model, tmp_path, monkeypatch):
+    """The reimport worker has its own cwd: a caller's relative path must still resolve."""
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "out").mkdir()
+    export(model, "out")  # relative out_dir
+    checks = reimport_check("out/" + STEP_NAME, "out/" + PART_MAP_NAME)
+    assert not [c for c in checks if not c["passed"]], checks
+
+    # ...and still resolves after the caller moves somewhere else entirely.
+    nested = tmp_path / "elsewhere"
+    nested.mkdir()
+    monkeypatch.chdir(nested)
+    checks = reimport_check("../out/" + STEP_NAME, "../out/" + PART_MAP_NAME)
+    assert not [c for c in checks if not c["passed"]], checks
+
+
+def test_export_returns_relative_artifact_paths_for_a_relative_out_dir(model, tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    artifacts = export(model, "rel_out")
+    assert {a["path"] for a in artifacts} == ARTIFACT_NAMES
+    for artifact in artifacts:
+        assert (tmp_path / "rel_out" / artifact["path"]).is_file()
 
 
 def test_a_missing_step_is_reported_not_raised(tmp_path, model):
