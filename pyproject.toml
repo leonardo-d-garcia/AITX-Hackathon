@@ -41,6 +41,7 @@ include = ["dronebench_*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = [
+    "packages",
     "packages/contracts",
     "packages/graph",
     "packages/recommend",
