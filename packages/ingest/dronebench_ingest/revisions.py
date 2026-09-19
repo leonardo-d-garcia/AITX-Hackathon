@@ -213,14 +213,18 @@ def load_manifest(design_dir: str | Path, revision_id: Optional[str] = None) -> 
     directory = revision_dir(design_dir, revision_id)
     manifest = DesignManifest.model_validate_json((directory / MANIFEST_NAME).read_text())
     recorded = Path(manifest.sources_root) if manifest.sources_root else None
-    if recorded is None or not recorded.is_dir():
-        for candidate in (Path(design_dir) / "sources", directory.parent.parent / "sources"):
-            if candidate.is_dir():
-                manifest.sources_root = str(candidate.resolve())
-                manifest.warnings = [*manifest.warnings,
-                                     f"sources_root {str(recorded)!r} was not readable; relocated to "
-                                     f"{manifest.sources_root!r} next to the revision"]
-                break
+    local = directory.parent.parent / "sources"
+    if local.is_dir():
+        manifest.sources_root = str(local.resolve())
+        if recorded is not None and recorded.resolve() != local.resolve():
+            manifest.warnings = [*manifest.warnings,
+                                 f"sources_root was recorded as {str(recorded)!r}; this design "
+                                 f"directory carries its own sources at {manifest.sources_root!r}, "
+                                 "which is what was read (per-source sha256 lets you verify them)"]
+    elif recorded is None or not recorded.is_dir():
+        manifest.warnings = [*manifest.warnings,
+                             f"sources_root {str(recorded)!r} is not readable and this design "
+                             f"directory has no sources/ next to {directory.name}"]
     return manifest
 
 

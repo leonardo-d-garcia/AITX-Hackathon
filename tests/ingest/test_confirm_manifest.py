@@ -9,28 +9,27 @@ import pytest
 from dronebench_ingest import confirm, load_manifest, placed_mesh, stable_part_id
 from dronebench_ingest.errors import IngestError
 
-from .conftest import FUSE3, SELECTION, WING3
 
 
-def test_confirm_requires_explicit_variant_choices(staged):
+def test_confirm_requires_explicit_variant_choices(staged, selection):
     design_dir, _, _ = staged
     with pytest.raises(IngestError) as exc:
-        confirm(design_dir, units="mm", variants={"wing3": WING3}, mirror="x=0")
+        confirm(design_dir, units="mm", variants={"wing3": selection["wing3"]}, mirror="x=0")
     assert exc.value.envelope.code.value == "ASSEMBLY_UNCONFIRMED"
     assert "fuse3" in exc.value.envelope.message
 
 
-def test_confirm_rejects_an_option_that_is_not_in_the_group(staged):
+def test_confirm_rejects_an_option_that_is_not_in_the_group(staged, selection):
     design_dir, _, _ = staged
     with pytest.raises(IngestError) as exc:
         confirm(design_dir, units="mm", mirror="x=0",
-                variants={"wing3": "Wings/wing2.stl", "fuse3": FUSE3})
+                variants={"wing3": "Wings/wing2.stl", "fuse3": selection["fuse3"]})
     assert exc.value.envelope.code.value == "INPUT_REJECTED"
 
 
-def test_revision_is_deterministic_and_append_only(confirmed):
+def test_revision_is_deterministic_and_append_only(confirmed, selection):
     design_dir, revision, manifest, _ = confirmed
-    again = confirm(design_dir, units="mm", variants=SELECTION, mirror="x=0", mass_model="none",
+    again = confirm(design_dir, units="mm", variants=selection, mirror="x=0", mass_model="none",
                     confirmed_by="pytest")
     assert again.revision_id == revision.revision_id
     assert again.content_sha256 == revision.content_sha256
@@ -42,10 +41,10 @@ def test_revision_is_deterministic_and_append_only(confirmed):
     assert revision.state.value == "committed" and revision.cause == "confirm"
 
 
-def test_only_selected_variants_are_installed(confirmed):
+def test_only_selected_variants_are_installed(confirmed, selection):
     _, _, manifest, _ = confirmed
     installed = {p.source for p in manifest.parts if p.source}
-    assert WING3 in installed and FUSE3 in installed
+    assert selection["wing3"] in installed and selection["fuse3"] in installed
     assert manifest.excluded_sources == sorted([
         "Fuselage/fuse3_belly_cam.stl", "Fuselage/fuse3_clean.stl",
         "Wings/wing3_16mm_hole.stl", "Wings/wing3_no_hole.stl"])
@@ -130,9 +129,9 @@ def test_not_watertight_parts_have_no_centroid(confirmed):
     assert any("not watertight" in w for w in manifest.warnings)
 
 
-def test_shell_estimate_is_opt_in_and_carries_its_assumptions(staged):
+def test_shell_estimate_is_opt_in_and_carries_its_assumptions(staged, selection):
     design_dir, _, _ = staged
-    revision = confirm(design_dir, units="mm", variants=SELECTION, mirror="x=0",
+    revision = confirm(design_dir, units="mm", variants=selection, mirror="x=0",
                        mass_model="shell_estimate", confirmed_by="pytest")
     manifest = load_manifest(design_dir, revision.revision_id)
     assert manifest.mass_model == "shell_estimate"
@@ -179,13 +178,13 @@ def test_declared_mating_pairs_exist_and_are_symmetric(confirmed):
     assert "wing2 (right)" not in neighbours
 
 
-def test_a_failed_confirm_leaves_no_partial_revision(staged, monkeypatch):
+def test_a_failed_confirm_leaves_no_partial_revision(staged, selection, monkeypatch):
     design_dir, _, _ = staged
     import dronebench_ingest.revisions as revisions
     monkeypatch.setattr(revisions, "build_manifest",
                         lambda *a, **k: (_ for _ in ()).throw(RuntimeError("boom")))
     before = {p.name for p in (design_dir / "revisions").iterdir()}
     with pytest.raises(RuntimeError):
-        revisions.confirm(design_dir, units="in", variants=SELECTION, mirror="x=0")
+        revisions.confirm(design_dir, units="in", variants=selection, mirror="x=0")
     after = {p.name for p in (design_dir / "revisions").iterdir()}
     assert after == before

@@ -18,18 +18,17 @@ from dronebench_ingest import (confirm, export_reference_glb, geometry_features,
 from dronebench_ingest.assembly import sources_root
 from dronebench_ingest.errors import IngestError
 
-from conftest import SELECTION
 
 
 @pytest.fixture(scope="module")
-def relative_design(avenger_dir, tmp_path_factory):
+def relative_design(avenger_dir, selection, tmp_path_factory):
     """A design staged and confirmed with a RELATIVE design dir, as the end-to-end script does."""
     work = tmp_path_factory.mktemp("relative")
     previous = Path.cwd()
     os.chdir(work)
     try:
         stage_archive(avenger_dir, "design")             # relative, exactly like the failing run
-        revision = confirm("design", units="mm", variants=SELECTION, mirror="x=0",
+        revision = confirm("design", units="mm", variants=selection, mirror="x=0",
                            confirmed_by="pytest")
     finally:
         os.chdir(previous)
@@ -66,8 +65,12 @@ def test_meshes_load_from_an_unrelated_working_directory(relative_design, tmp_pa
     assert len(part_meshes(manifest)) == len(manifest.parts)
 
 
-def test_a_moved_design_directory_relocates_its_sources(relative_design, tmp_path, monkeypatch):
-    """Copy a design elsewhere: the sources sit next to the revision, so that wins over the record."""
+def test_a_copied_design_directory_reads_its_own_sources(relative_design, tmp_path, monkeypatch):
+    """A design directory is self-contained: its own sources/ wins over the path recorded at staging.
+
+    Copy or mount one somewhere else and it keeps working, and the per-source sha256 in the manifest
+    is there to prove the copy is the archive the revision was measured from.
+    """
     import shutil
     work, revision = relative_design
     moved = tmp_path / "somewhere_else"
@@ -76,7 +79,24 @@ def test_a_moved_design_directory_relocates_its_sources(relative_design, tmp_pat
 
     manifest = load_manifest(moved, revision.revision_id)
     assert Path(manifest.sources_root) == (moved / "sources").resolve()
-    assert any("relocated" in w for w in manifest.warnings)
+    assert any("carries its own sources" in w for w in manifest.warnings)
+    assert len(placed_mesh(manifest, manifest.parts[0]).faces) > 0
+
+    original = load_manifest(work / "design", revision.revision_id)
+    assert not any("carries its own sources" in w for w in original.warnings)
+
+
+def test_a_revision_copied_without_its_sources_falls_back_to_the_record(relative_design, tmp_path,
+                                                                        monkeypatch):
+    """No sources/ beside the revision: the absolute path recorded at staging still resolves."""
+    import shutil
+    work, revision = relative_design
+    bare = tmp_path / "bare"
+    (bare / "revisions").mkdir(parents=True)
+    shutil.copytree(work / "design" / "revisions" / revision.revision_id,
+                    bare / "revisions" / revision.revision_id)
+    manifest = load_manifest(bare, revision.revision_id)
+    assert Path(manifest.sources_root) == (work / "design" / "sources").resolve()
     assert len(placed_mesh(manifest, manifest.parts[0]).faces) > 0
 
 

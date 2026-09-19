@@ -23,6 +23,12 @@ SELECTION = {"wing3": WING3, "fuse3": FUSE3}
 
 
 @pytest.fixture(scope="session")
+def selection() -> dict[str, str]:
+    """The variant choices a user would make at confirmation, as {group_id: source_path}."""
+    return dict(SELECTION)
+
+
+@pytest.fixture(scope="session")
 def avenger_dir() -> Path:
     if not AVENGER.is_dir():
         pytest.skip(f"vendor archive not present at {AVENGER}")

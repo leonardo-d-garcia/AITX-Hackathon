@@ -13,7 +13,6 @@ from dronebench_ingest import export_reference_glb, preview_manifest
 from dronebench_ingest.cli import main
 from dronebench_ingest.glb import FRD_TO_GLTF, GLB_NAME
 
-from .conftest import SELECTION
 
 
 def test_glb_round_trips_with_every_part_node(confirmed, tmp_path):
@@ -117,12 +116,12 @@ def test_cli_features_on_an_unconfirmed_design_is_a_report_not_a_failure(tmp_pat
     assert payload["code"] == "UNITS_UNCONFIRMED"
 
 
-def test_cli_confirm_then_features_and_parts(tmp_path, avenger_dir, capsys):
+def test_cli_confirm_then_features_and_parts(tmp_path, avenger_dir, selection, capsys):
     design_dir = tmp_path / "cli"
     assert main(["ingest", str(avenger_dir), "--design-dir", str(design_dir)]) == 0
     capsys.readouterr()
     argv = ["confirm", "--design-dir", str(design_dir), "--units", "mm", "--mirror", "x=0"]
-    for group, option in SELECTION.items():
+    for group, option in selection.items():
         argv += ["--select", f"{group}={option}"]
     assert main(argv) == 0
     revision = json.loads(capsys.readouterr().out)

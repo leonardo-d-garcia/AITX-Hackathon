@@ -182,12 +182,12 @@ def test_mass_and_cg_stay_unknown_without_measured_mass(confirmed):
     assert "no mass claim" in features.mass_kg.assumptions[0]
 
 
-def test_shell_estimate_gives_a_mass_but_the_cg_stays_unknown(staged):
+def test_shell_estimate_gives_a_mass_but_the_cg_stays_unknown(staged, selection):
     """Selecting the mass model buys an estimated total; it does not buy a CG."""
     from dronebench_ingest import confirm, load_features
-    from .conftest import SELECTION
+    
     design_dir, _, _ = staged
-    revision = confirm(design_dir, units="mm", variants=SELECTION, mirror="x=0",
+    revision = confirm(design_dir, units="mm", variants=selection, mirror="x=0",
                        mass_model="shell_estimate", confirmed_by="pytest")
     features = load_features(design_dir, revision.revision_id)
     assert features.mass_kg.status.value == "estimated"
