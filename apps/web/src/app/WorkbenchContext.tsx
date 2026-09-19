@@ -30,6 +30,7 @@ import type {
 import {
   ApiError,
   api,
+  localEnvelope,
   subscribeEvents,
   type DoctorReport,
   type PartsResponse,
@@ -114,12 +115,7 @@ export function WorkbenchProvider({ children }: { children: ReactNode }) {
         } else {
           setError(
             new ApiError(
-              {
-                code: "INTERNAL",
-                message: caught instanceof Error ? caught.message : String(caught),
-                details: {},
-                retryable: false,
-              },
+              localEnvelope(caught instanceof Error ? caught.message : String(caught)),
               0,
             ),
           );
@@ -169,15 +165,7 @@ export function WorkbenchProvider({ children }: { children: ReactNode }) {
         const job = await api.job(started.job_id);
         if (job.status === "succeeded") break;
         if (job.status === "failed" || job.status === "cancelled") {
-          throw new ApiError(
-            {
-              code: "INTERNAL",
-              message: job.error_message ?? `import ${job.status}`,
-              details: {},
-              retryable: false,
-            },
-            500,
-          );
+          throw new ApiError(localEnvelope(job.error_message ?? `import ${job.status}`), 500);
         }
         await new Promise((resolve) => setTimeout(resolve, 100));
       }
@@ -235,10 +223,10 @@ export function WorkbenchProvider({ children }: { children: ReactNode }) {
           proposal_id: proposalId,
           decision,
           expected_active_revision_id: revisionId,
-          preview_hash: decision === "accept" ? previewHash : undefined,
+          preview_hash: decision === "accept" ? (previewHash ?? null) : null,
           // One key per decision, so a double-click cannot commit twice.
           idempotency_key: `${proposalId}:${decision}:${revisionId}`,
-          reason,
+          reason: reason ?? null,
         });
         await loadRevision(designId);
       });

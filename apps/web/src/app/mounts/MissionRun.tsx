@@ -16,7 +16,7 @@ import { useWorkbench } from "@/app/WorkbenchContext";
 import { ApiError, api } from "@/lib/api";
 import type { SimulationRun } from "@/lib/contracts.gen";
 
-export function SimulationMount() {
+export function MissionRun() {
   const { revisionId } = useWorkbench();
   const [run, setRun] = useState<SimulationRun | null>(null);
   const [note, setNote] = useState<string | null>(null);
@@ -37,26 +37,25 @@ export function SimulationMount() {
   const last = samples[samples.length - 1];
 
   return (
-    <div className="simulation-mount">
+    <div className="run">
       <header>
         <h2>Simulate</h2>
-        <span className="chip pending">features/simulation — Team C</span>
+        <span className="state">Team C</span>
         <button type="button" className="primary" onClick={() => void go()} disabled={!revisionId}>
           Run the mission model
         </button>
       </header>
 
       <p className="muted">
-        The replay scene mounts here. It is Team C&apos;s component and is not installed yet. The
-        run below is the reduced-order mission model: distance and energy integrated along the
-        declared route at a fixed altitude and speed.
+        Distance and energy integrated along the declared route at a fixed altitude and speed.
+        Team C&apos;s replay scene replaces this panel.
       </p>
 
-      {note ? <p className="warn">{note}</p> : null}
+      {note ? <p className="muted">{note}</p> : null}
 
       {run && last ? (
         <>
-          <dl className="runsummary">
+          <dl className="factgrid">
             <div>
               <dt>Revision</dt>
               <dd>
@@ -69,7 +68,7 @@ export function SimulationMount() {
             </div>
             <div>
               <dt>Outcome</dt>
-              <dd className={run.completed_route ? "" : "warn"}>
+              <dd className={run.completed_route ? "" : "is-unconfirmed"}>
                 {run.termination_reason.replace(/_/g, " ")}
               </dd>
             </div>
@@ -89,7 +88,7 @@ export function SimulationMount() {
 
           <EnergyTrace run={run} />
 
-          <section className="assumptions">
+          <section className="limits">
             <h3>What this run assumes</h3>
             <ul>
               {(run.assumptions ?? []).map((assumption) => (

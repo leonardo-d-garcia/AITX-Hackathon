@@ -13,26 +13,25 @@
 import { useWorkbench } from "@/app/WorkbenchContext";
 import type { Claim } from "@/lib/contracts.gen";
 
-export function CadViewportMount() {
+export function GeometryFacts() {
   const { parts, selectedPartId, revisionId } = useWorkbench();
   const features = parts?.geometry_features;
   const selected = parts?.parts.occurrences.find((item) => item.part_id === selectedPartId);
 
   return (
-    <div className="viewport-mount">
+    <div className="facts">
       <header>
         <h2>Geometry</h2>
-        <span className="chip pending">features/cad — Team A</span>
+        <span className="state">Team A</span>
       </header>
 
       <p className="muted">
-        The 3D viewport mounts here. It is Team A&apos;s component and is not installed yet, so no
-        rendering is claimed. The quantities below come from <code>geometry_features.json</code>,
-        the same source the evaluator reads - there is no second copy of the wing dimensions.
+        These come from <code>geometry_features.json</code>, the same source the evaluator reads.
+        There is no second copy of the wing dimensions anywhere in the product.
       </p>
 
       {features ? (
-        <dl className="features">
+        <dl className="factgrid">
           <div>
             <dt>Revision</dt>
             <dd>
@@ -57,7 +56,7 @@ export function CadViewportMount() {
           </div>
           <div>
             <dt>Frame</dt>
-            <dd className={features.frame_confirmed ? "" : "warn"}>
+            <dd className={features.frame_confirmed ? "" : "is-unconfirmed"}>
               {features.frame_confirmed ? "confirmed" : "unconfirmed"}
             </dd>
           </div>

@@ -11,16 +11,16 @@ import { useState } from "react";
 
 import { useWorkbench } from "./WorkbenchContext";
 
-export function EventLog() {
+export function AuditRail() {
   const { events } = useWorkbench();
   const [open, setOpen] = useState(false);
 
   const latest = events[events.length - 1];
 
   return (
-    <footer className={open ? "eventlog open" : "eventlog"}>
-      <button type="button" className="eventlog-toggle" onClick={() => setOpen(!open)}>
-        {open ? "▾" : "▸"} Audit log
+    <footer className={open ? "audit is-open" : "audit"}>
+      <button type="button" className="audit-toggle" onClick={() => setOpen(!open)}>
+        Audit log
         <span className="muted">
           {latest ? ` · #${latest.sequence} ${latest.kind}` : " · nothing yet"}
         </span>

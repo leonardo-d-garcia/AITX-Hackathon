@@ -98,10 +98,13 @@ def render_type(schema: dict[str, Any], defs: dict[str, Any], depth: int = 0) ->
 def render_object(schema: dict[str, Any], defs: dict[str, Any], depth: int) -> str:
     indent = "  " * (depth + 1)
     closing = "  " * depth
-    required = set(schema.get("required", []))
+    # Every property, not just the schema's `required` set. Pydantic marks a field optional when
+    # it has a default, but this bundle is generated in *serialization* mode and `model_dump`
+    # emits every field - so on the wire they are all present. Marking them optional would make
+    # consumers write `?? []` guards against a case the API cannot produce.
     lines = ["{"]
     for name, prop in schema.get("properties", {}).items():
-        optional = "" if name in required else "?"
+        optional = ""
         description = prop.get("description")
         if description:
             wrapped = " ".join(description.split())

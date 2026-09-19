@@ -296,6 +296,12 @@
           "title": "Diagnostics",
           "type": "array"
         },
+        "downloadable": {
+          "description": "Section 6: download requires a successful round trip. Serialised for the same reason\nas ``passed`` - the UI must not re-derive whether a file may be offered.",
+          "readOnly": true,
+          "title": "Downloadable",
+          "type": "boolean"
+        },
         "glb_artifact_id": {
           "anyOf": [
             {
@@ -436,7 +442,8 @@
         "ok",
         "base_revision_id",
         "operation",
-        "produced_by"
+        "produced_by",
+        "downloadable"
       ],
       "title": "CadEditResult",
       "type": "object"
@@ -3612,6 +3619,12 @@
           "title": "Notes",
           "type": "array"
         },
+        "passed": {
+          "description": "Serialised so the UI has one definition of a passing round trip, not two.",
+          "readOnly": true,
+          "title": "Passed",
+          "type": "boolean"
+        },
         "performed": {
           "title": "Performed",
           "type": "boolean"
@@ -3641,7 +3654,8 @@
         }
       },
       "required": [
-        "performed"
+        "performed",
+        "passed"
       ],
       "title": "RoundTripCheck",
       "type": "object"

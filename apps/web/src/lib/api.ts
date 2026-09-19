@@ -50,6 +50,12 @@ export class ApiError extends Error {
   }
 }
 
+/** An envelope for a failure that never reached the service layer. Same shape, so the UI has
+ *  exactly one error type to handle. */
+export function localEnvelope(message: string): ErrorEnvelope {
+  return { code: "INTERNAL", message, revision_id: null, details: {}, retryable: false };
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(path, {
     ...init,
@@ -61,12 +67,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     try {
       envelope = (await response.json()) as ErrorEnvelope;
     } catch {
-      envelope = {
-        code: "INTERNAL",
-        message: `${response.status} ${response.statusText}`,
-        details: {},
-        retryable: false,
-      };
+      envelope = localEnvelope(`${response.status} ${response.statusText}`);
     }
     throw new ApiError(envelope, response.status);
   }

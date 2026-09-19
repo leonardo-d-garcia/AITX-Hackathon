@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from typing import Annotated, Literal, Self, Union
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, computed_field, model_validator
 
 from .claims import Claim
 from .parts import Representation
@@ -191,8 +191,18 @@ class RoundTripCheck(BaseModel):
     )
     notes: list[str] = Field(default_factory=list)
 
+    @model_validator(mode="before")
+    @classmethod
+    def _drop_derived(cls, data):
+        """Ignore ``passed`` on input; it is derived from the checks below."""
+        if isinstance(data, dict) and "passed" in data:
+            data = {k: v for k, v in data.items() if k != "passed"}
+        return data
+
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def passed(self) -> bool:
+        """Serialised so the UI has one definition of a passing round trip, not two."""
         return (
             self.performed
             and self.solids_match
@@ -248,6 +258,13 @@ class CadEditResult(BaseModel):
         description="B-stub marks the reference CAD port B uses until Team A's kernel lands."
     )
 
+    @model_validator(mode="before")
+    @classmethod
+    def _drop_derived_result(cls, data):
+        if isinstance(data, dict) and "downloadable" in data:
+            data = {k: v for k, v in data.items() if k != "downloadable"}
+        return data
+
     @model_validator(mode="after")
     def _ok_implies_evidence(self) -> Self:
         if self.ok:
@@ -265,7 +282,9 @@ class CadEditResult(BaseModel):
                 )
         return self
 
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def downloadable(self) -> bool:
-        """Section 6: download requires a successful round trip."""
+        """Section 6: download requires a successful round trip. Serialised for the same reason
+        as ``passed`` - the UI must not re-derive whether a file may be offered."""
         return self.ok and self.round_trip.passed

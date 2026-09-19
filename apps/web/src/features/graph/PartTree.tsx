@@ -1,11 +1,9 @@
 /**
- * The part tree (architecture section 10, Inspect).
+ * The part list.
  *
- * "Selection synchronizes tree, mesh, bounded graph neighborhood and claims." Selection lives in
- * the shared context, so clicking here moves every other panel.
- *
- * Unknowns are amber and carry a text label as well as a colour, because section 10 asks for
- * "text/status icons for accessibility" rather than colour alone.
+ * Selection is shared state, so picking here moves the schematic, the inspector, and the graph.
+ * An occurrence with no mass evidence is amber *and* says "mass unknown" — colour alone is not a
+ * signal every viewer can read, and this is the state the whole product turns on.
  */
 
 import { useMemo, useState } from "react";
@@ -32,22 +30,24 @@ export function PartTree() {
     const byRole = new Map<string, PartOccurrence[]>();
     for (const occurrence of matching) {
       const role = occurrence.role ?? "unknown";
-      const bucket = byRole.get(role) ?? [];
-      bucket.push(occurrence);
-      byRole.set(role, bucket);
+      byRole.set(role, [...(byRole.get(role) ?? []), occurrence]);
     }
     return [...byRole.entries()].sort(([a], [b]) => a.localeCompare(b));
   }, [parts, filter]);
 
-  const unknownCount = Object.keys(parts?.unknown_claims ?? {}).length;
-
   if (!parts) return <p className="muted">No revision loaded.</p>;
+
+  const unknown = Object.keys(parts.unknown_claims ?? {});
+  const total = parts.parts.occurrences.length;
+  const matched = grouped.reduce((sum, [, list]) => sum + list.length, 0);
 
   return (
     <div className="parttree">
       <header>
         <h2>Parts</h2>
-        <span className="muted">{parts.parts.occurrences.length} installed</span>
+        <span className="muted num">
+          {filter ? `${matched} of ${total}` : total}
+        </span>
       </header>
 
       <input
@@ -58,12 +58,18 @@ export function PartTree() {
         aria-label="Filter parts"
       />
 
-      {unknownCount > 0 ? (
-        <p className="unknown-banner">
-          <span className="chip unknown">unknown</span>
-          {unknownCount} occurrence{unknownCount === 1 ? "" : "s"} have no mass evidence. Every
-          weight-dependent check stays unknown until a value with provenance is entered.
+      {unknown.length > 0 ? (
+        <p className="unknown-callout">
+          <strong>
+            {unknown.length} part{unknown.length === 1 ? " has" : "s have"} no mass evidence.
+          </strong>
+          Mass, centre of gravity, and every weight-dependent check stay unknown until a value with
+          provenance is entered.
         </p>
+      ) : null}
+
+      {matched === 0 ? (
+        <p className="muted">Nothing matches “{filter}”.</p>
       ) : null}
 
       {grouped.map(([role, occurrences]) => (
@@ -71,35 +77,39 @@ export function PartTree() {
           <h3>{role.replace(/_/g, " ")}</h3>
           <ul>
             {occurrences.map((occurrence) => {
-              const massKnown = occurrence.mass_kg.value !== null;
+              const mass = occurrence.mass_kg.value;
+              const known = mass !== null && mass !== undefined;
               const capabilities = parts.capabilities[occurrence.part_id] ?? [];
+              const selected = occurrence.part_id === selectedPartId;
               return (
                 <li key={occurrence.part_id}>
                   <button
                     type="button"
-                    className={occurrence.part_id === selectedPartId ? "part selected" : "part"}
-                    onClick={() => selectPart(occurrence.part_id)}
-                    aria-current={occurrence.part_id === selectedPartId}
+                    className={selected ? "part is-selected" : "part"}
+                    onClick={() => selectPart(selected ? null : occurrence.part_id)}
+                    aria-pressed={selected}
                   >
                     <span className="name">{occurrence.name}</span>
-                    <span className={massKnown ? "mass" : "mass unknown"}>
-                      {massKnown
-                        ? `${(occurrence.mass_kg.value as number).toFixed(3)} kg`
-                        : "mass unknown"}
+                    <span className={known ? "mass" : "mass is-unknown"}>
+                      {known ? `${(mass as number).toFixed(3)} kg` : "mass unknown"}
                     </span>
-                    {occurrence.locked ? (
-                      <span className="chip locked" title="Mission payload; cannot be edited">
-                        locked
-                      </span>
-                    ) : null}
-                    {occurrence.mirror_of ? (
-                      <span className="chip" title={`mirrors ${occurrence.mirror_of}`}>
-                        mirrored
-                      </span>
-                    ) : null}
-                    {capabilities.length ? (
-                      <span className="chip editable" title={capabilities.join(", ")}>
-                        editable
+                    {occurrence.locked || occurrence.mirror_of || capabilities.length ? (
+                      <span className="flags">
+                        {capabilities.length ? (
+                          <span className="flag is-editable" title={capabilities.join(", ")}>
+                            editable
+                          </span>
+                        ) : null}
+                        {occurrence.locked ? (
+                          <span className="flag is-locked" title="Mission payload">
+                            locked
+                          </span>
+                        ) : null}
+                        {occurrence.mirror_of ? (
+                          <span className="flag" title={`mirrors ${occurrence.mirror_of}`}>
+                            mirrored
+                          </span>
+                        ) : null}
                       </span>
                     ) : null}
                   </button>

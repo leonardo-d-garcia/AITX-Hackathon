@@ -1,160 +1,218 @@
 /**
- * The workbench shell (architecture section 10).
+ * The workbench shell.
  *
- * "Build one workbench with three modes: Inspect, Improve, Simulate. Persistent top bar:
- * design/revision, reference-versus-reconstruction label, model fidelity, mission, and STEP export
- * status."
+ * Viewport-dominant: the schematic is the page. The part list and the evidence panel are rails
+ * that slide in when you need them and get out of the way when you do not, so the aircraft keeps
+ * the screen.
  *
- * The top bar is not decoration. Every claim the product makes is scoped to a revision and a
- * fidelity tier, so both are on screen at all times - a judge should never have to ask which
- * revision a number belongs to.
+ * Architecture section 10 asks for three modes and a persistent scope line (revision, fidelity,
+ * representation, export status). Those live in the status strip, which is the only permanent
+ * chrome — everything else is summoned.
  */
 
-import { useEffect } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { GraphPanel } from "@/features/graph/GraphPanel";
 import { EvidenceInspector } from "@/features/graph/EvidenceInspector";
+import { GraphPanel } from "@/features/graph/GraphPanel";
 import { PartTree } from "@/features/graph/PartTree";
-import { ReviewPanel } from "@/features/review/ReviewPanel";
 import { HistoryPanel } from "@/features/review/HistoryPanel";
-import { CadViewportMount } from "@/features/cad/CadViewportMount";
-import { SimulationMount } from "@/features/simulation/SimulationMount";
+import { ReviewPanel } from "@/features/review/ReviewPanel";
+import { GeometryFacts } from "@/app/mounts/GeometryFacts";
+import { MissionRun } from "@/app/mounts/MissionRun";
+import {
+  Schematic,
+  readPalette,
+  toSchematicParts,
+  type ScenePalette,
+} from "@/viewport/Schematic";
 
+import { ConfirmGate } from "./ConfirmGate";
+import { StatusStrip } from "./StatusStrip";
+import { AuditRail } from "./AuditRail";
 import { useWorkbench, type Mode } from "./WorkbenchContext";
-import { TopBar } from "./TopBar";
-import { EventLog } from "./EventLog";
 
-const MODES: { id: Mode; label: string; hint: string }[] = [
-  { id: "inspect", label: "Inspect", hint: "select a part, read its evidence, trace what it feeds" },
-  { id: "improve", label: "Improve", hint: "review bounded proposals, accept or decline" },
-  { id: "simulate", label: "Simulate", hint: "replay the mission for an exact revision" },
+const MODES: { id: Mode; label: string; key: string }[] = [
+  { id: "inspect", label: "Inspect", key: "1" },
+  { id: "improve", label: "Improve", key: "2" },
+  { id: "simulate", label: "Simulate", key: "3" },
 ];
 
 export function App() {
   const workbench = useWorkbench();
-  const { designId, mode, setMode, error, clearError, busy } = workbench;
+  const { designId, mode, setMode, error, clearError, parts, selectedPartId, selectPart } =
+    workbench;
 
-  // Keyboard mode switching: this is a desktop presentation tool, driven live.
+  const [leftOpen, setLeftOpen] = useState(true);
+  const [rightOpen, setRightOpen] = useState(true);
+
+  // Read from the document element, not a ref on the shell: the tokens live on :root, and before
+  // a design is imported the shell is not mounted at all, so a ref would never resolve.
+  const palette = useMemo<ScenePalette>(() => readPalette(document.documentElement), []);
+
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.target instanceof HTMLInputElement) return;
-      const index = ["1", "2", "3"].indexOf(event.key);
-      if (index >= 0) setMode(MODES[index]!.id);
+      const mode = MODES.find((entry) => entry.key === event.key);
+      if (mode) setMode(mode.id);
+      if (event.key === "[") setLeftOpen((open) => !open);
+      if (event.key === "]") setRightOpen((open) => !open);
+      if (event.key === "Escape") selectPart(null);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [setMode]);
+  }, [setMode, selectPart]);
+
+  const schematicParts = useMemo(
+    () =>
+      parts ? toSchematicParts(parts.parts.occurrences, parts.capabilities ?? {}) : [],
+    [parts],
+  );
+
+  const handleSelect = useCallback((partId: string | null) => selectPart(partId), [selectPart]);
+
+  if (!designId) return <Landing />;
 
   return (
     <div className="shell">
-      <TopBar />
+      <StatusStrip />
 
-      <nav className="modes" aria-label="Workbench mode">
-        {MODES.map((entry) => (
-          <button
-            key={entry.id}
-            type="button"
-            className={entry.id === mode ? "mode active" : "mode"}
-            onClick={() => setMode(entry.id)}
-            title={entry.hint}
-            aria-pressed={entry.id === mode}
-          >
-            {entry.label}
-          </button>
-        ))}
-        {busy ? (
-          <span className="busy" role="status">
-            {busy}…
-          </span>
-        ) : null}
-      </nav>
-
-      {error ? (
-        <div
-          className={error.isDesignResult ? "banner result" : "banner error"}
-          role={error.isDesignResult ? "status" : "alert"}
+      <div className="stage">
+        <aside
+          className={leftOpen ? "rail left open" : "rail left"}
+          aria-hidden={!leftOpen}
         >
-          <strong>{error.envelope.code}</strong>
-          <span>{error.envelope.message}</span>
-          {error.isDesignResult ? (
-            <em>
-              This is a result of the model, not a failure of the tool.
-            </em>
+          <div className="rail-body">
+            {mode === "improve" ? <HistoryPanel /> : <PartTree />}
+          </div>
+        </aside>
+
+        <main className="viewport">
+          <Schematic
+            parts={schematicParts}
+            features={parts?.geometry_features ?? null}
+            selectedPartId={selectedPartId}
+            onSelect={handleSelect}
+            palette={palette}
+          />
+
+          <div className="viewport-overlay">
+            <nav className="modes" aria-label="Workbench mode">
+              {MODES.map((entry) => (
+                <button
+                  key={entry.id}
+                  type="button"
+                  className={entry.id === mode ? "mode is-active" : "mode"}
+                  onClick={() => setMode(entry.id)}
+                  aria-pressed={entry.id === mode}
+                >
+                  {entry.label}
+                </button>
+              ))}
+            </nav>
+
+            <div className="rail-toggles">
+              <button
+                type="button"
+                className="rail-toggle"
+                onClick={() => setLeftOpen((open) => !open)}
+                aria-expanded={leftOpen}
+              >
+                {leftOpen ? "Hide parts" : "Parts"}
+              </button>
+              <button
+                type="button"
+                className="rail-toggle"
+                onClick={() => setRightOpen((open) => !open)}
+                aria-expanded={rightOpen}
+              >
+                {rightOpen ? "Hide panel" : mode === "improve" ? "Proposals" : "Evidence"}
+              </button>
+            </div>
+          </div>
+
+          {error ? (
+            <div
+              className={error.isDesignResult ? "notice is-result" : "notice is-error"}
+              role={error.isDesignResult ? "status" : "alert"}
+            >
+              <p className="notice-code">{error.envelope.code}</p>
+              <p className="notice-message">{error.envelope.message}</p>
+              {error.isDesignResult ? (
+                <p className="notice-aside">
+                  A result of the model, not a failure of the tool.
+                </p>
+              ) : null}
+              <button type="button" onClick={clearError}>
+                Dismiss
+              </button>
+            </div>
           ) : null}
-          <button type="button" onClick={clearError}>
-            Dismiss
-          </button>
-        </div>
-      ) : null}
-
-      {!designId ? <EmptyState /> : null}
-
-      {designId && mode === "inspect" ? (
-        <main className="layout inspect">
-          <aside className="pane left">
-            <PartTree />
-          </aside>
-          <section className="pane centre">
-            <CadViewportMount />
-          </section>
-          <aside className="pane right">
-            <EvidenceInspector />
-            <GraphPanel />
-          </aside>
         </main>
-      ) : null}
 
-      {designId && mode === "improve" ? (
-        <main className="layout improve">
-          <section className="pane wide">
-            <ReviewPanel />
-          </section>
-          <aside className="pane right">
-            <HistoryPanel />
-            <GraphPanel />
-          </aside>
-        </main>
-      ) : null}
+        <aside
+          className={rightOpen ? "rail right open" : "rail right"}
+          aria-hidden={!rightOpen}
+        >
+          <div className="rail-body">
+            <ConfirmGate />
+            {mode === "inspect" ? (
+              <>
+                <EvidenceInspector />
+                <GraphPanel />
+                <GeometryFacts />
+              </>
+            ) : null}
+            {mode === "improve" ? <ReviewPanel /> : null}
+            {mode === "simulate" ? <MissionRun /> : null}
+          </div>
+        </aside>
+      </div>
 
-      {designId && mode === "simulate" ? (
-        <main className="layout simulate">
-          <section className="pane wide">
-            <SimulationMount />
-          </section>
-          <aside className="pane right">
-            <HistoryPanel />
-          </aside>
-        </main>
-      ) : null}
-
-      <EventLog />
+      <AuditRail />
     </div>
   );
 }
 
-function EmptyState() {
-  const { importFixture, doctor } = useWorkbench();
+function Landing() {
+  const { importFixture, doctor, busy } = useWorkbench();
+
   return (
-    <main className="empty">
-      <h1>DroneBench Studio</h1>
-      <p>
-        Import a design to begin. The checked-in fixture is{" "}
-        <strong>parametric_fixedwing</strong>, a synthetic demonstrator authored for this
-        workbench. It is not the Titan Avenger and is not a reconstruction of any real aircraft.
-      </p>
-      <button type="button" className="primary" onClick={() => void importFixture()}>
-        Import the synthetic fixture
-      </button>
+    <main className="landing">
+      <div className="landing-copy">
+        <h1>
+          Click a part, see why it matters, change it with evidence.
+        </h1>
+        <p className="landing-lede">
+          DroneBench traces a design decision from the geometry that carries it, through the
+          constraint it feeds, to the revision that changed it. Every number on screen names the
+          revision it belongs to and the evidence behind it. Where the evidence runs out, it says
+          so instead of guessing.
+        </p>
+        <button
+          type="button"
+          className="primary large"
+          onClick={() => void importFixture()}
+          disabled={Boolean(busy)}
+        >
+          {busy ? `${busy}…` : "Import a design"}
+        </button>
+        <p className="landing-note">
+          Loads <strong>parametric_fixedwing</strong>, a synthetic demonstrator authored for this
+          workbench. It is not the Titan Avenger and reconstructs no real aircraft.
+        </p>
+      </div>
+
       {doctor?.capabilities_absent?.length ? (
-        <section className="absent">
-          <h2>Not available on this machine</h2>
+        <section className="landing-absent">
+          <h2>Not installed on this machine</h2>
           <ul>
             {doctor.capabilities_absent.map((note) => (
               <li key={note}>{note}</li>
             ))}
           </ul>
-          <p className="muted">
-            The workbench states what it cannot do rather than producing an unverified result.
+          <p>
+            The workbench reports what it cannot do rather than producing a result it cannot
+            stand behind.
           </p>
         </section>
       ) : null}

@@ -116,7 +116,7 @@ function CheckStrip() {
 function EvidenceRequestCard({ request }: { request: EvidenceRequest }) {
   const { selectPart, setMode } = useWorkbench();
   return (
-    <article className="card request">
+    <article className="card is-request">
       <h4>{request.title}</h4>
       <p>{request.why_it_matters}</p>
       <p className="muted">
@@ -156,29 +156,23 @@ function ProposalCard({
   const informational = (proposal.tradeoffs ?? []).filter((t) => t.direction === "informational");
 
   return (
-    <article className={`card proposal state-${proposal.state} ${displayed ? "" : "demoted"}`}>
+    <article className={`card is-proposal ${displayed ? "" : "is-demoted"}`}>
       <header>
         <h3>{evaluated ? proposal.title : "Unevaluated proposal"}</h3>
-        <span className={`chip state-${proposal.state}`}>{proposal.state}</span>
+        <span className={`state is-${proposal.state}`}>{proposal.state.replace(/_/g, " ")}</span>
         {proposal.origin === "provider" ? (
-          <span className="chip" title="Authored by the model, validated identically">
-            model-authored
-          </span>
+          <span className="state" title="Authored by the model, validated identically">model</span>
         ) : null}
       </header>
 
-      <p className="issue">
+      <p className="card-issue">
         <strong>Issue:</strong> {proposal.issue}
       </p>
-      <p className="rationale">{proposal.rationale}</p>
+      <p className="card-rationale">{proposal.rationale}</p>
 
-      <dl className="operation">
-        <dt>Operation</dt>
-        <dd>
-          <code>{proposal.operation.operation}</code> on{" "}
-          <code>{proposal.operation.target_part_id}</code>
-        </dd>
-      </dl>
+      <p className="card-operation">
+        {proposal.operation.operation} · {proposal.operation.target_part_id}
+      </p>
 
       {proposal.prerequisites?.length ? (
         <details>
@@ -217,7 +211,7 @@ function ProposalCard({
       )}
 
       {preview?.blocked_reasons?.length ? (
-        <div className="blocked">
+        <div className="blocked-list">
           <strong>Blocked by:</strong>
           <ul>
             {preview.blocked_reasons.map((item) => (
@@ -243,7 +237,7 @@ function ProposalCard({
         </section>
       ) : null}
 
-      <footer className="actions">
+      <footer className="card-actions">
         <button
           type="button"
           className="primary"
@@ -288,7 +282,7 @@ function TradeoffList({ title, rows }: { title: string; rows: Tradeoff[] }) {
       {title ? <h5>{title}</h5> : null}
       <ul>
         {rows.map((row) => (
-          <li key={row.metric} className={`t-${row.direction}`}>
+          <li key={row.metric} className={`tradeoff is-${row.direction}`}>
             <span className="metric">{row.metric}</span>
             <span className="values">
               {format(row.baseline)} → {format(row.candidate)} {row.unit}

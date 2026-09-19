@@ -42,19 +42,18 @@ export function HistoryPanel() {
         {history.map((revision) => (
           <li
             key={revision.revision_id}
-            className={revision.revision_id === revisionId ? "entry active" : "entry"}
+            className={revision.revision_id === revisionId ? "entry is-active" : "entry"}
           >
-            <span className="dot" aria-hidden="true" />
+            <span className="marker" aria-hidden="true" />
             <div>
               <div className="entry-title">
                 {revision.label || CAUSE_LABEL[revision.created_cause] || revision.created_cause}
               </div>
-              <div className="muted">
-                <code>{revision.revision_id.slice(0, 12)}</code> · {revision.stage} ·{" "}
-                {CAUSE_LABEL[revision.created_cause] ?? revision.created_cause}
+              <div className="entry-meta">
+                {revision.revision_id.replace("rev_", "").slice(0, 8)} · {revision.stage}
               </div>
             </div>
-            {revision.revision_id === revisionId ? <span className="chip">active</span> : null}
+            {revision.revision_id === revisionId ? <span className="state is-committed">active</span> : null}
           </li>
         ))}
       </ol>
