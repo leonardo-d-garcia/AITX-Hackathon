@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dronebench.dev/schemas/design_manifest.schema.json",
+  "title": "DesignManifest",
+  "description": "Identity and provenance for a Lane C design revision. Frame is FRD (X forward, Y right, Z down).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["design_id", "revision_id", "representation", "frame", "notes"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "design_id": { "type": "string", "minLength": 1 },
+    "revision_id": { "type": "string", "minLength": 1 },
+    "representation": {
+      "type": "string",
+      "enum": ["editable_reconstruction", "as_measured", "cad_native"]
+    },
+    "frame": { "type": "string", "const": "FRD" },
+    "units": { "type": "string", "const": "SI" },
+    "notes": { "type": "string", "minLength": 1 },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

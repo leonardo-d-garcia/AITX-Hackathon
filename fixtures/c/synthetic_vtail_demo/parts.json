@@ -1,0 +1,767 @@
+{
+  "schema_version": 1,
+  "frame": "FRD",
+  "occurrences": [
+    {
+      "part_id": "wing_L",
+      "type": "wing",
+      "mass_kg": {
+        "value": 0.35,
+        "unit": "kg",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        },
+        "y_m": {
+          "value": -0.55,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        },
+        "z_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "wing_R",
+      "type": "wing",
+      "mass_kg": {
+        "value": 0.35,
+        "unit": "kg",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        },
+        "y_m": {
+          "value": 0.55,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        },
+        "z_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "fuse",
+      "type": "fuselage",
+      "mass_kg": {
+        "value": 0.5,
+        "unit": "kg",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.4,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        },
+        "y_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        },
+        "z_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "vtail_L",
+      "type": "tail",
+      "mass_kg": {
+        "value": 0.08,
+        "unit": "kg",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.85,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "assumed at x = -tail_arm_m in FRD; not a measured CG"
+          ]
+        },
+        "y_m": {
+          "value": -0.15,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "assumed at x = -tail_arm_m in FRD; not a measured CG"
+          ]
+        },
+        "z_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "assumed at x = -tail_arm_m in FRD; not a measured CG"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "vtail_R",
+      "type": "tail",
+      "mass_kg": {
+        "value": 0.08,
+        "unit": "kg",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.85,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "assumed at x = -tail_arm_m in FRD; not a measured CG"
+          ]
+        },
+        "y_m": {
+          "value": 0.15,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "assumed at x = -tail_arm_m in FRD; not a measured CG"
+          ]
+        },
+        "z_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "assumed at x = -tail_arm_m in FRD; not a measured CG"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "spar_L",
+      "type": "spar",
+      "mass_kg": {
+        "value": 0.12,
+        "unit": "kg",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "unspecified FRD component assumed for the synthetic demo"
+          ]
+        },
+        "y_m": {
+          "value": -0.55,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "unspecified FRD component assumed for the synthetic demo"
+          ]
+        },
+        "z_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "unspecified FRD component assumed for the synthetic demo"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "spar_R",
+      "type": "spar",
+      "mass_kg": {
+        "value": 0.12,
+        "unit": "kg",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "unspecified FRD component assumed for the synthetic demo"
+          ]
+        },
+        "y_m": {
+          "value": 0.55,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "unspecified FRD component assumed for the synthetic demo"
+          ]
+        },
+        "z_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "unspecified FRD component assumed for the synthetic demo"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "battery",
+      "type": "battery",
+      "mass_kg": {
+        "value": 0.6,
+        "unit": "kg",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.25,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        },
+        "y_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        },
+        "z_m": {
+          "value": 0.02,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        }
+      },
+      "specs": {
+        "energy_wh": {
+          "value": 88,
+          "unit": "Wh",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        },
+        "voltage_v": {
+          "value": 14.8,
+          "unit": "V",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        },
+        "ir_ohm": {
+          "value": 0.02,
+          "unit": "ohm",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "motor",
+      "type": "motor",
+      "mass_kg": {
+        "value": 0.13,
+        "unit": "kg",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": 0.1,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "unspecified FRD component assumed for the synthetic demo"
+          ]
+        },
+        "y_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "unspecified FRD component assumed for the synthetic demo"
+          ]
+        },
+        "z_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "unspecified FRD component assumed for the synthetic demo"
+          ]
+        }
+      },
+      "specs": {
+        "kv": {
+          "value": 900,
+          "unit": "rpm/V",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        },
+        "rm_ohm": {
+          "value": 0.08,
+          "unit": "ohm",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        },
+        "i0_a": {
+          "value": 0.6,
+          "unit": "A",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        },
+        "imax_a": {
+          "value": 25,
+          "unit": "A",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "prop",
+      "type": "prop",
+      "mass_kg": {
+        "value": 0.03,
+        "unit": "kg",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": 0.15,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "unspecified FRD component assumed for the synthetic demo"
+          ]
+        },
+        "y_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "unspecified FRD component assumed for the synthetic demo"
+          ]
+        },
+        "z_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "unspecified FRD component assumed for the synthetic demo"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "esc",
+      "type": "esc",
+      "mass_kg": {
+        "value": 0.05,
+        "unit": "kg",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.22,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "unspecified FRD component assumed for the synthetic demo"
+          ]
+        },
+        "y_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "unspecified FRD component assumed for the synthetic demo"
+          ]
+        },
+        "z_m": {
+          "value": 0.02,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "unspecified FRD component assumed for the synthetic demo"
+          ]
+        }
+      },
+      "specs": {
+        "imax_a": {
+          "value": 30,
+          "unit": "A",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "servo_L",
+      "type": "servo",
+      "mass_kg": {
+        "value": 0.03,
+        "unit": "kg",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.85,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "assumed at x = -tail_arm_m in FRD; not a measured CG"
+          ]
+        },
+        "y_m": {
+          "value": -0.15,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "assumed at x = -tail_arm_m in FRD; not a measured CG"
+          ]
+        },
+        "z_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "assumed at x = -tail_arm_m in FRD; not a measured CG"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "servo_R",
+      "type": "servo",
+      "mass_kg": {
+        "value": 0.03,
+        "unit": "kg",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.85,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "assumed at x = -tail_arm_m in FRD; not a measured CG"
+          ]
+        },
+        "y_m": {
+          "value": 0.15,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "assumed at x = -tail_arm_m in FRD; not a measured CG"
+          ]
+        },
+        "z_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "assumed at x = -tail_arm_m in FRD; not a measured CG"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "payload",
+      "type": "payload",
+      "mass_kg": {
+        "value": 0.2,
+        "unit": "kg",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "unspecified FRD component assumed for the synthetic demo"
+          ]
+        },
+        "y_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "unspecified FRD component assumed for the synthetic demo"
+          ]
+        },
+        "z_m": {
+          "value": 0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "assumed",
+          "evidence_ids": [],
+          "assumptions": [
+            "synthetic demo assumption; not a measurement",
+            "unspecified FRD component assumed for the synthetic demo"
+          ]
+        }
+      },
+      "locked": true
+    }
+  ]
+}
