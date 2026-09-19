@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dronebench.dev/schemas/geometry_features.schema.json",
+  "title": "GeometryFeatures",
+  "description": "Measured or assumed lifting-surface geometry. Reference area S_m2, span b_m, and MAC c_m appear exactly once, under reference. Right-wing stations only (y >= 0); the left wing is the implied mirror. Frame FRD, lengths in metres, angles in radians.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "frame",
+    "units",
+    "reference",
+    "wing_stations",
+    "tail",
+    "mission",
+    "aero_assumptions",
+    "spar"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "frame": { "type": "string", "const": "FRD" },
+    "units": { "type": "string", "const": "m" },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["S_m2", "b_m", "c_m"],
+      "description": "Set reference area, span, and MAC exactly once. Do not duplicate these keys elsewhere.",
+      "properties": {
+        "S_m2": { "$ref": "claim.schema.json" },
+        "b_m": { "$ref": "claim.schema.json" },
+        "c_m": { "$ref": "claim.schema.json" }
+      }
+    },
+    "wing_stations": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/$defs/wing_station" }
+    },
+    "tail": { "$ref": "#/$defs/tail" },
+    "mission": { "$ref": "#/$defs/mission" },
+    "aero_assumptions": { "$ref": "#/$defs/aero_assumptions" },
+    "spar": { "$ref": "#/$defs/spar" },
+    "cg_inputs": { "$ref": "#/$defs/cg_inputs" }
+  },
+  "$defs": {
+    "wing_station": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["span_y_m", "leading_edge_x_m", "chord_m", "z_m", "twist_rad"],
+      "description": "Right-wing station. span_y_m is FRD Y (positive right).",
+      "properties": {
+        "span_y_m": { "$ref": "claim.schema.json" },
+        "leading_edge_x_m": { "$ref": "claim.schema.json" },
+        "chord_m": { "$ref": "claim.schema.json" },
+        "z_m": { "$ref": "claim.schema.json" },
+        "twist_rad": { "$ref": "claim.schema.json" }
+      }
+    },
+    "tail": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["layout", "tail_arm_m"],
+      "properties": {
+        "layout": { "type": "string", "enum": ["vtail", "conventional"] },
+        "cant_rad": { "$ref": "claim.schema.json" },
+        "panel_count": { "$ref": "claim.schema.json" },
+        "panel_area_m2": { "$ref": "claim.schema.json" },
+        "panel_span_m": { "$ref": "claim.schema.json" },
+        "tail_arm_m": { "$ref": "claim.schema.json" },
+        "horizontal_area_m2": { "$ref": "claim.schema.json" },
+        "vertical_area_m2": { "$ref": "claim.schema.json" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "layout": { "const": "vtail" } },
+            "required": ["layout"]
+          },
+          "then": {
+            "required": ["cant_rad", "panel_count", "panel_area_m2", "panel_span_m"],
+            "not": {
+              "anyOf": [
+                { "required": ["horizontal_area_m2"] },
+                { "required": ["vertical_area_m2"] }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "layout": { "const": "conventional" } },
+            "required": ["layout"]
+          },
+          "then": {
+            "required": ["horizontal_area_m2", "vertical_area_m2"],
+            "not": { "required": ["cant_rad"] }
+          }
+        }
+      ]
+    },
+    "mission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cruise_mps",
+        "altitude_m",
+        "rho_kgm3",
+        "g_mps2",
+        "reserve_wh_fraction",
+        "load_factor_limit"
+      ],
+      "properties": {
+        "cruise_mps": { "$ref": "claim.schema.json" },
+        "altitude_m": { "$ref": "claim.schema.json" },
+        "rho_kgm3": { "$ref": "claim.schema.json" },
+        "g_mps2": { "$ref": "claim.schema.json" },
+        "reserve_wh_fraction": { "$ref": "claim.schema.json" },
+        "load_factor_limit": { "$ref": "claim.schema.json" }
+      }
+    },
+    "aero_assumptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "CD0_profile",
+        "CD0_fuselage",
+        "CD0_interference",
+        "oswald_e",
+        "CLmax"
+      ],
+      "properties": {
+        "CD0_profile": { "$ref": "claim.schema.json" },
+        "CD0_fuselage": { "$ref": "claim.schema.json" },
+        "CD0_interference": { "$ref": "claim.schema.json" },
+        "oswald_e": { "$ref": "claim.schema.json" },
+        "CLmax": { "$ref": "claim.schema.json" }
+      }
+    },
+    "spar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["Do_m", "Di_m", "sigma_allow_mpa", "stations"],
+      "properties": {
+        "Do_m": { "$ref": "claim.schema.json" },
+        "Di_m": { "$ref": "claim.schema.json" },
+        "sigma_allow_mpa": { "$ref": "claim.schema.json" },
+        "stations": { "$ref": "claim.schema.json" }
+      }
+    },
+    "cg_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Optional mass-properties inputs. Neutral point stays unknown unless a real derivative run exists; do not substitute a quarter-chord guess.",
+      "properties": {
+        "np_x_m": { "$ref": "claim.schema.json" }
+      }
+    }
+  }
+}

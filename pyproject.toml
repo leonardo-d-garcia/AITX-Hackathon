@@ -46,6 +46,15 @@ pythonpath = [
     "packages/recommend",
     "packages/workflow",
     "apps/api",
+    "packages/ingest",
+    "packages/cad",
+    "packages/edits",
+    "packages/viewer",
+    "packages/adapters",
+    "packages/evaluate",
+    "packages/sim",
+    "packages/openvsp_worker",
+    "packages/dronebench",
 ]
 filterwarnings = ["error::DeprecationWarning:dronebench_.*"]
 

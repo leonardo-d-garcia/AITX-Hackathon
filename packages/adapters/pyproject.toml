@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dronebench-adapters"
+version = "0.1.0"
+description = "Convert DroneBench design artifacts into Lane C's evaluator schema shapes"
+requires-python = ">=3.11"
+dependencies = [
+    "jsonschema>=4.20",
+    "referencing>=0.30",
+]
+
+[project.scripts]
+dronebench-export = "dronebench_adapters.cli:main"
+
+[tool.setuptools]
+packages = ["dronebench_adapters"]
