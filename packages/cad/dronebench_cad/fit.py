@@ -184,6 +184,7 @@ def fit_report(
     frame: Optional[dict[str, Any]] = None,
     samples: int = 4000,
     seed: int = 20260919,
+    features: Any = None,
 ) -> dict[str, Any]:
     """Compare the reconstruction with the reference meshes. Numbers only, no verdict.
 
@@ -213,6 +214,7 @@ def fit_report(
         },
         "parts": {},
         "surfaces": {},
+        "area": _area_comparison(model, features),
         "overall": {},
         "notes": [],
         "warnings": list(model.warnings),
@@ -268,6 +270,12 @@ def fit_report(
             continue
 
         recon = _tessellate(part)
+        if part.side == "left":
+            # The archive supplies one side only. Compare a left-hand occurrence against the
+            # same reference by reflecting it, rather than pretending there is a left mesh.
+            recon.vertices[:, 1] *= -1.0
+            recon.invert()
+            entry["compared_mirrored"] = "left occurrence reflected onto the reference side"
         entry["reference_group"] = group_key
         entry["reference_watertight"] = bool(ref.is_watertight)
         entry["reference_to_reconstruction"] = _distance_stats(ref, recon, samples, seed)
@@ -345,6 +353,42 @@ def fit_report(
     return report
 
 
+def _area_comparison(model: CadModel, features: Any) -> dict[str, Any]:
+    """Reconstructed wing planform against whatever the features claim, like for like.
+
+    The reconstruction has no fuselage carry-through: its wings start at the root station.
+    A1's `reference_area_m2` is gross (carry-through included), so the two are only
+    comparable once the carry-through rectangle is added back, and that is done here
+    explicitly rather than by quietly picking whichever number agrees.
+    """
+    wings = [p for p in model.parts if p.category == "wing"]
+    if not wings:
+        return {}
+    exposed = sum(projected_planform_area_m2(p) for p in wings)
+    root = None
+    for s in model.params.surfaces:
+        if s.category == "wing" and s.stations:
+            root = s.stations[0]
+            break
+    carry_through = 2 * root.span_y_m * root.chord_m if root else 0.0
+    out: dict[str, Any] = {
+        "reconstruction_exposed_planform_m2": exposed,
+        "carry_through_rectangle_m2": carry_through,
+        "reconstruction_gross_planform_m2": exposed + carry_through,
+        "method": "signed x-y triangle areas of the tessellated solids, positive faces only",
+    }
+    if features is None:
+        return out
+    data = features if isinstance(features, dict) else features.model_dump(mode="python")
+    claimed = (data.get("reference_area_m2") or {}).get("value")
+    if claimed:
+        out["features_reference_area_m2"] = claimed
+        out["relative_difference_vs_exposed"] = (exposed - claimed) / claimed
+        out["relative_difference_vs_gross"] = (exposed + carry_through - claimed) / claimed
+        out["assumptions"] = (data.get("reference_area_m2") or {}).get("assumptions", [])
+    return out
+
+
 def _group_for(part: ReconPart) -> Optional[str]:
     for key, spec in REFERENCE_GROUPS.items():
         if "part_ids" in spec and part.part_id in spec["part_ids"]:
@@ -381,5 +425,5 @@ def _resolve_reference(reference: Any, frame: Optional[dict[str, Any]]):
             "native_to_frd": manifest_frame.get("native_to_frd"),
             "from_manifest": True,
         }
-    ref_dir = data.get("reference_dir") or data.get("staged_dir")
+    ref_dir = data.get("sources_root") or data.get("reference_dir") or data.get("staged_dir")
     return (Path(ref_dir) if ref_dir else None), (resolved or dict(CANDIDATE_FRAME))

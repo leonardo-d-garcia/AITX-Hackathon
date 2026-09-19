@@ -183,13 +183,10 @@ class ReconParams(_P):
             ]
             # A1 may hand over one symmetric surface ("wing") or an explicit pair
             # ("vtail_left", "vtail_right") whose stations are both given on the +y side.
-            if sid.endswith("_left"):
-                side, mirror = "left", False
-            elif sid.endswith("_right"):
-                side, mirror = "right", False
-            else:
-                side, mirror = "right", bool(s.get("symmetric", True))
-            suffix = "" if sid.endswith(("_left", "_right")) else f"_{side}"
+            symmetric = bool(s.get("symmetric", True))
+            side = "left" if sid.endswith("_left") else "right"
+            mirror = symmetric  # an explicit left/right pair arrives with symmetric=False
+            stem = sid.removesuffix("_left").removesuffix("_right")
             surfaces.append(
                 SurfaceParams(
                     surface_id=sid,
@@ -199,8 +196,8 @@ class ReconParams(_P):
                     cant_rad=float(s.get("cant_rad") or 0.0),
                     camber=DEFAULTS_CAMBER_BY_SURFACE.get(base, 0.0),
                     camber_pos=0.4,
-                    part_id_right=f"recon_{sid}{suffix}" if side == "right" else f"recon_{sid}_right",
-                    part_id_left=f"recon_{sid}{suffix}" if side == "left" else f"recon_{sid}_left",
+                    part_id_right=f"recon_{stem}_right",
+                    part_id_left=f"recon_{stem}_left",
                     category=base,
                     source_part_ids=list(s.get("part_ids") or []),
                 )

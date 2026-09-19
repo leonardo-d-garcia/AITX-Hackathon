@@ -345,29 +345,35 @@ def _fuselage(manifest: DesignManifest, quality: dict) -> tuple[list[FuselageSta
 # ------------------------------------------------------------------ mass
 
 def _mass_and_cg(manifest: DesignManifest, quality: dict) -> tuple[Claim, Claim]:
-    masses, moments, missing = 0.0, np.zeros(3), []
+    total, moments, no_mass, no_com = 0.0, np.zeros(3), [], []
     for part in manifest.parts:
         m = part.mass_kg.value
         if m is None:
-            missing.append(part.part_id)
+            no_mass.append(part.part_id)
             continue
-        masses += float(m)
+        total += float(m)
         com = part.local_com_m.value
         if com is None:
-            missing.append(part.part_id)
+            no_com.append(part.part_id)
             continue
         T = np.array(part.T_parent_from_local, dtype=float)
         moments += float(m) * (T[:3, :3] @ np.array(com, dtype=float) + T[:3, 3])
-    if missing:
-        quality["mass"] = {"parts_without_mass_or_com": sorted(missing)}
-        why = (f"{len(missing)} installed parts have no mass or no centre of mass; a total mass or "
-               "CG computed from the rest would understate both")
-        return Claim.unknown("kg", why), Claim.unknown("m", why)
-    return (
-        _claim(masses, "kg", [], "sum of estimated part masses; no part was weighed"),
-        _claim([float(v) for v in moments / masses], "m", [],
-               "mass-weighted centroid of part centres of mass under the stated per-part assumptions"),
-    )
+    quality["mass"] = {"parts_without_mass": sorted(no_mass), "parts_without_com": sorted(no_com),
+                       "mass_model": manifest.mass_model}
+    if no_mass:
+        why = (f"{len(no_mass)} installed parts have no mass claim; a total summed from the rest "
+               "would understate the aircraft")
+        return Claim.unknown("kg", why), Claim.unknown("m", why + " — and so would its CG")
+    mass = _claim(total, "kg", [], "sum of the per-part mass claims; no part was weighed",
+                  f"mass model: {manifest.mass_model}")
+    if no_com:
+        return mass, Claim.unknown(
+            "m", f"{len(no_com)} parts carry a mass but no centre of mass (their meshes are not "
+                 "watertight), so a CG from the rest would be biased towards the parts that have one")
+    return mass, _claim(
+        [float(v) for v in moments / total], "m", [],
+        "mass-weighted centroid of part centres of mass under the stated per-part assumptions",
+        "a geometric centroid is not a measured centre of mass")
 
 
 # ------------------------------------------------------------------ entry point

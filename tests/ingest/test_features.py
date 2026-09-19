@@ -42,7 +42,7 @@ def test_unconfirmed_design_yields_an_error_envelope_not_a_number(staged):
 
 
 def test_unresolved_variants_block_metrics(staged):
-    from dronebench_ingest import detect_variants, inspect_sources, load_staged, propose_frame
+    from dronebench_ingest import detect_variants, load_staged, propose_frame
     from dronebench_ingest.manifest import build_manifest
     design_dir, _, sources = staged
     frame = propose_frame(sources).model_copy(update={"confirmed": True, "confirmed_by": "test"})
@@ -160,9 +160,25 @@ def test_mass_and_cg_stay_unknown_without_measured_mass(confirmed):
     _, _, _, features = confirmed
     assert features.mass_kg.value is None and features.mass_kg.status.value == "unknown"
     assert features.cg_m.value is None
-    missing = features.quality["mass"]["parts_without_mass_or_com"]
+    missing = features.quality["mass"]["parts_without_mass"]
     assert len(missing) >= 30
-    assert "no mass" in features.mass_kg.assumptions[0]
+    assert "no mass claim" in features.mass_kg.assumptions[0]
+
+
+def test_shell_estimate_gives_a_mass_but_the_cg_stays_unknown(staged):
+    """Selecting the mass model buys an estimated total; it does not buy a CG."""
+    from dronebench_ingest import confirm, load_features
+    from conftest import SELECTION
+    design_dir, _, _ = staged
+    revision = confirm(design_dir, units="mm", variants=SELECTION, mirror="x=0",
+                       mass_model="shell_estimate", confirmed_by="pytest")
+    features = load_features(design_dir, revision.revision_id)
+    assert features.mass_kg.status.value == "estimated"
+    assert 2.0 < features.mass_kg.value < 20.0
+    assert any("mass model: shell_estimate" in a for a in features.mass_kg.assumptions)
+    assert features.cg_m.value is None                           # open meshes have no centroid
+    assert "watertight" in features.cg_m.assumptions[0]
+    assert features.quality["mass"]["parts_without_com"]
 
 
 def test_every_published_number_carries_evidence_and_assumptions(confirmed):

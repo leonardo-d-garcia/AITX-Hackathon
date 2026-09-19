@@ -66,6 +66,7 @@ surfaces:
     z_m: -0.01751
     twist_rad: 0.0
     thickness_ratio: 0.13452
+  build_side: right
   mirror: true
   cant_rad: 0.0
   camber: 0.04
@@ -75,6 +76,13 @@ surfaces:
   part_id_right: recon_wing_right
   part_id_left: recon_wing_left
   category: wing
+  source_part_ids:
+  - wing1
+  - wing2
+  - wing3
+  - wing4
+  - wing5
+  - aileron
 - surface_id: vtail_right
   stations:
   - span_y_m: 0.0555
@@ -125,6 +133,7 @@ surfaces:
     z_m: -0.1473
     twist_rad: 0.0
     thickness_ratio: 0.1
+  build_side: right
   mirror: true
   cant_rad: 0.5235
   camber: 0.0
@@ -134,6 +143,10 @@ surfaces:
   part_id_right: recon_vtail_right
   part_id_left: recon_vtail_left
   category: vtail
+  source_part_ids:
+  - vtail1
+  - vtail2
+  - taileron
 fuselage:
 - x_m: 0.0
   width_m: 0.004

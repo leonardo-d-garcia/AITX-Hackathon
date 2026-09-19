@@ -174,6 +174,10 @@ def main(argv: list[str] | None = None) -> int:
         _log(f"{exc.envelope.code.value}: {exc.envelope.message}")
         _emit(exc.envelope)
         return 2
+    except BrokenPipeError:      # piped into head, less, ...
+        import os
+        os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())
+        return 0
 
 
 if __name__ == "__main__":

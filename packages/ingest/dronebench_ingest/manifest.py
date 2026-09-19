@@ -15,7 +15,7 @@ import hashlib
 import json
 import re
 from pathlib import Path
-from typing import Any, Iterable, Optional
+from typing import Any, Optional
 
 import numpy as np
 
@@ -346,11 +346,3 @@ def _strip_times(obj: Any) -> Any:
     if isinstance(obj, list):
         return [_strip_times(v) for v in obj]
     return obj
-
-
-def content_hash(*chunks: Iterable[str]) -> str:
-    h = hashlib.sha256()
-    for chunk in chunks:
-        h.update(str(chunk).encode())
-        h.update(b"\0")
-    return h.hexdigest()
