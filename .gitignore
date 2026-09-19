@@ -1,0 +1,35 @@
+# Generated solver / runtime
+artifacts/
+vendor_assets/
+*.vsp3
+*.vsp3.*
+
+# Nested accidental clone
+/AITX-Hackathon/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+
+# Node / Vite
+node_modules/
+apps/web/dist/
+apps/web/.vite/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Secrets
+.env
+.env.*
