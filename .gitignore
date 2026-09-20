@@ -10,6 +10,22 @@ __pycache__/
 .venv/
 venv/
 
+# Generated solver / runtime
+artifacts/
+vendor_assets/
+*.vsp3
+*.vsp3.*
+
+# Nested accidental clone
+/AITX-Hackathon/
+
+# Python
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+
+# Node / Vite
 node_modules/
 apps/web/dist/
 apps/web/.vite/
@@ -27,6 +43,15 @@ apps/web/.vite/
 # repository. Regenerate with `python scripts/extract_titan.py` (see README).
 apps/web/public/titan/
 *.pyc
-vendor_assets/
-artifacts/
 revisions/
+# Generated evaluation dumps (reproducible via CLI)
+fixtures/**/evaluation.json
+
+# OS / IDE
+Thumbs.db
+.idea/
+.vscode/
+
+# Secrets
+.env
+.env.*

@@ -1,0 +1,520 @@
+{
+  "schema_version": 1,
+  "frame": "FRD",
+  "units": "m",
+  "reference": {
+    "S_m2": {
+      "value": 0.4,
+      "unit": "m2",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    },
+    "b_m": {
+      "value": 2.2,
+      "unit": "m",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    },
+    "c_m": {
+      "value": 0.2,
+      "unit": "m",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  },
+  "wing_stations": [
+    {
+      "span_y_m": {
+        "value": 0.0,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "leading_edge_x_m": {
+        "value": -0.15,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "chord_m": {
+        "value": 0.28,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "z_m": {
+        "value": 0.0,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "twist_rad": {
+        "value": 0.0,
+        "unit": "rad",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      }
+    },
+    {
+      "span_y_m": {
+        "value": 0.3,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "leading_edge_x_m": {
+        "value": -0.14,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "chord_m": {
+        "value": 0.25,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "z_m": {
+        "value": 0.01,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "twist_rad": {
+        "value": 0.0,
+        "unit": "rad",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      }
+    },
+    {
+      "span_y_m": {
+        "value": 0.6,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "leading_edge_x_m": {
+        "value": -0.12,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "chord_m": {
+        "value": 0.22,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "z_m": {
+        "value": 0.02,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "twist_rad": {
+        "value": -0.02,
+        "unit": "rad",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      }
+    },
+    {
+      "span_y_m": {
+        "value": 0.9,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "leading_edge_x_m": {
+        "value": -0.1,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "chord_m": {
+        "value": 0.18,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "z_m": {
+        "value": 0.03,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "twist_rad": {
+        "value": -0.03,
+        "unit": "rad",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      }
+    },
+    {
+      "span_y_m": {
+        "value": 1.1,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "leading_edge_x_m": {
+        "value": -0.08,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "chord_m": {
+        "value": 0.14,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "z_m": {
+        "value": 0.04,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      },
+      "twist_rad": {
+        "value": -0.04,
+        "unit": "rad",
+        "status": "known",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "synthetic demo assumption; not a measurement"
+        ]
+      }
+    }
+  ],
+  "tail": {
+    "layout": "vtail",
+    "cant_rad": {
+      "value": 0.6981317007977318,
+      "unit": "rad",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    },
+    "panel_count": {
+      "value": 2,
+      "unit": "1",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    },
+    "panel_area_m2": {
+      "value": 0.05,
+      "unit": "m2",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    },
+    "tail_arm_m": {
+      "value": 0.85,
+      "unit": "m",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    },
+    "panel_span_m": {
+      "value": 0.35,
+      "unit": "m",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  },
+  "mission": {
+    "cruise_mps": {
+      "value": 15,
+      "unit": "m/s",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    },
+    "altitude_m": {
+      "value": 120,
+      "unit": "m",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    },
+    "rho_kgm3": {
+      "value": 1.225,
+      "unit": "kg/m3",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    },
+    "g_mps2": {
+      "value": 9.80665,
+      "unit": "m/s2",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    },
+    "reserve_wh_fraction": {
+      "value": 0.2,
+      "unit": "1",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    },
+    "load_factor_limit": {
+      "value": 3.5,
+      "unit": "1",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  },
+  "aero_assumptions": {
+    "CD0_profile": {
+      "value": 0.015,
+      "unit": "1",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    },
+    "CD0_fuselage": {
+      "value": 0.008,
+      "unit": "1",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    },
+    "CD0_interference": {
+      "value": 0.002,
+      "unit": "1",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    },
+    "oswald_e": {
+      "value": 0.8,
+      "unit": "1",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    },
+    "CLmax": {
+      "value": 1.3,
+      "unit": "1",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  },
+  "spar": {
+    "Do_m": {
+      "value": 0.016,
+      "unit": "m",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    },
+    "Di_m": {
+      "value": 0.012,
+      "unit": "m",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    },
+    "sigma_allow_mpa": {
+      "value": 400,
+      "unit": "MPa",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    },
+    "stations": {
+      "value": 21,
+      "unit": "1",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  },
+  "cg_inputs": {
+    "np_x_m": {
+      "value": null,
+      "unit": "m",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "neutral point not provided; do not substitute a quarter-chord guess"
+      ]
+    }
+  }
+}

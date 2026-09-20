@@ -10,40 +10,53 @@ requires-python = ">=3.11"
 readme = "README.md"
 license = { file = "LICENSE" }
 
-# Team B owns this file (architecture section 11). A and C submit additions rather than editing
-# it directly, so that one lockfile describes the integration machine.
+# Union of all three lanes. Team B owns this file (architecture section 11); A and C submit
+# additions rather than editing it, which is how the annotated list below arrived.
 dependencies = [
-    "pydantic>=2.7,<3",
-    "fastapi>=0.110",
-    "networkx>=3.2",
-    "pyyaml>=6",
+    "pydantic>=2.7,<3",   # all lanes
+    "fastapi>=0.110",     # B: apps/api
+    "networkx>=3.2",      # B: packages/graph
+    "pyyaml>=6",          # B
+    "numpy>=1.26",        # C: packages/evaluate, packages/sim
+    "jsonschema>=4.21",   # C: packages/contracts schema validation
 ]
 
 [project.optional-dependencies]
 serve = ["uvicorn[standard]>=0.29"]
+cad = ["cadquery>=2.4", "trimesh>=4"]   # A: packages/cad and packages/ingest. Heavy; opt in.
 dev = ["pytest>=8", "httpx>=0.27"]
 
 [project.scripts]
+# B's CLI is the integrated one: revision store, recommender, transaction. Lane C's
+# `python -m dronebench` entry point still works from packages/dronebench.
 dronebench = "dronebench_api.cli:main"
 
 [tool.setuptools.packages.find]
 where = [
-    "packages/contracts",
+    "packages",            # C: contracts, evaluate, sim, openvsp_worker, dronebench
+    "packages/contracts",  # B: dronebench_contracts
     "packages/graph",
     "packages/recommend",
     "packages/workflow",
-    "apps/api",
+    "packages/cad",        # A: dronebench_cad
+    "packages/ingest",     # A: dronebench_ingest
+    "packages/viewer",     # A: dronebench_viewer
+    "apps/api",            # B: dronebench_api
 ]
-include = ["dronebench_*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = [
+    "packages",
     "packages/contracts",
     "packages/graph",
     "packages/recommend",
     "packages/workflow",
+    "packages/cad",
+    "packages/ingest",
+    "packages/viewer",
     "apps/api",
+    ".",
 ]
 filterwarnings = ["error::DeprecationWarning:dronebench_.*"]
 

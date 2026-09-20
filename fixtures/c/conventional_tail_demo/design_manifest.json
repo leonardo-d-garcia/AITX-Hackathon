@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "design_id": "conventional_tail_demo",
+  "revision_id": "rev_conventional_tail_001",
+  "representation": "editable_reconstruction",
+  "frame": "FRD",
+  "units": "SI",
+  "notes": "Synthetic conventional-tail demo. Every numeric value is an assumed demo assumption, not a measurement. Same wing and masses as the V-tail demo except the tail layout.",
+  "assumptions": [
+    "synthetic demo assumption; not a measurement",
+    "Right-wing stations only; left wing is the implied mirror.",
+    "FRD frame: X forward, Y right, Z down. Lengths in metres, angles in radians, mass in kilograms."
+  ]
+}
