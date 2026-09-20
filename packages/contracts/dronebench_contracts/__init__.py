@@ -93,6 +93,7 @@ from .identity import (
     content_hash,
     sha256_file,
     sha256_hex,
+    strip_display_only,
 )
 from .mission import (
     CheckClass,
@@ -173,7 +174,7 @@ __all__ = [
     "frd_to_threejs", "threejs_to_frd", "station_from_x", "x_from_station",
     # identity
     "IdentityError", "NonFiniteNumberError", "assert_finite", "canonical_bytes",
-    "canonical_json", "content_hash", "sha256_file", "sha256_hex",
+    "canonical_json", "content_hash", "sha256_file", "sha256_hex", "strip_display_only",
     # claims
     "Claim", "ClaimSet", "ClaimStatus", "ConflictSet", "Evidence", "MissingClaimValue",
     "SourceKind", "MEASURED_SOURCE_KINDS",

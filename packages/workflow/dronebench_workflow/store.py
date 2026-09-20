@@ -15,6 +15,8 @@ import shutil
 from pathlib import Path
 from typing import Iterable
 
+import json
+
 from dronebench_contracts import (
     Artifact,
     DroneBenchError,
@@ -22,6 +24,7 @@ from dronebench_contracts import (
     Representation,
     canonical_bytes,
     sha256_hex,
+    strip_display_only,
 )
 
 
@@ -86,7 +89,7 @@ class ArtifactStore:
 
         if target.exists():
             existing = target.read_bytes()
-            if sha256_hex(existing) != artifact.sha256:
+            if sha256_hex(existing) != artifact.sha256 and not _same_but_for_timing(existing, data):
                 raise ImmutabilityError(
                     f"{design_id}/{revision_id}/{relative_path} already exists with other content; "
                     "revisions are append-only"
@@ -167,6 +170,22 @@ class ArtifactStore:
         database is never deleted - undo switches pointers, it does not erase history.
         """
         shutil.rmtree(self.revision_dir(design_id, revision_id), ignore_errors=True)
+
+
+def _same_but_for_timing(existing: bytes, incoming: bytes) -> bool:
+    """True when two JSON artifacts differ only in display-only fields.
+
+    Recomputing the same evaluation produces the same numbers but a fresh ``elapsed_s`` and a fresh
+    timestamp. Those are display-only - they are already excluded from every content hash - so
+    treating them as a content change would make regenerating a preview fail against its own
+    append-only revision. The stored bytes win; the recomputation is discarded.
+    """
+    try:
+        a = strip_display_only(json.loads(existing))
+        b = strip_display_only(json.loads(incoming))
+    except Exception:
+        return False
+    return a == b
 
 
 def _safe(component: str) -> str:

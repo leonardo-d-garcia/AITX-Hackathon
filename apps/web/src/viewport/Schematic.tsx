@@ -43,18 +43,60 @@ export interface ScenePalette {
   ground: string;
 }
 
+export type ColourBy = "status" | "risk";
+
 interface Props {
   parts: SchematicPart[];
   features: GeometryFeatures | null;
   selectedPartId: string | null;
   onSelect: (partId: string | null) => void;
   palette: ScenePalette;
+  /** Fly the assembly along the mission circuit instead of holding it for inspection. */
+  flying?: boolean;
+  colourBy?: ColourBy;
+  onFlight?: (t: number) => void;
 }
+
+/**
+ * Supply-chain and evidence risk, by role.
+ *
+ * This is a *declared* judgement, not something read off the geometry: single-sourced electronics
+ * and bought components carry procurement risk, printed structure does not. It is shown as a
+ * colour and always named in the legend, because a colour with no word beside it is not a signal.
+ */
+export const RISK_BY_ROLE: Record<string, "high" | "medium" | "low"> = {
+  battery: "high",
+  motor: "high",
+  esc: "high",
+  flight_controller: "high",
+  propeller: "medium",
+  servo: "medium",
+  spar: "medium",
+  payload: "medium",
+  harness: "medium",
+  wing: "low",
+  tail_panel: "low",
+  fuselage: "low",
+  mount: "low",
+  surface: "low",
+  hatch: "low",
+};
+
+const RISK_COLOUR = { high: "#c2453c", medium: "#c08419", low: "#7f9c86" } as const;
 
 /** Roles whose real shape comes from geometry_features, not from their bounding box. */
 const LOFTED_ROLES = new Set(["wing", "tail_panel"]);
 
-export function Schematic({ parts, features, selectedPartId, onSelect, palette }: Props) {
+export function Schematic({
+  parts,
+  features,
+  selectedPartId,
+  onSelect,
+  palette,
+  flying = false,
+  colourBy = "status",
+  onFlight,
+}: Props) {
   const mountRef = useRef<HTMLDivElement | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
   const [failed, setFailed] = useState<string | null>(null);
@@ -67,6 +109,10 @@ export function Schematic({ parts, features, selectedPartId, onSelect, palette }
 
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
+  const flyingRef = useRef(flying);
+  flyingRef.current = flying;
+  const onFlightRef = useRef(onFlight);
+  onFlightRef.current = onFlight;
 
   // Rebuild only when the geometry actually changes, never on a selection change.
   const signature = useMemo(
@@ -271,10 +317,65 @@ export function Schematic({ parts, features, selectedPartId, onSelect, palette }
     });
     observer.observe(mount);
 
+    const clock = new THREE.Clock();
+
+    // -- mission circuit: the aircraft flies this in Simulate ------------------------------
+    const points: THREE.Vector3[] = [];
+    const R = Math.max(extent.length() * 4, 8);
+    for (let i = 0; i <= 64; i += 1) {
+      const u = (i / 64) * Math.PI * 2;
+      points.push(new THREE.Vector3(Math.sin(u) * R, Math.sin(u * 2) * R * 0.07, Math.cos(u) * R * 0.7));
+    }
+    const route = new THREE.CatmullRomCurve3(points, true, "catmullrom", 0.4);
+    const ribbon = new THREE.Mesh(
+      new THREE.TubeGeometry(route, 400, extent.length() * 0.007, 8, true),
+      new THREE.MeshBasicMaterial({ color: new THREE.Color(palette.accent), transparent: true, opacity: 0.3 }),
+    );
+    ribbon.visible = false;
+    scene.add(ribbon);
+
+    const home = camera.position.clone();
+    let t = 0;
+    let wasFlying = false;
+    const chase = new THREE.Vector3();
+
     let frame = 0;
     const tick = () => {
       frame = requestAnimationFrame(tick);
-      controls.update();
+      const dt = Math.min(clock.getDelta(), 0.05);
+      const fly = flyingRef.current;
+      ribbon.visible = fly;
+
+      if (fly) {
+        if (!wasFlying) { wasFlying = true; controls.enabled = false; }
+        t = (t + dt * 0.055) % 1;
+        const at = route.getPointAt(t);
+        const ahead = route.getPointAt((t + 0.012) % 1);
+        group.position.copy(at);
+        group.lookAt(ahead);
+        const tan = route.getTangentAt(t);
+        const nxt = route.getTangentAt((t + 0.02) % 1);
+        group.rotateZ(THREE.MathUtils.clamp(tan.clone().cross(nxt).y * 20, -0.55, 0.55));
+
+        chase.copy(at)
+          .addScaledVector(tan, -distance * 1.7)
+          .add(new THREE.Vector3(0, distance * 0.62, 0))
+          .add(new THREE.Vector3(-tan.z, 0, tan.x).multiplyScalar(distance * 0.85));
+        camera.position.lerp(chase, Math.min(dt * 1.6, 1));
+        camera.lookAt(ahead);
+        onFlightRef.current?.(t);
+      } else {
+        if (wasFlying) {
+          wasFlying = false;
+          controls.enabled = true;
+          group.position.set(0, 0, 0);
+          group.rotation.set(0, 0, 0);
+          camera.position.copy(home);
+          controls.target.copy(target);
+          controls.update();
+        }
+        controls.update();
+      }
       renderer.render(scene, camera);
     };
     tick();
@@ -317,7 +418,14 @@ export function Schematic({ parts, features, selectedPartId, onSelect, palette }
       const material = mesh.material as THREE.MeshStandardMaterial;
       const lineMaterial = line.material as THREE.LineBasicMaterial;
 
-      material.color.set(isSelected ? palette.accent : part.massKnown ? palette.surface : palette.unknown);
+      const risk = RISK_BY_ROLE[part.role] ?? "low";
+      const base =
+        colourBy === "risk"
+          ? RISK_COLOUR[risk]
+          : part.massKnown
+            ? palette.surface
+            : palette.unknown;
+      material.color.set(isSelected ? palette.accent : base);
       material.emissive.set(isHovered && !isSelected ? palette.accent : "#000000");
       material.emissiveIntensity = isHovered && !isSelected ? 0.12 : 0;
       material.opacity = part.massKnown ? 1 : isSelected ? 0.9 : 0.55;
@@ -325,7 +433,7 @@ export function Schematic({ parts, features, selectedPartId, onSelect, palette }
       lineMaterial.color.set(isSelected ? palette.accent : palette.line);
       lineMaterial.opacity = isSelected ? 1 : isHovered ? 0.8 : 0.5;
     }
-  }, [selectedPartId, hovered, parts, palette]);
+  }, [selectedPartId, hovered, parts, palette, colourBy]);
 
   const hoveredPart = parts.find((part) => part.partId === hovered);
 

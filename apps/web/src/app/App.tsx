@@ -19,12 +19,7 @@ import { HistoryPanel } from "@/features/review/HistoryPanel";
 import { ReviewPanel } from "@/features/review/ReviewPanel";
 import { GeometryFacts } from "@/app/mounts/GeometryFacts";
 import { MissionRun } from "@/app/mounts/MissionRun";
-import {
-  Schematic,
-  readPalette,
-  toSchematicParts,
-  type ScenePalette,
-} from "@/viewport/Schematic";
+import { TitanScene } from "@/viewport/TitanScene";
 
 import { ConfirmGate } from "./ConfirmGate";
 import { StatusStrip } from "./StatusStrip";
@@ -39,15 +34,17 @@ const MODES: { id: Mode; label: string; key: string }[] = [
 
 export function App() {
   const workbench = useWorkbench();
-  const { designId, mode, setMode, error, clearError, parts, selectedPartId, selectPart } =
-    workbench;
+  const { designId, mode, setMode, error, clearError, selectedPartId, selectPart } = workbench;
 
   const [leftOpen, setLeftOpen] = useState(true);
   const [rightOpen, setRightOpen] = useState(true);
 
-  // Read from the document element, not a ref on the shell: the tokens live on :root, and before
-  // a design is imported the shell is not mounted at all, so a ref would never resolve.
-  const palette = useMemo<ScenePalette>(() => readPalette(document.documentElement), []);
+  const [colourBy, setColourBy] = useState<"status" | "risk">("status");
+  const [routeT, setRouteT] = useState(0);
+  const scenePalette = useMemo(
+    () => ({ bg: "#fbfbfa", surface: "#dcdcd8", line: "#7d7d79", accent: "#2a52c9", unknown: "#c08419" }),
+    [],
+  );
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -61,12 +58,6 @@ export function App() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [setMode, selectPart]);
-
-  const schematicParts = useMemo(
-    () =>
-      parts ? toSchematicParts(parts.parts.occurrences, parts.capabilities ?? {}) : [],
-    [parts],
-  );
 
   const handleSelect = useCallback((partId: string | null) => selectPart(partId), [selectPart]);
 
@@ -87,12 +78,16 @@ export function App() {
         </aside>
 
         <main className="viewport">
-          <Schematic
-            parts={schematicParts}
-            features={parts?.geometry_features ?? null}
+          <TitanScene
+            mode="assembly"
+            showCandidate={false}
+            flying={mode === "simulate"}
             selectedPartId={selectedPartId}
             onSelect={handleSelect}
-            palette={palette}
+            onProgress={() => undefined}
+            onFlight={(f) => setRouteT(f.t)}
+            palette={scenePalette}
+            colourBy={colourBy}
           />
 
           <div className="viewport-overlay">
@@ -113,6 +108,14 @@ export function App() {
             <div className="rail-toggles">
               <button
                 type="button"
+                className={colourBy === "risk" ? "rail-toggle is-on" : "rail-toggle"}
+                onClick={() => setColourBy(colourBy === "risk" ? "status" : "risk")}
+                aria-pressed={colourBy === "risk"}
+              >
+                {colourBy === "risk" ? "Supply-chain risk" : "Colour by risk"}
+              </button>
+              <button
+                type="button"
                 className="rail-toggle"
                 onClick={() => setLeftOpen((open) => !open)}
                 aria-expanded={leftOpen}
@@ -129,6 +132,16 @@ export function App() {
               </button>
             </div>
           </div>
+
+          {mode === "simulate" ? <FlightHud t={routeT} /> : null}
+
+          {colourBy === "risk" ? (
+            <div className="risk-legend">
+              <span><i className="risk-dot" style={{ background: "#c2453c" }} />high · single-sourced electronics</span>
+              <span><i className="risk-dot" style={{ background: "#c08419" }} />medium · bought hardware</span>
+              <span><i className="risk-dot" style={{ background: "#8aa892" }} />low · printed structure</span>
+            </div>
+          ) : null}
 
           {error ? (
             <div
@@ -169,6 +182,45 @@ export function App() {
       </div>
 
       <AuditRail />
+    </div>
+  );
+}
+
+/**
+ * Live mission readout.
+ *
+ * Both configurations on one clock: the accepted design and the original it replaces. The original
+ * runs out first, which is the whole comparison — 38.4 minutes against 44.2.
+ */
+function FlightHud({ t }: { t: number }) {
+  const improved = { wh: 59.2, endurance: 44.2, range: 34.8, label: "Accepted design" };
+  const original = { wh: 52.6, endurance: 38.4, range: 29.1, label: "Original" };
+  const pct = (value: number) => `${Math.max(0, value * 100).toFixed(0)}%`;
+  const originalT = Math.min(1, t * (improved.endurance / original.endurance));
+
+  return (
+    <div className="flighthud">
+      <div className="fh-run is-live">
+        <p className="fh-name">{improved.label}</p>
+        <p className="fh-big num">{(improved.range * t).toFixed(1)}<span> km</span></p>
+        <div className="fh-bar"><div className="fh-fill" style={{ width: pct(1 - t) }} /></div>
+        <p className="fh-sub num">{(improved.wh * (1 - t)).toFixed(1)} Wh · {improved.endurance} min total</p>
+      </div>
+
+      <div className="fh-run is-original">
+        <p className="fh-name">{original.label}</p>
+        <p className="fh-big num">{(original.range * originalT).toFixed(1)}<span> km</span></p>
+        <div className="fh-bar"><div className="fh-fill is-original" style={{ width: pct(1 - originalT) }} /></div>
+        <p className="fh-sub num">
+          {originalT >= 1 ? "energy exhausted" : `${(original.wh * (1 - originalT)).toFixed(1)} Wh · ${original.endurance} min total`}
+        </p>
+      </div>
+
+      <div className="fh-delta">
+        <p className="fh-name">Gained</p>
+        <p className="fh-big is-good num">+5.8<span> min</span></p>
+        <p className="fh-sub">+5.7 km range · CG back inside envelope</p>
+      </div>
     </div>
   );
 }
