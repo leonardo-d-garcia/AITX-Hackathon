@@ -23,6 +23,17 @@ _ASSUMPTIONS = [
     "power_w is a prescribed operating-point draw, not from a propulsion solve",
 ]
 
+_CAD_PACK_ASSUMPTIONS = [
+    "pack energy/power are assumed",
+    "print archive has no battery",
+]
+
+_S_PATHS = (("reference", "S_m2"), ("reference", "S"), ("S",), ("area_m2",), ("S_m2",))
+_B_PATHS = (("reference", "b_m"), ("reference", "b"), ("b",), ("span_m",))
+_C_PATHS = (("reference", "c_m"), ("c",), ("chord_m",))
+_CANT_PATHS = (("tail", "cant_rad"), ("vtail", "cant_rad"), ("cant",), ("cant_rad",))
+_MISSING = object()
+
 
 def simulate_mission(
     geometry: Mapping[str, Any] | None,
@@ -32,10 +43,14 @@ def simulate_mission(
 ) -> dict[str, Any]:
     """Integrate usable energy along a prescribed route and emit simulation_run."""
     ref = _reference_geometry(geometry)
-    params = _mission_params(route, evaluation)
+    params = _mission_params(route, evaluation, geometry)
+    skip_stress = _omit_assumed_stress(geometry, route)
     spar_id = _spar_part_id(parts)
     semispan_m = 0.5 * ref["b"]
     stations = _spar_stations(semispan_m)
+    assumptions = list(_ASSUMPTIONS)
+    if _cad_sourced_b(geometry):
+        assumptions.extend(_CAD_PACK_ASSUMPTIONS)
 
     t_straight_end = params["t_straight_end"]
     t_climb_end = params["t_climb_end"]
@@ -63,18 +78,19 @@ def simulate_mission(
                 energy = 0.0
                 frame = _frame(t, state, energy)
                 frames.append(frame)
-                _extend_stress(
-                    stress_samples,
-                    t,
-                    state["load_factor_n"],
-                    stations,
-                    semispan_m,
-                    params["sigma_root_mpa_n1"],
-                )
+                if not skip_stress:
+                    _extend_stress(
+                        stress_samples,
+                        t,
+                        state["load_factor_n"],
+                        stations,
+                        semispan_m,
+                        params["sigma_root_mpa_n1"],
+                    )
                 break
         frame = _frame(t, state, energy)
         frames.append(frame)
-        if i % stress_stride == 0 or i == n_steps or energy == 0.0:
+        if not skip_stress and (i % stress_stride == 0 or i == n_steps or energy == 0.0):
             _extend_stress(
                 stress_samples,
                 t,
@@ -96,11 +112,11 @@ def simulate_mission(
                 "openvsp": params["openvsp_version"],
                 "vspaero": params["vspaero_version"],
             },
-            "assumptions": list(_ASSUMPTIONS),
+            "assumptions": assumptions,
             "dt_s": dt_s,
         },
         "frames": frames,
-        "part_stress": {spar_id: stress_samples},
+        "part_stress": {} if skip_stress else {spar_id: stress_samples},
     }
     validate_simulation_run(run)
     return run
@@ -115,18 +131,15 @@ def _reference_geometry(
     cant: float = 0.6981317007977318,
 ) -> dict[str, float]:
     """Read reference quantities from the geometry dict. Defaults are parameters, not module constants."""
+    found_s = _dig(geometry, *_S_PATHS)
+    found_b = _dig(geometry, *_B_PATHS)
+    found_c = _dig(geometry, *_C_PATHS)
+    found_cant = _dig(geometry, *_CANT_PATHS)
     return {
-        "S": _dig(geometry, ("S",), ("area_m2",), ("reference", "S"), default=S),
-        "b": _dig(geometry, ("b",), ("span_m",), ("reference", "b"), default=b),
-        "c": _dig(geometry, ("c",), ("chord_m",), ("reference", "c"), default=c),
-        "cant": _dig(
-            geometry,
-            ("cant",),
-            ("cant_rad",),
-            ("vtail_cant_rad",),
-            ("reference", "cant"),
-            default=cant,
-        ),
+        "S": S if found_s is None else found_s,
+        "b": b if found_b is None else found_b,
+        "c": c if found_c is None else found_c,
+        "cant": cant if found_cant is None else found_cant,
     }
 
 
@@ -140,6 +153,7 @@ def _geometry_hash(ref: Mapping[str, float]) -> str:
 def _mission_params(
     route: Mapping[str, Any] | None,
     evaluation: Mapping[str, Any] | None,
+    geometry: Mapping[str, Any] | None = None,
     *,
     dt_s: float = 0.02,
     duration_s: float = 60.0,
@@ -170,17 +184,20 @@ def _mission_params(
     if not isinstance(solvers, Mapping):
         solvers = meta.get("solver_versions") if isinstance(meta.get("solver_versions"), Mapping) else {}
     level_power = float(route.get("power_level_w", evaluation.get("power_w", power_level_w)))
+    geo_va = _dig(geometry, ("mission", "cruise_mps"))
+    geo_alt = _dig(geometry, ("mission", "altitude_m"))
+    geo_reserve = _dig(geometry, ("mission", "reserve_wh_fraction"))
     return {
         "dt_s": float(route.get("dt_s", dt_s)),
         "duration_s": float(route.get("duration_s", duration_s)),
-        "Va": float(route.get("Va", Va)),
-        "alt_m": float(route.get("alt_m", alt_m)),
+        "Va": _route_or_geo(route, "Va", geo_va, Va),
+        "alt_m": _route_or_geo(route, "alt_m", geo_alt, alt_m),
         "climb_vz_up_mps": float(route.get("climb_vz_up_mps", climb_vz_up_mps)),
         "climb_load_factor_n": float(route.get("climb_load_factor_n", climb_load_factor_n)),
         "bank_rad": float(route.get("bank_rad", bank_rad)),
         "alpha_rad": float(route.get("alpha_rad", alpha_rad)),
         "pack_wh": float(route.get("pack_wh", pack_wh)),
-        "reserve_fraction": float(route.get("reserve_fraction", reserve_fraction)),
+        "reserve_fraction": _route_or_geo(route, "reserve_fraction", geo_reserve, reserve_fraction),
         "power_level_w": level_power,
         "power_climb_w": float(route.get("power_climb_w", power_climb_w)),
         "power_turn_w": float(route.get("power_turn_w", power_turn_w)),
@@ -394,22 +411,112 @@ def _spar_part_id(parts: Any, *, default: str = "spar_L") -> str:
     return default
 
 
+def _as_float(value: Any) -> float | None:
+    """Unwrap {value: number} claims and plain numbers. Null stays None."""
+    if isinstance(value, Mapping) and "value" in value:
+        return _as_float(value.get("value"))
+    if not isinstance(value, (int, float, str, bytes, bool, type(None))) and hasattr(
+        value, "value"
+    ):
+        return _as_float(getattr(value, "value"))
+    if value is None or isinstance(value, bool):
+        return None
+    try:
+        out = float(value)
+    except (TypeError, ValueError):
+        return None
+    if not math.isfinite(out):
+        return None
+    return out
+
+
+def _walk_path(geometry: Mapping[str, Any] | None, path: tuple[str, ...]) -> Any:
+    if not isinstance(geometry, Mapping):
+        return _MISSING
+    cur: Any = geometry
+    for key in path:
+        if isinstance(cur, Mapping) and key in cur:
+            cur = cur[key]
+        else:
+            return _MISSING
+    return cur
+
+
 def _dig(
     geometry: Mapping[str, Any] | None,
     *paths: tuple[str, ...],
-    default: float,
-) -> float:
-    if not geometry:
+    default: float | None = None,
+) -> float | None:
+    if not isinstance(geometry, Mapping):
         return default
     for path in paths:
-        cur: Any = geometry
-        found = True
-        for key in path:
-            if isinstance(cur, Mapping) and key in cur and cur[key] is not None:
-                cur = cur[key]
-            else:
-                found = False
-                break
-        if found:
-            return float(cur)
+        node = _walk_path(geometry, path)
+        if node is _MISSING:
+            continue
+        number = _as_float(node)
+        if number is not None:
+            return number
     return default
+
+
+def _route_or_geo(
+    route: Mapping[str, Any],
+    key: str,
+    geo_value: float | None,
+    default: float,
+) -> float:
+    if key in route:
+        number = _as_float(route[key])
+        if number is not None:
+            return number
+    if geo_value is not None:
+        return geo_value
+    return default
+
+
+def _source_kind(node: Any) -> str | None:
+    if isinstance(node, Mapping):
+        kind = node.get("source_kind")
+    else:
+        kind = getattr(node, "source_kind", None)
+    if kind is None:
+        return None
+    return str(kind)
+
+
+def _claim_status(node: Any) -> str | None:
+    if isinstance(node, Mapping):
+        status = node.get("status")
+    else:
+        status = getattr(node, "status", None)
+    if status is None:
+        return None
+    return str(status)
+
+
+def _cad_sourced_b(geometry: Mapping[str, Any] | None) -> bool:
+    if not isinstance(geometry, Mapping):
+        return False
+    for path in _B_PATHS:
+        node = _walk_path(geometry, path)
+        if node is _MISSING or _as_float(node) is None:
+            continue
+        return _source_kind(node) == "cad"
+    return False
+
+
+def _omit_assumed_stress(
+    geometry: Mapping[str, Any] | None,
+    route: Mapping[str, Any] | None,
+) -> bool:
+    if isinstance(route, Mapping) and _as_float(route.get("sigma_root_mpa_n1")) is not None:
+        return False
+    if not isinstance(geometry, Mapping):
+        return False
+    spar = geometry.get("spar")
+    if not isinstance(spar, Mapping) or "Di_m" not in spar:
+        return False
+    node = spar["Di_m"]
+    if node is None or _claim_status(node) == "unknown":
+        return True
+    return _as_float(node) is None

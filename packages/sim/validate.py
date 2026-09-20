@@ -124,8 +124,8 @@ def validate_simulation_run(run: Mapping[str, Any]) -> None:
         prev_energy = energy
         prev_power = power
 
-    if not isinstance(part_stress, Mapping) or not part_stress:
-        raise SimulationRunError("part_stress must be a non-empty object")
+    if not isinstance(part_stress, Mapping):
+        raise SimulationRunError("part_stress must be an object")
     for part_id, samples in part_stress.items():
         if not isinstance(samples, list) or not samples:
             raise SimulationRunError(f"part_stress.{part_id} must be a non-empty list")

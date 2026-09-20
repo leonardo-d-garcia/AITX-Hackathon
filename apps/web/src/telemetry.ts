@@ -109,3 +109,109 @@ export function interpolateFrame(frames: Frame[], t: number): Frame {
     energy_wh_remaining: lerp(a.energy_wh_remaining, b.energy_wh_remaining),
   };
 }
+
+type Vec3 = [number, number, number];
+type Quat = [number, number, number, number];
+type Mat3 = [Vec3, Vec3, Vec3];
+
+/** Body-to-NED quat → body-to-three.js quat (scalar-first).
+ *  three.js is Y-up right-handed with X=east, Z=-north. Identity FRD
+ *  therefore has body forward along −Z, right along +X, down along −Y.
+ *  Compose M * R(q) where M maps NED (n,e,d) → (e, −d, −n).
+ */
+export function quatFrdNedToThree(
+  q: [number, number, number, number],
+): [number, number, number, number] {
+  const rBn = rotFromQuat(q);
+  const m: Mat3 = [
+    [0, 1, 0],
+    [0, 0, -1],
+    [-1, 0, 0],
+  ];
+  return quatFromRot(mmul(m, rBn));
+}
+
+/** Rotate a body FRD point into three.js world axes (translation not applied). */
+export function rotateBodyPointThree(
+  q: [number, number, number, number],
+  bodyFrd: [number, number, number],
+): [number, number, number] {
+  return qv(quatFrdNedToThree(q), bodyFrd);
+}
+
+function rotFromQuat(quat: Quat): Mat3 {
+  const [w, x, y, z] = quat;
+  const xx = x * x;
+  const yy = y * y;
+  const zz = z * z;
+  const xy = x * y;
+  const xz = x * z;
+  const yz = y * z;
+  const wx = w * x;
+  const wy = w * y;
+  const wz = w * z;
+  return [
+    [1 - 2 * (yy + zz), 2 * (xy - wz), 2 * (xz + wy)],
+    [2 * (xy + wz), 1 - 2 * (xx + zz), 2 * (yz - wx)],
+    [2 * (xz - wy), 2 * (yz + wx), 1 - 2 * (xx + yy)],
+  ];
+}
+
+function mmul(a: Mat3, b: Mat3): Mat3 {
+  const row = (i: 0 | 1 | 2): Vec3 => [
+    a[i][0] * b[0][0] + a[i][1] * b[1][0] + a[i][2] * b[2][0],
+    a[i][0] * b[0][1] + a[i][1] * b[1][1] + a[i][2] * b[2][1],
+    a[i][0] * b[0][2] + a[i][1] * b[1][2] + a[i][2] * b[2][2],
+  ];
+  return [row(0), row(1), row(2)];
+}
+
+function mv(r: Mat3, v: Vec3): Vec3 {
+  return [
+    r[0][0] * v[0] + r[0][1] * v[1] + r[0][2] * v[2],
+    r[1][0] * v[0] + r[1][1] * v[1] + r[1][2] * v[2],
+    r[2][0] * v[0] + r[2][1] * v[1] + r[2][2] * v[2],
+  ];
+}
+
+function qv(q: Quat, v: Vec3): Vec3 {
+  return mv(rotFromQuat(q), v);
+}
+
+function quatFromRot(r: Mat3): Quat {
+  const [m00, m01, m02] = r[0];
+  const [m10, m11, m12] = r[1];
+  const [m20, m21, m22] = r[2];
+  const trace = m00 + m11 + m22;
+  let w: number;
+  let x: number;
+  let y: number;
+  let z: number;
+  if (trace > 0) {
+    const s = 0.5 / Math.sqrt(trace + 1);
+    w = 0.25 / s;
+    x = (m21 - m12) * s;
+    y = (m02 - m20) * s;
+    z = (m10 - m01) * s;
+  } else if (m00 > m11 && m00 > m22) {
+    const s = 2 * Math.sqrt(Math.max(1e-15, 1 + m00 - m11 - m22));
+    w = (m21 - m12) / s;
+    x = 0.25 * s;
+    y = (m01 + m10) / s;
+    z = (m02 + m20) / s;
+  } else if (m11 > m22) {
+    const s = 2 * Math.sqrt(Math.max(1e-15, 1 + m11 - m00 - m22));
+    w = (m02 - m20) / s;
+    x = (m01 + m10) / s;
+    y = 0.25 * s;
+    z = (m12 + m21) / s;
+  } else {
+    const s = 2 * Math.sqrt(Math.max(1e-15, 1 + m22 - m00 - m11));
+    w = (m10 - m01) / s;
+    x = (m02 + m20) / s;
+    y = (m12 + m21) / s;
+    z = 0.25 * s;
+  }
+  const n = Math.sqrt(w * w + x * x + y * y + z * z) || 1;
+  return [w / n, x / n, y / n, z / n];
+}

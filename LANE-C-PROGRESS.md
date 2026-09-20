@@ -126,7 +126,7 @@ Python helpers: `packages/contracts/validate.py` (`validate_instance("evaluation
 
 | Item | Status |
 |---|---|
-| Unreal (U1–U5) | **Out of this pass.** No UE project on the branch. Runbook at `UE5-Grok-Titan-Avenger-Runbook.md` is **untracked** |
+| Unreal (U1–U5) | Path 2 skeleton is on disk (`unreal/DroneBench`, Python replay scripts, Remote Control 30010). Renderer, not a plant. R3F remains the shipping viewport. Editor import/PIE was **not** verified in this snapshot. Do not wait on Unreal for other lanes |
 | Titan / Avenger CAD ingest | Zip + `packages/cad/` + `titan_avenger_inventory.json` are **untracked**. Fixtures are synthetic |
 | `packages/sim/frames.py` | Untracked NED→Three / NED→UE helpers. Committed conversion for R3F is `apps/web/src/telemetry.ts` (`nedToThree`) |
 | Climb / static margin / CLmax from VSPAERO | Climb stays `unknown` without excess power. Static margin stays `unknown` without validated derivatives. VSPAERO linear lift does **not** set `CLmax` |

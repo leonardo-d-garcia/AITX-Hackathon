@@ -36,3 +36,14 @@ Thumbs.db
 # Secrets
 .env
 .env.*
+
+# CAD archives / meshes (local, not committed)
+Titan*.zip
+*Avenger*.zip
+*.glb
+fixtures/c/titan_avenger_cad/meshes/
+unreal/**/Binaries/
+unreal/**/Intermediate/
+unreal/**/Saved/
+unreal/**/DerivedDataCache/
+unreal/**/Content/

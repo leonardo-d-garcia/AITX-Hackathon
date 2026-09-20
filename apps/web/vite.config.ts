@@ -11,7 +11,11 @@ export default defineConfig({
     alias: {
       "@telemetry": path.resolve(
         root,
-        "../../fixtures/c/synthetic_vtail_demo/simulation_run.json",
+        "../../fixtures/c/titan_avenger_cad/simulation_run.json",
+      ),
+      "@airframe": path.resolve(
+        root,
+        "../../fixtures/c/titan_avenger_cad/meshes/titan_avenger.glb",
       ),
     },
   },

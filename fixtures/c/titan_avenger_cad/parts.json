@@ -1,0 +1,1416 @@
+{
+  "schema_version": 1,
+  "frame": "FRD",
+  "occurrences": [
+    {
+      "part_id": "fuse_1",
+      "type": "fuselage",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": 0.37153499999999995,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": -0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": 0.000115000000000002,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "fuse_2",
+      "type": "fuselage",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": 0.165,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": -0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.010094999999999998,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "fuse_3",
+      "type": "fuselage",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.075,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": -0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "fuse_4",
+      "type": "fuselage",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.315,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": -0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.005510000000000002,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "fuse_5",
+      "type": "fuselage",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.4840899999999999,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": -0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "canopy_1",
+      "type": "fuselage",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": 0.34647500000000003,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": 0.00019999999999999928,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.046755,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "canopy_2",
+      "type": "fuselage",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": 0.224595,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": 0.00021000000000000085,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.05194499999999999,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "hatch_1",
+      "type": "fuselage",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.13767000000000001,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": -0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.032325,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "hatch_2",
+      "type": "fuselage",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.25282,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": -0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.03522,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "motor_mount",
+      "type": "other",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.538225,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": -0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.0,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "wing_1_L",
+      "type": "wing",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.055515,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": -0.189045,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.016675000000000002,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "wing_1_R",
+      "type": "wing",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.055515,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": 0.189045,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.016675000000000002,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "wing_2_L",
+      "type": "wing",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.057625,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": -0.42809,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.01709,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "wing_2_R",
+      "type": "wing",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.057625,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": 0.42809,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.01709,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "wing_3_L",
+      "type": "wing",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.033465,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": -0.6680900000000001,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.01722,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "wing_3_R",
+      "type": "wing",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.033465,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": 0.6680900000000001,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.01722,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "wing_4_L",
+      "type": "wing",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.061864999999999996,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": -0.90809,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.01734,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "wing_4_R",
+      "type": "wing",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.061864999999999996,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": 0.90809,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.01734,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "wing_5_L",
+      "type": "wing",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.063985,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": -1.07017,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.017435000000000003,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "wing_5_R",
+      "type": "wing",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.063985,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": 1.07017,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.017435000000000003,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "aileron_L",
+      "type": "surface",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.117785,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": -0.6680900000000001,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.01425,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "aileron_R",
+      "type": "surface",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.117785,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": 0.6680900000000001,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.01425,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "wing_bay_plate_L",
+      "type": "other",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.056715,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": -0.62306,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.01345,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "wing_bay_plate_R",
+      "type": "other",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.056715,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": 0.62306,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.01345,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "vtail_1_L",
+      "type": "tail",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.427515,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": -0.15209999999999999,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.069245,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "vtail_1_R",
+      "type": "tail",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.427515,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": 0.15209999999999999,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.069245,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "vtail_2_L",
+      "type": "tail",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.46890499999999996,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": -0.26958,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.137745,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "vtail_2_R",
+      "type": "tail",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.46890499999999996,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": 0.26958,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.137745,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "taileron_L",
+      "type": "surface",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.5018499999999999,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": -0.15179,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.07159,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    },
+    {
+      "part_id": "taileron_R",
+      "type": "surface",
+      "mass_kg": {
+        "value": null,
+        "unit": "kg",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "volume is not mass"
+        ]
+      },
+      "position_frd_m": {
+        "x_m": {
+          "value": -0.5018499999999999,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "y_m": {
+          "value": 0.15179,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        },
+        "z_m": {
+          "value": -0.07159,
+          "unit": "m",
+          "status": "known",
+          "source_kind": "cad",
+          "evidence_ids": [],
+          "assumptions": [
+            "measured from print-archive STL bounds"
+          ]
+        }
+      }
+    }
+  ]
+}

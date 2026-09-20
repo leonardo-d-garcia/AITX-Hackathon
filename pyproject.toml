@@ -15,6 +15,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]
+cad = ["trimesh>=4"]
 
 [project.scripts]
 dronebench = "dronebench.cli:main"

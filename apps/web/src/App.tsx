@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { HeatmapLegend } from "./features/simulation/HeatmapLegend";
+import { PartCard } from "./features/simulation/PartCard";
 import { ReplayViewport } from "./features/simulation/ReplayViewport";
 import {
   fidelityLabel,
@@ -18,6 +20,7 @@ export function App() {
   const [playing, setPlaying] = useState(false);
   const [rate, setRate] = useState(1);
   const [t, setT] = useState(0);
+  const [picked, setPicked] = useState<string | null>(null);
   const last = useRef<number | null>(null);
 
   useEffect(() => {
@@ -67,6 +70,7 @@ export function App() {
   );
 
   const tier = run?.meta.fidelity_tier ?? "analytic";
+  const assumptions = (run?.meta.assumptions ?? []).slice(0, 3);
 
   return (
     <div
@@ -97,7 +101,8 @@ export function App() {
             DroneBench mission replay
           </div>
           <div style={{ color: "var(--muted)", fontSize: 12 }}>
-            R3F shipping viewport · Unreal is not the plant
+            R3F shipping viewport · Unreal is not the plant · print archive has
+            no mass
           </div>
         </div>
         <div style={{ textAlign: "right" }}>
@@ -110,14 +115,57 @@ export function App() {
         </div>
       </header>
 
-      <div style={{ minHeight: 0 }}>
+      <div style={{ minHeight: 0, position: "relative" }}>
         {error ? (
           <div style={{ padding: 24, color: "var(--caution)" }}>
             Waiting on U0 fallback: {error}
           </div>
         ) : (
-          <ReplayViewport frame={frame} />
+          <ReplayViewport
+            frame={frame}
+            onPartPick={(id) => setPicked(id)}
+          />
         )}
+        {assumptions.length > 0 ? (
+          <div
+            style={{
+              position: "absolute",
+              top: 12,
+              left: 12,
+              maxWidth: 420,
+              color: "var(--muted)",
+              fontSize: 11,
+              lineHeight: 1.45,
+              pointerEvents: "none",
+            }}
+          >
+            {assumptions.map((line) => (
+              <div key={line}>{line}</div>
+            ))}
+          </div>
+        ) : null}
+        <div
+          style={{
+            position: "absolute",
+            top: 12,
+            right: 12,
+            display: "grid",
+            gap: 8,
+            pointerEvents: "none",
+          }}
+        >
+          <PartCard partId={picked} />
+        </div>
+        <div
+          style={{
+            position: "absolute",
+            bottom: 12,
+            left: 12,
+            pointerEvents: "none",
+          }}
+        >
+          <HeatmapLegend />
+        </div>
       </div>
 
       <footer
@@ -159,10 +207,11 @@ export function App() {
             setT(Number(e.target.value));
           }}
         />
-        <div style={{ fontSize: 12, color: "var(--muted)", minWidth: 280 }}>
+        <div style={{ fontSize: 12, color: "var(--muted)", minWidth: 360 }}>
           t={t.toFixed(2)}s n={frame?.load_factor_n.toFixed(2) ?? "—"}{" "}
           Va={frame?.Va.toFixed(1) ?? "—"} m/s E=
-          {frame?.energy_wh_remaining.toFixed(1) ?? "—"} Wh
+          {frame?.energy_wh_remaining.toFixed(1) ?? "—"} Wh picked=
+          {picked ?? "—"}
         </div>
       </footer>
     </div>

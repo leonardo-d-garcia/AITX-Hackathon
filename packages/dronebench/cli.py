@@ -58,7 +58,11 @@ def cmd_simulate(args: argparse.Namespace) -> int:
         parts = parts_raw.get("occurrences", parts_raw.get("parts", parts_raw))
     else:
         raise SystemExit(f"{args.parts} must be a list or object")
-    run = simulate_mission(geometry, parts)
+    route = _load_json(Path(args.route)) if args.route else None
+    if args.design_manifest:
+        manifest = _load_json(Path(args.design_manifest))
+        route = dict(route or {}, revision_id=manifest["revision_id"])
+    run = simulate_mission(geometry, parts, route=route)
     out = Path(args.out) if args.out else Path("simulation_run.json")
     write_simulation_run(out, run)
     print(str(out))
@@ -92,6 +96,8 @@ def main(argv: list[str] | None = None) -> int:
     p_sim = sub.add_parser("simulate", help="write simulation_run.json")
     p_sim.add_argument("--geometry", required=True)
     p_sim.add_argument("--parts", required=True)
+    p_sim.add_argument("--route")
+    p_sim.add_argument("--design-manifest")
     p_sim.add_argument("--out")
     p_sim.set_defaults(func=cmd_simulate)
 

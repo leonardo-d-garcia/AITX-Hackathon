@@ -1,0 +1,422 @@
+{
+  "fuse_1": {
+    "name": "fuse_1",
+    "mesh_node": "fuse_1",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "fuse_2": {
+    "name": "fuse_2",
+    "mesh_node": "fuse_2",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "fuse_3": {
+    "name": "fuse_3",
+    "mesh_node": "fuse_3",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "fuse_4": {
+    "name": "fuse_4",
+    "mesh_node": "fuse_4",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "fuse_5": {
+    "name": "fuse_5",
+    "mesh_node": "fuse_5",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "canopy_1": {
+    "name": "canopy_1",
+    "mesh_node": "canopy_1",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "canopy_2": {
+    "name": "canopy_2",
+    "mesh_node": "canopy_2",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "hatch_1": {
+    "name": "hatch_1",
+    "mesh_node": "hatch_1",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "hatch_2": {
+    "name": "hatch_2",
+    "mesh_node": "hatch_2",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "motor_mount": {
+    "name": "motor_mount",
+    "mesh_node": "motor_mount",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "wing_1_L": {
+    "name": "wing_1_L",
+    "mesh_node": "wing_1_L",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "wing_1_R": {
+    "name": "wing_1_R",
+    "mesh_node": "wing_1_R",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "wing_2_L": {
+    "name": "wing_2_L",
+    "mesh_node": "wing_2_L",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "wing_2_R": {
+    "name": "wing_2_R",
+    "mesh_node": "wing_2_R",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "wing_3_L": {
+    "name": "wing_3_L",
+    "mesh_node": "wing_3_L",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "wing_3_R": {
+    "name": "wing_3_R",
+    "mesh_node": "wing_3_R",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "wing_4_L": {
+    "name": "wing_4_L",
+    "mesh_node": "wing_4_L",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "wing_4_R": {
+    "name": "wing_4_R",
+    "mesh_node": "wing_4_R",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "wing_5_L": {
+    "name": "wing_5_L",
+    "mesh_node": "wing_5_L",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "wing_5_R": {
+    "name": "wing_5_R",
+    "mesh_node": "wing_5_R",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "aileron_L": {
+    "name": "aileron_L",
+    "mesh_node": "aileron_L",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "aileron_R": {
+    "name": "aileron_R",
+    "mesh_node": "aileron_R",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "wing_bay_plate_L": {
+    "name": "wing_bay_plate_L",
+    "mesh_node": "wing_bay_plate_L",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "wing_bay_plate_R": {
+    "name": "wing_bay_plate_R",
+    "mesh_node": "wing_bay_plate_R",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "vtail_1_L": {
+    "name": "vtail_1_L",
+    "mesh_node": "vtail_1_L",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "vtail_1_R": {
+    "name": "vtail_1_R",
+    "mesh_node": "vtail_1_R",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "vtail_2_L": {
+    "name": "vtail_2_L",
+    "mesh_node": "vtail_2_L",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "vtail_2_R": {
+    "name": "vtail_2_R",
+    "mesh_node": "vtail_2_R",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "taileron_L": {
+    "name": "taileron_L",
+    "mesh_node": "taileron_L",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  },
+  "taileron_R": {
+    "name": "taileron_R",
+    "mesh_node": "taileron_R",
+    "material": {
+      "name": "unspecified",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "folder name High Temp PETG or ABS or ASA is not a material cert"
+      ]
+    }
+  }
+}

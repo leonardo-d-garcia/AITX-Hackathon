@@ -29,7 +29,15 @@ Simulation does not keep its own copy of the wing dimensions. Geometry comes fro
 
 ## Unreal
 
-Out of this pass. Unreal is a renderer, not a plant. Do not write flight dynamics in Unreal or in the R3F viewport.
+Unreal is a renderer, not a plant. Do not write flight dynamics in Unreal or in the R3F viewport.
+
+- Path 2 is authorized: Mode A only (second window / alt-tab). Pixel Streaming is forbidden.
+- Python replay first. Do not start a C++ `ATelemetryReplayActor` unless replay already looks right and the editor is closed for a cold `Build.bat` (stretch; skip unless asked).
+- Exactly one session may talk to Remote Control port 30010. Only that session writes `unreal/DroneBench/Content/`.
+- Never fuse or combine the 30 part meshes. Import with identity / transforms preserved; combine, auto-centre, and fit-to-grid off.
+- Unknown stays unknown. Null is not zero. Do not invent mass, Di, material, motor, or battery.
+- 45-minute editor gate: if Remote Control + `import unreal; print(unreal.SystemLibrary.get_engine_version())` via `tools/ue.py` is still red at 45 minutes, abandon Unreal. R3F is the shipping fallback.
+- Kill Path 2 on: physics in UE, two Content writers, inverted aircraft after two conversion attempts, Pixel Streaming, or T-45 min.
 
 ## Verification
 

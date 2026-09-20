@@ -1,0 +1,598 @@
+{
+  "schema_version": 1,
+  "frame": "FRD",
+  "units": "m",
+  "reference": {
+    "S_m2": {
+      "value": 0.4199,
+      "unit": "m2",
+      "status": "known",
+      "source_kind": "cad",
+      "evidence_ids": [],
+      "assumptions": [
+        "measured from print-archive STL bounds",
+        "exposed planform both sides, no carry-through; set once"
+      ]
+    },
+    "b_m": {
+      "value": 2.2245,
+      "unit": "m",
+      "status": "known",
+      "source_kind": "cad",
+      "evidence_ids": [],
+      "assumptions": [
+        "measured from print-archive STL bounds",
+        "twice the measured half-span tip"
+      ]
+    },
+    "c_m": {
+      "value": 0.2883149231061435,
+      "unit": "m",
+      "status": "known",
+      "source_kind": "computed",
+      "evidence_ids": [],
+      "assumptions": [
+        "MAC from piecewise-linear measured stations"
+      ]
+    }
+  },
+  "wing_stations": [
+    {
+      "span_y_m": {
+        "value": 0.07,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "leading_edge_x_m": {
+        "value": 0.05143,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "chord_m": {
+        "value": 0.21389000000000002,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "z_m": {
+        "value": -0.016675000000000002,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "twist_rad": {
+        "value": null,
+        "unit": "rad",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "twist not extracted from the hollow printed section"
+        ]
+      }
+    },
+    {
+      "span_y_m": {
+        "value": 0.30809,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "leading_edge_x_m": {
+        "value": 0.03892,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "chord_m": {
+        "value": 0.19308999999999998,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "z_m": {
+        "value": -0.01709,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "twist_rad": {
+        "value": null,
+        "unit": "rad",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "twist not extracted from the hollow printed section"
+        ]
+      }
+    },
+    {
+      "span_y_m": {
+        "value": 0.5480900000000001,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "leading_edge_x_m": {
+        "value": 0.02631,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "chord_m": {
+        "value": 0.17212,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "z_m": {
+        "value": -0.01722,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "twist_rad": {
+        "value": null,
+        "unit": "rad",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "twist not extracted from the hollow printed section"
+        ]
+      }
+    },
+    {
+      "span_y_m": {
+        "value": 0.7880900000000001,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "leading_edge_x_m": {
+        "value": 0.01372,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "chord_m": {
+        "value": 0.15117,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "z_m": {
+        "value": -0.01734,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "twist_rad": {
+        "value": null,
+        "unit": "rad",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "twist not extracted from the hollow printed section"
+        ]
+      }
+    },
+    {
+      "span_y_m": {
+        "value": 1.02809,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "leading_edge_x_m": {
+        "value": 0.0011199999999999975,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "chord_m": {
+        "value": 0.13021000000000002,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "z_m": {
+        "value": -0.017435000000000003,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "cad",
+        "evidence_ids": [],
+        "assumptions": [
+          "measured from print-archive STL bounds"
+        ]
+      },
+      "twist_rad": {
+        "value": null,
+        "unit": "rad",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "twist not extracted from the hollow printed section"
+        ]
+      }
+    },
+    {
+      "span_y_m": {
+        "value": 1.11225,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "inferred",
+        "evidence_ids": [],
+        "assumptions": [
+          "tip station"
+        ]
+      },
+      "leading_edge_x_m": {
+        "value": -0.003298400000000008,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "inferred",
+        "evidence_ids": [],
+        "assumptions": [
+          "linear extrapolation of measured taper"
+        ]
+      },
+      "chord_m": {
+        "value": 0.12286002666666666,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "inferred",
+        "evidence_ids": [],
+        "assumptions": [
+          "linear extrapolation of measured taper"
+        ]
+      },
+      "z_m": {
+        "value": -0.017435000000000003,
+        "unit": "m",
+        "status": "known",
+        "source_kind": "inferred",
+        "evidence_ids": [],
+        "assumptions": [
+          "linear extrapolation of measured taper"
+        ]
+      },
+      "twist_rad": {
+        "value": null,
+        "unit": "rad",
+        "status": "unknown",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "assumptions": [
+          "not present in the print archive",
+          "twist not extracted from the hollow printed section"
+        ]
+      }
+    }
+  ],
+  "tail": {
+    "layout": "vtail",
+    "cant_rad": {
+      "value": 0.5542218793322155,
+      "unit": "rad",
+      "status": "known",
+      "source_kind": "cad",
+      "evidence_ids": [],
+      "assumptions": [
+        "measured from print-archive STL bounds",
+        "atan2(dZ, dX) of vtail1 AABB"
+      ]
+    },
+    "panel_count": {
+      "value": 2.0,
+      "unit": "1",
+      "status": "known",
+      "source_kind": "cad",
+      "evidence_ids": [],
+      "assumptions": [
+        "measured from print-archive STL bounds",
+        "two canted panels after mirror"
+      ]
+    },
+    "panel_area_m2": {
+      "value": null,
+      "unit": "m2",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "planform not in the inventory; wetted area is not planform"
+      ]
+    },
+    "panel_span_m": {
+      "value": 0.20507999999999998,
+      "unit": "m",
+      "status": "known",
+      "source_kind": "cad",
+      "evidence_ids": [],
+      "assumptions": [
+        "measured from print-archive STL bounds"
+      ]
+    },
+    "tail_arm_m": {
+      "value": 0.4004725,
+      "unit": "m",
+      "status": "known",
+      "source_kind": "computed",
+      "evidence_ids": [],
+      "assumptions": [
+        "wing quarter-chord datum to vtail1 quarter-chord"
+      ]
+    }
+  },
+  "mission": {
+    "cruise_mps": {
+      "value": 15.0,
+      "unit": "m/s",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "assumed mission-model input; not a measurement",
+        "not present in the print archive"
+      ]
+    },
+    "altitude_m": {
+      "value": 120.0,
+      "unit": "m",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "assumed mission-model input; not a measurement",
+        "not present in the print archive"
+      ]
+    },
+    "rho_kgm3": {
+      "value": 1.225,
+      "unit": "kg/m3",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "assumed mission-model input; not a measurement",
+        "not present in the print archive"
+      ]
+    },
+    "g_mps2": {
+      "value": 9.80665,
+      "unit": "m/s2",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "assumed mission-model input; not a measurement",
+        "not present in the print archive"
+      ]
+    },
+    "reserve_wh_fraction": {
+      "value": 0.2,
+      "unit": "1",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "assumed mission-model input; not a measurement",
+        "not present in the print archive"
+      ]
+    },
+    "load_factor_limit": {
+      "value": 3.5,
+      "unit": "1",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "assumed mission-model input; not a measurement",
+        "not present in the print archive"
+      ]
+    }
+  },
+  "aero_assumptions": {
+    "CD0_profile": {
+      "value": 0.015,
+      "unit": "1",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "assumed mission-model input; not a measurement",
+        "not present in the print archive"
+      ]
+    },
+    "CD0_fuselage": {
+      "value": 0.008,
+      "unit": "1",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "assumed mission-model input; not a measurement",
+        "not present in the print archive"
+      ]
+    },
+    "CD0_interference": {
+      "value": 0.002,
+      "unit": "1",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "assumed mission-model input; not a measurement",
+        "not present in the print archive"
+      ]
+    },
+    "oswald_e": {
+      "value": 0.8,
+      "unit": "1",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "assumed mission-model input; not a measurement",
+        "not present in the print archive"
+      ]
+    },
+    "CLmax": {
+      "value": 1.3,
+      "unit": "1",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "assumed mission-model input; not a measurement",
+        "not present in the print archive"
+      ]
+    }
+  },
+  "spar": {
+    "Do_m": {
+      "value": 0.012,
+      "unit": "m",
+      "status": "known",
+      "source_kind": "cad",
+      "evidence_ids": [],
+      "assumptions": [
+        "measured from print-archive STL bounds",
+        "pass-through hole in wing3_12mm_hole"
+      ]
+    },
+    "Di_m": {
+      "value": null,
+      "unit": "m",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "tube wall is not in the archive"
+      ]
+    },
+    "sigma_allow_mpa": {
+      "value": null,
+      "unit": "MPa",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive"
+      ]
+    },
+    "stations": {
+      "value": 21.0,
+      "unit": "1",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "assumed mission-model input; not a measurement",
+        "not present in the print archive"
+      ]
+    }
+  },
+  "cg_inputs": {
+    "np_x_m": {
+      "value": null,
+      "unit": "m",
+      "status": "unknown",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "not present in the print archive",
+        "neutral point not provided; do not substitute a quarter-chord guess"
+      ]
+    }
+  }
+}
