@@ -22,3 +22,7 @@ apps/web/.vite/
 # keep the directory placeholders in git
 !artifacts/README.md
 !vendor_assets/README.md
+
+# Supplied aircraft archive: no licence document in the ZIP, so it never enters the
+# repository. Regenerate with `python scripts/extract_titan.py` (see README).
+apps/web/public/titan/
