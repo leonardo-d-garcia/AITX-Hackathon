@@ -42,3 +42,5 @@ venv/
 .vscode/
 *.vsp3
 *.vsp3.*
+demo/assets/
+demo/data/

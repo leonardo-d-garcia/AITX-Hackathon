@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DroneBench — bench test (standalone harness)</title>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<style>
+  html,body{height:100%;margin:0;background:#070a0f;color:#e9edf3;
+    font:14px/1.4 ui-sans-serif,-apple-system,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif}
+  #stage{position:absolute;inset:0}
+  #src{position:absolute;left:50%;transform:translateX(-50%);bottom:72px;z-index:5;
+    font-size:11px;color:#6f7d8f}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="src">harness</div>
+<script type="module">
+import { mount, makeMockData } from './flight.js';
+
+// file:// blocks fetch of local JSON in Chrome, so fall back to the mock profile.
+let data = null, src = 'mock (built-in profile)';
+try {
+  const r = await fetch('./data/demo_data.json');
+  if (r.ok) { data = await r.json(); src = 'demo/data/demo_data.json'; }
+} catch (e) { /* expected on file:// */ }
+if (!data) data = makeMockData();
+
+const api = mount(document.getElementById('stage'), data, { autoplay: true, speed: 1 });
+document.getElementById('src').textContent = 'harness · data: ' + src;
+window.__api = api;
+api.on('complete', ({ summary }) => {
+  window.__complete = summary;
+  console.log('[harness] complete', JSON.stringify(summary.deltas));
+});
+api.on('tick', () => { window.__ticked = true; });
+</script>
+</body>
+</html>

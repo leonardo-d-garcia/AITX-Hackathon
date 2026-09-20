@@ -1,0 +1,1531 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DroneBench — Titan Avenger</title>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<style>
+:root{
+  --bg:#0b0e13; --panel:#141922; --panel-2:#1b212c; --panel-3:#232b38;
+  --ink:#e8edf5; --ink-2:#9aa6b8; --ink-3:#6b7789;
+  --line:#28313f; --line-2:#36414f;
+  --accent:#5b8cff; --accent-ink:#08111f; --accent-dim:#2a3f6d;
+  --viewport:#080b10;
+  --measured:#3fd6a0; --computed:#7fa8ff; --assumed:#c79cff; --unknown:#f0a93c; --conflicted:#ff7a70;
+  --measured-bg:#11332a; --computed-bg:#17243f; --assumed-bg:#2a2140; --unknown-bg:#3a2a0c; --conflicted-bg:#3d1b18;
+  --ok:#3fd6a0; --warn:#f0a93c; --bad:#ff7a70;
+  --r:10px; --r-lg:14px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  background:var(--bg); color:var(--ink); font:15px/1.5 var(--font);
+  display:flex; flex-direction:column; overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:6px;border:2px solid var(--bg)}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ---------------------------------------------------------------- header */
+header{
+  display:flex;align-items:center;gap:18px;padding:12px 22px;flex:none;
+  background:linear-gradient(180deg,#151b25,#10151d);border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:baseline;gap:10px}
+.brand .mark{
+  font-size:12px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--accent);
+}
+.brand h1{font-size:17px;margin:0;font-weight:600;letter-spacing:-.2px}
+.rev{
+  font:12px/1 var(--mono);color:var(--ink-2);background:var(--panel-2);
+  border:1px solid var(--line);border-radius:999px;padding:5px 10px;
+}
+.recon-label{
+  font-size:12px;font-weight:600;letter-spacing:.3px;color:var(--unknown);
+  border:1px solid var(--unknown);background:var(--unknown-bg);
+  border-radius:999px;padding:5px 12px;white-space:nowrap;
+}
+.spacer{flex:1}
+.fidelity{font-size:12px;color:var(--ink-3);max-width:520px;text-align:right;line-height:1.4}
+
+/* ------------------------------------------------------------------ tabs */
+nav{
+  display:flex;gap:2px;padding:0 22px;background:#10151d;
+  border-bottom:1px solid var(--line);flex:none;
+}
+nav button{
+  background:none;border:0;border-bottom:2px solid transparent;color:var(--ink-2);
+  padding:11px 18px;font-size:14px;font-weight:500;letter-spacing:.1px;
+  transition:color .14s ease, border-color .14s ease;
+}
+nav button:hover{color:var(--ink)}
+nav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+nav button .n{color:var(--ink-3);font:11px/1 var(--mono);margin-right:8px}
+nav button[aria-selected="true"] .n{color:var(--accent)}
+
+main{flex:1;min-height:0;position:relative}
+.tab{position:absolute;inset:0;display:none;min-height:0}
+.tab.active{display:flex}
+
+/* ----------------------------------------------------------- primitives */
+.chip{
+  display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:2px 10px;
+  font-size:11.5px;font-weight:600;letter-spacing:.2px;border:1px solid transparent;white-space:nowrap;
+}
+.chip::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
+.chip.measured{color:var(--measured);background:var(--measured-bg);border-color:#1f6b52}
+.chip.computed{color:var(--computed);background:var(--computed-bg);border-color:#2b4478}
+.chip.assumed{color:var(--assumed);background:var(--assumed-bg);border-color:#4a3a73}
+.chip.unknown{color:var(--unknown);background:var(--unknown-bg);border-color:#7a5615}
+.chip.conflicted{color:var(--conflicted);background:var(--conflicted-bg);border-color:#7d302b}
+.chip.plain{color:var(--ink-2);background:var(--panel-2);border-color:var(--line)}
+.chip.plain::before{display:none}
+.chip.ok{color:var(--ok);background:var(--measured-bg);border-color:#1f6b52}
+.chip.bad{color:var(--bad);background:var(--conflicted-bg);border-color:#7d302b}
+
+.btn{
+  background:var(--panel-3);border:1px solid var(--line-2);border-radius:8px;
+  padding:7px 14px;font-size:13px;font-weight:550;color:var(--ink);
+  transition:background .14s ease,border-color .14s ease,transform .08s ease;
+}
+.btn:hover{background:#2b3547;border-color:#465264}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:650}
+.btn.primary:hover{background:#7aa1ff}
+.btn.ghost{background:transparent}
+.btn:disabled{opacity:.45;cursor:default;transform:none}
+
+.sec-label{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;
+  color:var(--ink-3);margin:0 0 10px;
+}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.unknown-val{color:var(--unknown);font-style:normal}
+
+/* ---------------------------------------------------------------- panels */
+.pane{background:var(--panel);display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.pane-head{
+  padding:12px 16px;border-bottom:1px solid var(--line);flex:none;
+  display:flex;align-items:center;gap:10px;
+}
+.pane-head h2{margin:0;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.9px;color:var(--ink-2)}
+.pane-body{flex:1;overflow:auto;padding:16px}
+
+table.grid{width:100%;border-collapse:collapse;font-size:13px}
+table.grid th{
+  text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-3);
+  padding:7px 10px;border-bottom:1px solid var(--line-2);font-weight:700;
+  position:sticky;top:0;background:var(--panel);z-index:2;
+}
+table.grid td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.grid tr:last-child td{border-bottom:0}
+
+/* --------------------------------------------------------------- ingest */
+#tab-ingest{flex-direction:column;overflow:auto}
+.ingest-wrap{max-width:1500px;margin:0 auto;padding:28px 32px 48px;width:100%}
+#dropzone{
+  border:2px dashed var(--line-2);border-radius:var(--r-lg);background:var(--panel);
+  padding:52px 36px;text-align:center;transition:border-color .18s ease,background .18s ease;
+}
+#dropzone.hot{border-color:var(--accent);background:#141d30}
+#dropzone h3{margin:0 0 8px;font-size:22px;font-weight:600;letter-spacing:-.3px}
+#dropzone p{margin:0 0 20px;color:var(--ink-2);font-size:14px}
+.stages{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.stage{
+  display:flex;align-items:center;gap:9px;background:var(--panel-2);border:1px solid var(--line);
+  border-radius:999px;padding:7px 16px;font-size:13px;color:var(--ink-3);
+  transition:color .2s ease,border-color .2s ease,background .2s ease;
+}
+.stage .tick{width:9px;height:9px;border-radius:50%;background:var(--line-2);flex:none;transition:background .2s ease}
+.stage.run{color:var(--ink);border-color:var(--accent-dim);background:#151d2e}
+.stage.run .tick{background:var(--accent);animation:pulse 1s ease-in-out infinite}
+.stage.done{color:var(--ink-2);border-color:#1f6b52}
+.stage.done .tick{background:var(--measured)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.ingest-results{margin-top:30px;display:none}
+.ingest-results.show{display:block;animation:rise .35s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.card > .hd{padding:13px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+.card > .hd h3{margin:0;font-size:13px;font-weight:650;letter-spacing:.2px}
+.card > .bd{padding:16px 18px}
+.card > .bd.flush{padding:0}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;background:var(--line)}
+.metric{background:var(--panel);padding:15px 18px}
+.metric .k{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--ink-3);margin-bottom:7px}
+.metric .v{font:600 25px/1.1 var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.5px}
+.metric .v .u{font-size:14px;color:var(--ink-2);font-weight:400;margin-left:3px}
+.metric .m{margin-top:9px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.metric .src{font-size:11.5px;color:var(--ink-3)}
+.variant{
+  display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border:1px solid var(--line);
+  border-radius:var(--r);margin-bottom:9px;background:var(--panel-2);
+}
+.variant.picked{border-color:var(--accent-dim);background:#141d30}
+.radio{
+  width:16px;height:16px;border-radius:50%;border:2px solid var(--line-2);flex:none;margin-top:3px;position:relative;
+}
+.variant.picked .radio{border-color:var(--accent)}
+.variant.picked .radio::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--accent)}
+.variant .t{font-size:13.5px;font-weight:600}
+.variant .d{font-size:12.5px;color:var(--ink-2);margin-top:3px}
+.qa-scroll{max-height:330px;overflow:auto}
+tr.flagged td{background:#2a1f0b}
+tr.flagged td:first-child{box-shadow:inset 3px 0 0 var(--unknown)}
+
+/* ---------------------------------------------------------------- parts */
+#tab-parts{display:none}
+#tab-parts.active{display:grid;grid-template-columns:320px 1fr 380px}
+#tab-parts .pane.left{border-right:1px solid var(--line)}
+#tab-parts .pane.right{border-left:1px solid var(--line)}
+#viewhost{position:relative;background:var(--viewport);min-width:0;overflow:hidden}
+#viewhost canvas{display:block;width:100%;height:100%}
+.vp-overlay{position:absolute;pointer-events:none;z-index:3}
+#vp-status{
+  left:14px;top:14px;background:rgba(20,25,34,.92);border:1px solid var(--line);
+  border-radius:var(--r);padding:9px 13px;font-size:12.5px;max-width:460px;backdrop-filter:blur(6px);
+}
+#vp-legend{
+  left:14px;bottom:14px;background:rgba(20,25,34,.92);border:1px solid var(--line);
+  border-radius:var(--r);padding:11px 13px;font-size:12px;backdrop-filter:blur(6px);
+}
+#vp-legend h4{margin:0 0 7px;font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-3);font-weight:700}
+.lg-row{display:flex;align-items:center;gap:8px;padding:2px 0;color:var(--ink-2)}
+.sw{width:11px;height:11px;border-radius:3px;flex:none;border:1px solid rgba(255,255,255,.18)}
+#vp-tools{
+  right:14px;top:14px;background:rgba(20,25,34,.92);border:1px solid var(--line);
+  border-radius:var(--r);padding:11px 14px;font-size:12px;pointer-events:auto;backdrop-filter:blur(6px);
+  display:flex;flex-direction:column;gap:9px;min-width:210px;
+}
+#vp-tools label{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--ink-2)}
+#vp-tools input[type=range]{width:110px;accent-color:var(--accent)}
+#vp-loading{
+  inset:0;display:flex;align-items:center;justify-content:center;color:var(--ink-3);font-size:13px;
+  background:var(--viewport);z-index:4;
+}
+#search{
+  width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;
+  padding:8px 11px;font-size:13px;
+}
+#search::placeholder{color:var(--ink-3)}
+.plist{list-style:none;margin:0;padding:0}
+.plist li{
+  display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;
+  font-size:13px;transition:background .1s ease;
+}
+.plist li:hover{background:var(--panel-2)}
+.plist li[aria-selected="true"]{background:var(--accent-dim)}
+.plist li .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.plist li .dot{width:9px;height:9px;border-radius:3px;flex:none}
+.claim{border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin-bottom:10px;background:var(--panel-2)}
+.claim .top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.claim .lbl{font-size:12px;color:var(--ink-2);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+.claim .val{font:600 19px/1.2 var(--mono);font-variant-numeric:tabular-nums;margin:7px 0 9px}
+.claim .val .u{font-size:13px;color:var(--ink-2);font-weight:400;margin-left:3px}
+.claim .meta{font-size:12px;color:var(--ink-3);line-height:1.5}
+.claim .meta b{color:var(--ink-2);font-weight:600}
+.empty{color:var(--ink-3);font-size:13px;padding:22px 4px;text-align:center}
+
+/* ---------------------------------------------------------------- graph */
+#tab-graph{display:none}
+#tab-graph.active{display:grid;grid-template-columns:1fr 340px}
+#graph-host{position:relative;background:var(--viewport);min-width:0;overflow:hidden}
+#graph-svg{width:100%;height:100%;display:block}
+.gedge{stroke:#2e3949;stroke-width:1.4;fill:none;transition:stroke .18s ease,stroke-width .18s ease}
+.gedge.lit{stroke:var(--accent);stroke-width:2.4}
+.gnode rect{fill:var(--panel-2);stroke:var(--line-2);stroke-width:1.3;transition:fill .18s ease,stroke .18s ease}
+.gnode text{fill:var(--ink-2);font:11.5px var(--font);pointer-events:none;transition:fill .18s ease}
+.gnode{cursor:pointer}
+.gnode:hover rect{stroke:var(--ink-3)}
+.gnode.lit rect{fill:#1b2a4a;stroke:var(--accent)}
+.gnode.lit text{fill:var(--ink)}
+.gnode.root rect{fill:var(--accent);stroke:var(--accent)}
+.gnode.root text{fill:var(--accent-ink);font-weight:650}
+.gnode.dim{opacity:.32}
+.glayer-label{fill:var(--ink-3);font:10px var(--font);letter-spacing:1px;text-transform:uppercase}
+
+/* ---------------------------------------------------------- suggestions */
+#tab-suggestions{display:none}
+#tab-suggestions.active{display:grid;grid-template-columns:1fr 420px}
+#sugg-main{overflow:auto;padding:24px 28px}
+.sugg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:18px;align-items:start}
+.scard{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;
+  transition:border-color .2s ease,opacity .25s ease,transform .25s ease;
+}
+.scard .hd{padding:15px 18px 13px;border-bottom:1px solid var(--line)}
+.scard .hd .row{display:flex;align-items:center;gap:9px;margin-bottom:8px;flex-wrap:wrap}
+.scard h3{margin:0;font-size:15.5px;font-weight:600;letter-spacing:-.1px;line-height:1.35}
+.scard .bd{padding:15px 18px}
+.scard .rationale{font-size:13.5px;color:var(--ink-2);line-height:1.55;margin:0 0 14px}
+.scard.refused{border-color:#7d302b;background:linear-gradient(180deg,#1d1416,var(--panel))}
+.scard.refused .hd{border-bottom-color:#4a2320;background:#251518}
+.refusal{
+  border-left:3px solid var(--bad);background:#2a1614;border-radius:0 var(--r) var(--r) 0;
+  padding:13px 16px;font-size:13.5px;line-height:1.6;color:#ffd9d4;margin:4px 0 0;
+}
+.refusal .who{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.9px;color:var(--bad);font-weight:700;margin-bottom:7px}
+.changes{font-size:12.5px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:13px}
+.changes .ch{display:grid;grid-template-columns:1fr auto;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line);align-items:center}
+.changes .ch:last-child{border-bottom:0}
+.changes .f{color:var(--ink-2)}
+.changes .f b{color:var(--ink);font-weight:600}
+.changes .d{font-family:var(--mono);font-size:12px;white-space:nowrap}
+.changes .d .from{color:var(--ink-3)}
+.changes .d .arw{color:var(--ink-3);margin:0 6px}
+.changes .d .to{color:var(--accent)}
+.checks{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.scard.declined{opacity:.42}
+.applied-col{border-left:1px solid var(--line);overflow:auto;padding:22px;background:#0e131b}
+.acard{background:var(--panel);border:1px solid #1f6b52;border-radius:var(--r);padding:14px 16px;margin-bottom:13px;animation:rise .3s ease both}
+.acard h4{margin:0 0 8px;font-size:14px;font-weight:600}
+.acard .rid{font:11.5px/1 var(--mono);color:var(--ink-3);margin-bottom:11px}
+.diffstrip{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:11px 0;font-size:12.5px}
+.diffstrip .dl{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--ink-3);margin-bottom:7px;font-weight:700}
+.diffrow{display:flex;justify-content:space-between;gap:10px;padding:2px 0;font-family:var(--mono);font-size:11.5px}
+.diffrow .g{color:var(--ink-3)}
+.delta{font-family:var(--mono);font-size:12px}
+.delta.up{color:var(--ok)}.delta.down{color:var(--bad)}
+.tt{position:relative}
+.tt[data-tip]{cursor:help}
+.tt[data-tip]:hover::after{
+  content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 7px);z-index:40;
+  background:#080c12;border:1px solid var(--line-2);border-radius:8px;padding:9px 12px;
+  font-size:11.5px;line-height:1.5;color:var(--ink-2);white-space:pre-wrap;width:max-content;
+  max-width:380px;box-shadow:0 8px 28px rgba(0,0,0,.6);
+}
+.whynot{
+  border-left:3px solid var(--unknown);background:#2a1f0b;border-radius:0 8px 8px 0;
+  padding:10px 13px;font-size:12px;line-height:1.55;color:#f0d9ae;margin:0 0 14px;
+}
+.metric .src{max-width:100%;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ----------------------------------------------------------- bench test */
+#tab-flight{display:none}
+#tab-flight.active{display:flex;flex-direction:column}
+#flight-host{flex:1;min-height:0;position:relative;background:var(--viewport)}
+.flight-note{
+  flex:none;padding:11px 22px;border-top:1px solid var(--line);background:var(--panel);
+  font-size:12.5px;color:var(--ink-3);display:flex;gap:18px;align-items:center;flex-wrap:wrap;
+}
+.placeholder{
+  position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;color:var(--ink-3);font-size:14px;text-align:center;padding:40px;
+}
+
+@media (max-width:1500px){
+  #tab-parts.active{grid-template-columns:270px 1fr 330px}
+  #tab-suggestions.active{grid-template-columns:1fr 340px}
+  .sugg-grid{grid-template-columns:1fr}
+  .fidelity{max-width:340px}
+}
+@media (max-width:1180px){
+  .cols{grid-template-columns:1fr}
+  header{gap:12px;padding:10px 16px}
+  .fidelity{display:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <span class="mark">DroneBench</span>
+    <h1 id="hdr-aircraft">Titan Avenger</h1>
+  </div>
+  <span class="rev" id="hdr-rev">rev —</span>
+  <span class="recon-label">reconstruction — not Titan's CAD</span>
+  <span class="spacer"></span>
+  <span class="fidelity" id="hdr-fidelity"></span>
+</header>
+
+<nav id="tabs" role="tablist">
+  <button role="tab" data-tab="ingest" aria-selected="true"><span class="n">01</span>Ingest</button>
+  <button role="tab" data-tab="parts" aria-selected="false"><span class="n">02</span>Parts</button>
+  <button role="tab" data-tab="graph" aria-selected="false"><span class="n">03</span>Graph</button>
+  <button role="tab" data-tab="suggestions" aria-selected="false"><span class="n">04</span>Suggestions</button>
+  <button role="tab" data-tab="flight" aria-selected="false"><span class="n">05</span>Bench test</button>
+</nav>
+
+<main>
+  <!-- ============================================================ INGEST -->
+  <section class="tab active" id="tab-ingest" role="tabpanel">
+    <div class="ingest-wrap">
+      <div id="dropzone">
+        <h3>Drop the Titan Avenger archive</h3>
+        <p id="dz-sub">A zipped STL export. Nothing leaves this machine.</p>
+        <button class="btn primary" id="btn-ingest">Use the Titan Avenger archive</button>
+        <div class="stages" id="stages">
+          <div class="stage" data-stage="stage"><span class="tick"></span>Stage</div>
+          <div class="stage" data-stage="qa"><span class="tick"></span>QA</div>
+          <div class="stage" data-stage="variants"><span class="tick"></span>Variants</div>
+          <div class="stage" data-stage="frame"><span class="tick"></span>Frame</div>
+          <div class="stage" data-stage="measure"><span class="tick"></span>Measure</div>
+        </div>
+      </div>
+
+      <div class="ingest-results" id="ingest-results">
+        <div class="card" style="margin-bottom:20px">
+          <div class="hd"><h3>Measured geometry</h3><span class="spacer" style="flex:1"></span>
+            <span class="chip plain" id="ing-counts">—</span></div>
+          <div class="bd flush"><div class="metric-grid" id="measure-grid"></div></div>
+        </div>
+        <div class="card" style="margin-bottom:20px">
+          <div class="hd"><h3>Frame</h3></div>
+          <div class="bd" id="frame-note"></div>
+        </div>
+        <div class="cols">
+          <div class="card">
+            <div class="hd"><h3>Variant choices</h3><span style="flex:1"></span>
+              <span class="chip ok">confirmed</span></div>
+            <div class="bd" id="variants"></div>
+            <div class="hd" style="border-top:1px solid var(--line)"><h3>Warnings</h3></div>
+            <div class="bd" id="warnings" style="max-height:220px;overflow:auto"></div>
+          </div>
+          <div class="card">
+            <div class="hd"><h3>Staging &amp; QA</h3><span style="flex:1"></span>
+              <span class="chip unknown" id="qa-flag-count">—</span></div>
+            <div class="bd flush"><div class="qa-scroll"><table class="grid" id="qa-table"></table></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= PARTS -->
+  <section class="tab" id="tab-parts" role="tabpanel">
+    <aside class="pane left">
+      <div class="pane-head"><h2>Parts</h2><span style="flex:1"></span><span class="chip plain" id="parts-count">—</span></div>
+      <div style="padding:12px 14px 0"><input id="search" type="search" placeholder="Search parts…" autocomplete="off"></div>
+      <div class="pane-body" style="padding-top:10px"><ul class="plist" id="plist"></ul></div>
+    </aside>
+    <div id="viewhost">
+      <div id="vp-loading" class="vp-overlay" style="pointer-events:auto">Loading geometry…</div>
+      <div id="vp-status" class="vp-overlay">Click a part to inspect it. Drag to orbit, scroll to zoom.</div>
+      <div id="vp-tools" class="vp-overlay">
+        <label>Explode <input id="explode" type="range" min="0" max="100" value="0"></label>
+        <label>Model <span class="chip plain" id="vp-model">baseline</span></label>
+        <button class="btn ghost" id="btn-frame" style="font-size:12px;padding:5px 10px">Reset view</button>
+      </div>
+      <div id="vp-legend" class="vp-overlay">
+        <h4>Colour = claim status</h4>
+        <div class="lg-row"><span class="sw" style="background:#3fd6a0"></span>measured</div>
+        <div class="lg-row"><span class="sw" style="background:#7fa8ff"></span>computed</div>
+        <div class="lg-row"><span class="sw" style="background:#c79cff"></span>assumed</div>
+        <div class="lg-row"><span class="sw" style="background:#f0a93c"></span>unknown — needs evidence</div>
+        <div class="lg-row"><span class="sw" style="background:#ff7a70"></span>conflicted</div>
+      </div>
+    </div>
+    <aside class="pane right">
+      <div class="pane-head"><h2>Claim inspector</h2></div>
+      <div class="pane-body" id="inspector"><div class="empty">No part selected.</div></div>
+    </aside>
+  </section>
+
+  <!-- ============================================================= GRAPH -->
+  <section class="tab" id="tab-graph" role="tabpanel">
+    <div id="graph-host"><svg id="graph-svg"></svg></div>
+    <aside class="pane right" style="border-left:1px solid var(--line)">
+      <div class="pane-head"><h2>Evidence &amp; dependency</h2></div>
+      <div class="pane-body" id="graph-side"></div>
+    </aside>
+  </section>
+
+  <!-- ======================================================= SUGGESTIONS -->
+  <section class="tab" id="tab-suggestions" role="tabpanel">
+    <div id="sugg-main"><div class="sugg-grid" id="sugg-grid"></div></div>
+    <aside class="applied-col">
+      <p class="sec-label">Applied</p>
+      <div id="applied-list"><div class="empty">Nothing applied yet.</div></div>
+    </aside>
+  </section>
+
+  <!-- ======================================================== BENCH TEST -->
+  <section class="tab" id="tab-flight" role="tabpanel">
+    <div id="flight-host"></div>
+    <div class="flight-note">
+      <span><b style="color:var(--ink-2)">Modelled mission</b> — a simulated replay, not a flight test.</span>
+      <span id="flight-note-polar">Polar from Lane C's VSPAERO run on their fixture geometry.</span>
+    </div>
+  </section>
+</main>
+
+<script src="flight.js" onerror="window.__flightMissing=true"></script>
+<script>
+/* ------------------------------------------------------------------ mock
+   Used only when demo/data/demo_data.json is unreachable. Numbers mirror the
+   real run so the page is honest about what it is showing even offline.      */
+window.__MOCK_DATA__ = {
+  schema_version: "1.0.0-stub",
+  ingest: { design_title: "Titan Avenger", source_files_count: 0, sources: [], variants: [],
+            frame: {}, geometry: {}, part_count: 0, mirrored_count: 0, warnings: [
+              "demo_data.json could not be read, so this page is showing an empty stub rather than invented numbers."] },
+  parts: [], graph: { nodes: [], edges: [] }, suggestions: [], metrics: {}, telemetry: null,
+  provenance: { note: "no data file loaded" }
+};
+
+/* ------------------------------------------------------------------ util */
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c =>
+  ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+
+const STATUSES = ["measured","computed","assumed","unknown","conflicted"];
+const STATUS_COLOR = { measured:"#3fd6a0", computed:"#7fa8ff", assumed:"#c79cff",
+                       unknown:"#f0a93c", conflicted:"#ff7a70", none:"#55606f" };
+
+function normStatus(s){
+  if (!s) return "unknown";
+  s = String(s).toLowerCase();
+  if (STATUSES.includes(s)) return s;
+  if (s === "known" || s === "measured_direct") return "measured";
+  if (s === "derived" || s === "estimated") return "computed";
+  if (s === "catalog" || s === "assumption" || s === "synthetic" || s === "inferred") return "assumed";
+  if (s === "unchanged") return "computed";
+  return "unknown";
+}
+function chip(status, text){
+  const s = normStatus(status);
+  return `<span class="chip ${s}">${esc(text || s)}</span>`;
+}
+function fmtNum(v, digits){
+  if (v == null) return null;
+  if (Array.isArray(v)) return "[" + v.map(x => fmtNum(x, digits)).join(", ") + "]";
+  if (typeof v !== "number" || !isFinite(v)) return esc(String(v));
+  const d = digits != null ? digits : (Math.abs(v) >= 100 ? 1 : Math.abs(v) >= 1 ? 4 : 5);
+  return String(parseFloat(v.toFixed(d)));
+}
+/* The one rule the whole product rests on: a null is never a zero. */
+function fmtValue(v, unit, status){
+  const s = normStatus(status);
+  if (v == null || s === "unknown")
+    return `<span class="unknown-val">unknown — needs evidence</span>`;
+  const n = fmtNum(v);
+  return `${n}${unit ? `<span class="u">${esc(unit)}</span>` : ""}`;
+}
+function fmtBytes(b){
+  if (b == null) return "size unknown";
+  const mb = b / 1048576;
+  return mb >= 1 ? `${mb.toFixed(1)} MB` : `${Math.round(b / 1024)} KB`;
+}
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+/* ------------------------------------------------------------ data load */
+let DATA = null;
+let DATA_SOURCE = "mock";
+
+const GEO_LABELS = {
+  span_m: "Wing span", wing_area_m2: "Wing area", mac_m: "Mean aero chord",
+  aspect_ratio: "Aspect ratio", le_sweep_deg: "LE sweep", dihedral_deg: "Dihedral",
+  vtail_cant_deg: "V-tail cant", vtail_panel_area_m2: "V-tail panel area",
+  fuselage_length_m: "Fuselage length"
+};
+const PART_CLAIM_LABELS = { mass: "Mass", material: "Material", function: "Function" };
+/* The dependency graph carries 442 allowed_overlap_with edges — true, and
+   unreadable on a projector. These are the edges that carry consequence. */
+const GRAPH_EDGE_KINDS = ["carries_load_via", "affects", "feeds", "mirror_of"];
+const EDGE_VERB = {
+  carries_load_via: "carries load via", affects: "affects",
+  feeds: "feeds", mirror_of: "mirrors"
+};
+const prettyUnit = (u) => u === "m2" ? "m²" : u === "deg" ? "°" : (u || "");
+
+function claimFrom(key, raw){
+  if (!raw || typeof raw !== "object") return null;
+  const asm = Array.isArray(raw.assumptions) ? raw.assumptions : (raw.assumptions ? [raw.assumptions] : []);
+  return {
+    key,
+    label: GEO_LABELS[key] || PART_CLAIM_LABELS[key] || key.replace(/_/g, " "),
+    value: raw.value === undefined ? null : raw.value,
+    unit: prettyUnit(raw.unit),
+    status: normStatus(raw.status === "unknown" ? "unknown" : (raw.source_kind || raw.status)),
+    source: raw.source_kind || raw.status || "",
+    assumptions: asm
+  };
+}
+
+function normalize(raw){
+  const src = raw && typeof raw === "object" ? raw : {};
+  const ing = src.ingest || {};
+  const d = { raw: src };
+
+  /* ------------------------------------------------------------ ingest */
+  const sources = ing.sources || [];
+  const nonWatertight = sources.filter(f => f.watertight === false);
+  d.ingest = {
+    archive_name: ing.design_title ? `${ing.design_title} STL export` : "STL archive",
+    file_count: ing.source_files_count != null ? ing.source_files_count : sources.length,
+    part_count: ing.part_count,
+    mirrored_count: ing.mirrored_count,
+    warnings: ing.warnings || [],
+    excluded: ing.excluded_sources || [],
+    frame: ing.frame || {},
+    qa: {
+      non_watertight_count: nonWatertight.length,
+      files: sources.map(f => ({
+        name: f.path || f.name, triangles: f.triangles,
+        watertight: f.watertight, folder: f.folder,
+        note: f.watertight === false ? "not watertight — no volume, no centroid, mass stays unknown"
+            : f.consistent_winding === false ? "inconsistent winding" : ""
+      }))
+    },
+    variants: (ing.variants || []).map(v => ({
+      group: v.group_id, options: v.options || [], chosen: v.confirmed, reason: v.reason || ""
+    })),
+    measurements: Object.entries(ing.geometry || {})
+      .map(([k, v]) => claimFrom(k, v)).filter(Boolean)
+  };
+
+  /* ------------------------------------------------------------- parts */
+  d.parts = (src.parts || []).map(p => {
+    const claims = [];
+    for (const k of ["mass", "material", "function"]){
+      const c = claimFrom(k, p[k]);
+      if (c) claims.push(c);
+    }
+    if (Array.isArray(p.position_m))
+      claims.push({ key: "position_m", label: "Position (FRD)", value: p.position_m, unit: "m",
+        status: "measured", source: "reference mesh centroid", assumptions: [] });
+    if (p.source_file)
+      claims.push({ key: "source_file", label: "Source file", value: p.source_file, unit: "",
+        status: "measured", source: "staged archive", assumptions: [] });
+    return {
+      part_id: p.part_id, name: p.name || p.part_id, category: p.category || "",
+      side: p.side || "", mirror_of: p.mirror_of || null,
+      representation: p.representation || "", claims
+    };
+  }).filter(p => p.part_id);
+
+  const nameById = {};
+  for (const p of d.parts) nameById[p.part_id] = p.name + (p.side === "left" ? " (L)" : p.side === "right" ? " (R)" : "");
+
+  /* ------------------------------------------------------------- graph */
+  const rawG = src.graph || { nodes: [], edges: [] };
+  const edges = (rawG.edges || []).filter(e => GRAPH_EDGE_KINDS.includes(e.kind));
+  const touched = new Set();
+  for (const e of edges){ touched.add(e.from); touched.add(e.to); }
+  d.graph = {
+    nodes: (rawG.nodes || [])
+      .filter(n => touched.has(n.id) || n.kind !== "part")
+      .map(n => ({ id: n.id, kind: n.kind || "part",
+        label: nameById[n.id] || n.label || n.id,
+        part_id: (n.kind || "part") === "part" ? n.id : null })),
+    edges: edges.map(e => ({ from: e.from, to: e.to, kind: e.kind, evidence: e.evidence || "" })),
+    hidden_edges: (rawG.edges || []).length - edges.length
+  };
+
+  /* ------------------------------------------------------- suggestions */
+  d.suggestions = (src.suggestions || []).map(s => ({
+    id: s.id,
+    title: (s.title || "Suggestion").replace(/\s*--\s*REFUSED\s*$/i, "").replace(/->/g, "→"),
+    status: (s.status === "blocked" || s.refusal_message) ? "refused" : "proposed",
+    verified: !!s.verified,
+    unverified_reasons: s.unverified_reasons || [],
+    rationale: s.rationale || "",
+    refusal_text: s.refusal_message || "",
+    constraint_source: s.constraint_source || "",
+    error_code: s.error_code || "",
+    revision_id: s.revision_id || "",
+    glb: (s.glb_asset || "").replace(/\.glb$/, ""),
+    changes: (s.typed_changes || []).map(c => ({
+      part_id: c.part_id, field: c.field, before: c.before, after: c.after,
+      unit: prettyUnit(c.unit), status: c.status || "", note: c.note || ""
+    })),
+    checks: (s.checks || []).map(c => typeof c === "string"
+      ? { name: c, passed: true, detail: "" }
+      : { name: c.name, passed: c.passed !== false, detail: c.detail || "" }),
+    step: s.step_file ? { filename: s.step_file, bytes: s.step_size_bytes } : null
+  }));
+
+  /* ---------------------------------------------------------- metrics */
+  d.metrics = src.metrics || {};
+  d.metrics.per_suggestion = {};
+  d.telemetry = src.telemetry || null;
+
+  /* ------------------------------------------------------- provenance */
+  const prov = src.provenance || {};
+  let rev = "";
+  for (const v of Object.values(prov)){
+    const m = String(v).match(/rev-[0-9a-f]{8,}/);
+    if (m){ rev = m[0]; break; }
+  }
+  const unknownMass = d.parts.filter(p =>
+    p.claims.some(c => c.key === "mass" && c.status === "unknown")).length;
+  d.provenance = {
+    aircraft_name: ing.design_title || "Aircraft",
+    revision_id: rev || "rev —",
+    fidelity_note: `Geometry measured off the confirmed reference meshes. `
+      + `Mass is unknown for ${unknownMass} of ${d.parts.length} parts; material is unknown for all of them.`,
+    entries: prov
+  };
+  return d;
+}
+
+async function loadData(){
+  if (window.__DEMO_DATA__) { DATA_SOURCE = "embedded"; return normalize(window.__DEMO_DATA__); }
+  try {
+    const r = await fetch("data/demo_data.json", { cache: "no-store" });
+    if (r.ok) { DATA_SOURCE = "data/demo_data.json"; return normalize(await r.json()); }
+  } catch (e) { /* file:// or missing — fall through to the mock */ }
+  DATA_SOURCE = "mock";
+  return normalize(window.__MOCK_DATA__);
+}
+
+/* ------------------------------------------------------------ GLB assets
+   Base64-embedded by build_demo.py (window.__DEMO_ASSETS__), otherwise
+   fetched relative to the page.                                            */
+function assetUrl(name){
+  if (!name) return null;
+  const key = name.replace(/\.glb$/, "");
+  if (window.__DEMO_ASSETS__ && window.__DEMO_ASSETS__[key]) return window.__DEMO_ASSETS__[key];
+  return `assets/${key}.glb`;
+}
+
+/* ------------------------------------------------------------------ tabs */
+let currentTab = "ingest";
+const tabHooks = {};
+function showTab(name){
+  if (name === currentTab) return;
+  currentTab = name;
+  document.querySelectorAll("#tabs button").forEach(b =>
+    b.setAttribute("aria-selected", String(b.dataset.tab === name)));
+  document.querySelectorAll(".tab").forEach(s =>
+    s.classList.toggle("active", s.id === "tab-" + name));
+  if (tabHooks[name]) tabHooks[name]();
+}
+$("tabs").addEventListener("click", e => {
+  const b = e.target.closest("button[data-tab]");
+  if (b) showTab(b.dataset.tab);
+});
+
+/* ================================================================ INGEST */
+let ingestPlayed = false;
+
+function renderIngest(){
+  const ing = DATA.ingest, prov = DATA.provenance;
+  $("hdr-aircraft").textContent = prov.aircraft_name || "Titan Avenger";
+  $("hdr-rev").textContent = prov.revision_id || "rev —";
+  $("hdr-fidelity").textContent = prov.fidelity_note ||
+    "Geometry measured off meshes. Mass, CG and materials are unknown.";
+  if (ing.archive_name)
+    $("dz-sub").textContent = `${ing.archive_name} — ${ing.file_count || "?"} STL files. Nothing leaves this machine.`;
+
+  const parts = ing.part_count != null ? `${ing.part_count} parts` : `${DATA.parts.length} parts`;
+  const mir = ing.mirrored_count != null ? `, ${ing.mirrored_count} mirrored` : "";
+  $("ing-counts").textContent = parts + mir;
+
+  $("measure-grid").innerHTML = (ing.measurements || []).map(m => {
+    const asm = (m.assumptions || []).join("\n");
+    return `<div class="metric">
+      <div class="k">${esc(m.label || m.key)}</div>
+      <div class="v">${fmtValue(m.value, m.unit, m.status)}</div>
+      <div class="m">${chip(m.status)}<span class="src tt" ${asm ? `data-tip="${esc(asm)}"` : ""}>${
+        esc((m.assumptions && m.assumptions[0]) || m.source || "no source recorded")}</span></div>
+    </div>`;
+  }).join("") || `<div class="metric"><div class="k">No measurements in data</div></div>`;
+
+  const fr = ing.frame || {};
+  $("frame-note").innerHTML = fr.canonical_frame
+    ? `<span class="chip ${fr.confirmed ? "measured" : "unknown"}">${fr.confirmed ? "frame confirmed" : "frame unconfirmed"}</span>
+       <span style="color:var(--ink-2)">${esc(fr.canonical_frame)}, native ${esc(fr.units_native || "?")} × ${esc(String(fr.scale_to_m))} → m</span>
+       ${(fr.notes || []).map(n => `<div style="color:var(--ink-3);font-size:12px;margin-top:6px;line-height:1.5">${esc(n)}</div>`).join("")}`
+    : `<span class="chip unknown">no frame recorded</span>`;
+
+  $("warnings").innerHTML = (ing.warnings || []).map(w =>
+    `<div style="font-size:12.5px;color:var(--ink-2);padding:6px 0;border-bottom:1px solid var(--line);line-height:1.5">${esc(w)}</div>`
+  ).join("") || `<div class="empty">No warnings.</div>`;
+
+  $("variants").innerHTML = (ing.variants || []).map(v => {
+    const opts = (v.options || []).map(o => `
+      <div class="variant ${o === v.chosen ? "picked" : ""}">
+        <span class="radio"></span>
+        <div><div class="t">${esc(o)}${o === v.chosen ? " — chosen" : ""}</div>
+        ${o === v.chosen ? `<div class="d">${esc(v.reason || "")}</div>` : ""}</div>
+      </div>`).join("");
+    return `<p class="sec-label">${esc(v.group || "variant")} — ${(v.options||[]).length} candidates</p>${opts}`;
+  }).join("") || `<div class="empty">No variant choices in data.</div>`;
+
+  const files = ing.qa.files || [];
+  const flagged = ing.qa.non_watertight_count != null
+    ? ing.qa.non_watertight_count : files.filter(f => f.watertight === false).length;
+  $("qa-flag-count").textContent = `${flagged} not watertight`;
+  $("qa-table").innerHTML = `
+    <thead><tr><th>File</th><th style="width:100px">Triangles</th><th style="width:150px">Watertight</th><th>Note</th></tr></thead>
+    <tbody>${files.map(f => `
+      <tr class="${f.watertight === false ? "flagged" : ""}">
+        <td style="font-family:var(--mono);font-size:12px">${esc(f.name)}</td>
+        <td class="num">${f.triangles != null ? f.triangles.toLocaleString() : "—"}</td>
+        <td>${f.watertight === false ? chip("unknown","not watertight") : chip("measured","watertight")}</td>
+        <td style="color:var(--ink-3);font-size:12.5px">${esc(f.note || "")}</td>
+      </tr>`).join("")}</tbody>`;
+  if (!files.length)
+    $("qa-table").innerHTML = `<tbody><tr><td class="empty">No QA rows in data.</td></tr></tbody>`;
+}
+
+async function playIngest(){
+  if (ingestPlayed) { $("ingest-results").classList.add("show"); return; }
+  ingestPlayed = true;
+  $("btn-ingest").disabled = true;
+  const order = ["stage","qa","variants","frame","measure"];
+  for (const s of order){
+    const el = document.querySelector(`.stage[data-stage="${s}"]`);
+    el.classList.add("run");
+    await sleep(300);
+    el.classList.remove("run"); el.classList.add("done");
+  }
+  $("ingest-results").classList.add("show");
+  $("btn-ingest").disabled = false;
+  $("btn-ingest").textContent = "Re-run ingest";
+  $("ingest-results").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+$("btn-ingest").addEventListener("click", () => { ingestPlayed = false;
+  document.querySelectorAll(".stage").forEach(s => s.className = "stage"); playIngest(); });
+const dz = $("dropzone");
+["dragenter","dragover"].forEach(ev => dz.addEventListener(ev, e => {
+  e.preventDefault(); dz.classList.add("hot"); }));
+["dragleave","drop"].forEach(ev => dz.addEventListener(ev, e => {
+  e.preventDefault(); dz.classList.remove("hot"); }));
+dz.addEventListener("drop", () => playIngest());
+</script>
+
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c =>
+  ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+
+const DATA = await window.__loadDataPromise;
+window.DATA = DATA;
+
+/* ================================================================== 3D */
+const host = $("viewhost");
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+host.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color("#080b10");
+const camera = new THREE.PerspectiveCamera(42, 1, 0.01, 200);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+
+scene.add(new THREE.HemisphereLight("#cfe0ff", "#12161d", 1.1));
+const key = new THREE.DirectionalLight("#ffffff", 1.5); key.position.set(2.2, 3.4, 2.0); scene.add(key);
+const fill = new THREE.DirectionalLight("#7fa8ff", 0.5); fill.position.set(-2.5, 1.0, -1.8); scene.add(fill);
+const grid = new THREE.GridHelper(6, 24, "#1d2632", "#151c26");
+grid.material.transparent = true; grid.material.opacity = 0.5; scene.add(grid);
+
+const modelRoot = new THREE.Group(); scene.add(modelRoot);
+
+const state = {
+  models: {},          // name -> {group, entries, pickable}
+  active: null,
+  selected: null,
+  hovered: null,
+  explode: 0,
+  search: ""
+};
+
+const partById = {};
+for (const p of DATA.parts) partById[p.part_id] = p;
+
+function partStatus(p){
+  if (!p || !p.claims || !p.claims.length) return "unknown";
+  const set = new Set(p.claims.map(c => c.status));
+  if (set.has("conflicted")) return "conflicted";
+  if (set.has("unknown")) return "unknown";
+  if (set.has("assumed")) return "assumed";
+  if (set.has("measured")) return "measured";
+  return "computed";
+}
+const STATUS_COLOR = { measured:"#3fd6a0", computed:"#7fa8ff", assumed:"#c79cff",
+                       unknown:"#f0a93c", conflicted:"#ff7a70", none:"#55606f" };
+
+function resolvePartId(obj){
+  let o = obj;
+  while (o){
+    if (o.name && partById[o.name]) return o.name;
+    if (o.name){
+      const hit = DATA.parts.find(p => o.name === p.part_id ||
+        o.name.startsWith(p.part_id + ".") || o.name.startsWith(p.part_id + "_dup"));
+      if (hit) return hit.part_id;
+    }
+    o = o.parent;
+  }
+  return null;
+}
+
+const loader = new GLTFLoader();
+const loadCache = {};
+function loadModel(name){
+  if (loadCache[name]) return loadCache[name];
+  const url = window.__assetUrl(name);
+  loadCache[name] = new Promise((resolve, reject) => {
+    if (!url) return reject(new Error("no asset for " + name));
+    loader.load(url, gltf => resolve(buildModel(name, gltf)), undefined, reject);
+  });
+  return loadCache[name];
+}
+
+function buildModel(name, gltf){
+  const group = gltf.scene || gltf.scenes[0];
+  group.visible = false;
+  modelRoot.add(group);
+  group.updateMatrixWorld(true);
+  const entries = {}; const pickable = [];
+  group.traverse(obj => {
+    if (!obj.isMesh) return;
+    const pid = resolvePartId(obj) || ("unmapped:" + (obj.name || obj.uuid));
+    obj.userData.part_id = pid;
+    if (!obj.geometry.attributes.normal) obj.geometry.computeVertexNormals();
+    obj.material = new THREE.MeshStandardMaterial({
+      color: 0xffffff, roughness: 0.6, metalness: 0.05,
+      transparent: true, opacity: 1, side: THREE.DoubleSide
+    });
+    let e = entries[pid];
+    if (!e) e = entries[pid] = { part_id: pid, meshes: [], carriers: new Set() };
+    e.meshes.push(obj); pickable.push(obj);
+    let carrier = obj;
+    while (carrier.parent && carrier.parent !== group && resolvePartId(carrier.parent) === pid)
+      carrier = carrier.parent;
+    e.carriers.add(carrier);
+  });
+  const all = new THREE.Box3();
+  for (const e of Object.values(entries)){
+    const box = new THREE.Box3();
+    for (const m of e.meshes) box.expandByObject(m);
+    e.box = box; e.center = box.getCenter(new THREE.Vector3());
+    e.carriers = [...e.carriers];
+    e.home = e.carriers.map(c => c.position.clone());
+    all.union(box);
+  }
+  const origin = all.getCenter(new THREE.Vector3());
+  for (const e of Object.values(entries)){
+    const d = e.center.clone().sub(origin);
+    if (d.lengthSq() < 1e-12) d.set(0, 0.001, 0);
+    e.dir = d;
+  }
+  const model = { name, group, entries, pickable, box: all };
+  state.models[name] = model;
+  return model;
+}
+
+/* A neutral stand-in so the page is never empty if a GLB is missing. */
+function placeholderModel(name){
+  const group = new THREE.Group();
+  const entries = {}; const pickable = [];
+  const ids = DATA.parts.map(p => p.part_id).filter(id => id !== "aircraft").slice(0, 12);
+  ids.forEach((id, i) => {
+    const w = id.includes("wing") ? 1.0 : id.includes("fuselage") ? 0.2 : 0.16;
+    const g = new THREE.BoxGeometry(w, 0.05, id.includes("fuselage") ? 1.0 : 0.22);
+    const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({
+      color: 0xffffff, roughness: 0.6, transparent: true, side: THREE.DoubleSide }));
+    m.name = id; m.userData.part_id = id;
+    const side = id.endsWith("left") ? -1 : id.endsWith("right") ? 1 : 0;
+    m.position.set(side * 0.62, i * 0.005, id.includes("tail") ? 0.5 : 0);
+    group.add(m);
+    entries[id] = { part_id: id, meshes: [m], carriers: [m], home: [m.position.clone()],
+                    box: new THREE.Box3().setFromObject(m), center: m.position.clone(),
+                    dir: m.position.clone().setY(0.2) };
+    pickable.push(m);
+  });
+  group.visible = false;
+  modelRoot.add(group);
+  const model = { name, group, entries, pickable, box: new THREE.Box3().setFromObject(group), placeholder: true };
+  state.models[name] = model;
+  return model;
+}
+
+function frameModel(model){
+  const box = model.box;
+  if (!box || box.isEmpty()) return;
+  const size = box.getSize(new THREE.Vector3());
+  const center = box.getCenter(new THREE.Vector3());
+  const radius = Math.max(size.length() * 0.5, 0.05);
+  controls.target.copy(center);
+  camera.position.copy(center).addScaledVector(new THREE.Vector3(0.8, 0.5, 1.1).normalize(), radius * 2.4);
+  camera.near = radius / 200; camera.far = radius * 60;
+  camera.updateProjectionMatrix(); controls.update();
+  grid.position.set(center.x, box.min.y - size.y * 0.25, center.z);
+}
+
+function applyMaterials(){
+  const m = state.models[state.active];
+  if (!m) return;
+  for (const e of Object.values(m.entries)){
+    const part = partById[e.part_id];
+    const sel = state.selected === e.part_id;
+    const hov = state.hovered === e.part_id;
+    const color = part ? STATUS_COLOR[partStatus(part)] : STATUS_COLOR.none;
+    for (const mesh of e.meshes){
+      const mat = mesh.material;
+      mat.color.set(color);
+      mat.opacity = state.selected && !sel ? 0.34 : 1;
+      mat.transparent = mat.opacity < 1;
+      mat.depthWrite = mat.opacity >= 0.99;
+      mat.emissive.set(sel ? "#ffffff" : hov ? "#8fa8cc" : "#000000");
+      mat.emissiveIntensity = sel ? 0.30 : hov ? 0.18 : 0;
+      mat.needsUpdate = true;
+    }
+  }
+}
+
+function applyExplode(t){
+  const m = state.models[state.active];
+  if (!m) return;
+  for (const e of Object.values(m.entries)){
+    if (!e.dir) continue;
+    e.carriers.forEach((c, i) => c.position.copy(e.home[i]).addScaledVector(e.dir, t * 0.9));
+  }
+}
+
+/* Smooth crossfade when a suggestion swaps the model. */
+async function setActiveModel(name, { transition = true } = {}){
+  let model = state.models[name];
+  if (!model){
+    try { model = await loadModel(name); }
+    catch (e) { console.warn("GLB unavailable, using placeholder:", name); model = placeholderModel(name); }
+  }
+  const prev = state.models[state.active];
+  model.group.visible = true;
+  if (transition && prev && prev !== model){
+    const fade = (m, from, to, ms) => new Promise(res => {
+      const t0 = performance.now();
+      const step = () => {
+        const k = Math.min(1, (performance.now() - t0) / ms);
+        const v = from + (to - from) * k;
+        for (const e of Object.values(m.entries)) for (const mesh of e.meshes){
+          mesh.material.transparent = true; mesh.material.opacity = v; mesh.material.depthWrite = v > 0.95;
+        }
+        k < 1 ? requestAnimationFrame(step) : res();
+      };
+      step();
+    });
+    await Promise.all([fade(prev, 1, 0, 260), fade(model, 0, 1, 260)]);
+    prev.group.visible = false;
+  } else if (prev && prev !== model){
+    prev.group.visible = false;
+  }
+  state.active = name;
+  geometryStarted = true;
+  $("vp-loading").style.display = "none";
+  $("vp-model").textContent = model.placeholder ? name + " (placeholder)" : name;
+  applyExplode(state.explode);
+  applyMaterials();
+  if (!transition || !prev) frameModel(model);
+  renderPartList();
+}
+
+/* --------------------------------------------------------------- picking */
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+function pick(ev){
+  const m = state.models[state.active];
+  if (!m) return null;
+  const rect = renderer.domElement.getBoundingClientRect();
+  pointer.x = ((ev.clientX - rect.left) / rect.width) * 2 - 1;
+  pointer.y = -((ev.clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(pointer, camera);
+  for (const h of raycaster.intersectObjects(m.pickable, false))
+    if (h.object.visible && h.object.userData.part_id) return h.object.userData.part_id;
+  return null;
+}
+renderer.domElement.addEventListener("pointermove", ev => {
+  const pid = pick(ev);
+  if (pid !== state.hovered){
+    state.hovered = pid;
+    renderer.domElement.style.cursor = pid ? "pointer" : "default";
+    applyMaterials(); renderStatus();
+  }
+});
+renderer.domElement.addEventListener("pointerleave", () => {
+  if (state.hovered){ state.hovered = null; applyMaterials(); renderStatus(); }
+});
+let downAt = null;
+renderer.domElement.addEventListener("pointerdown", ev => { downAt = { x: ev.clientX, y: ev.clientY }; });
+renderer.domElement.addEventListener("pointerup", ev => {
+  if (!downAt) return;
+  const moved = Math.hypot(ev.clientX - downAt.x, ev.clientY - downAt.y);
+  downAt = null;
+  if (moved > 4 || ev.button !== 0) return;
+  select(pick(ev));
+});
+
+function select(pid, { fromGraph = false } = {}){
+  state.selected = pid && partById[pid] ? pid : null;
+  applyMaterials(); renderPartList(); renderInspector(); renderStatus();
+  if (!fromGraph) highlightGraph(state.selected);
+}
+window.__dbSelect = select;
+
+/* ----------------------------------------------------------- part panels */
+function renderStatus(){
+  const pid = state.hovered || state.selected;
+  const p = pid && partById[pid];
+  $("vp-status").innerHTML = p
+    ? `<b>${esc(p.name)}</b> &nbsp;<span style="color:var(--ink-3)">${esc(p.part_id)}</span> &nbsp;${
+        `<span class="chip ${partStatus(p)}">${partStatus(p)}</span>`}`
+    : "Click a part to inspect it. Drag to orbit, scroll to zoom.";
+}
+
+function renderPartList(){
+  const q = state.search.trim().toLowerCase();
+  const list = DATA.parts.filter(p =>
+    !q || p.name.toLowerCase().includes(q) || p.part_id.toLowerCase().includes(q));
+  $("parts-count").textContent = `${list.length} / ${DATA.parts.length}`;
+  $("plist").innerHTML = list.map(p => {
+    const s = partStatus(p);
+    return `<li data-pid="${esc(p.part_id)}" aria-selected="${state.selected === p.part_id}">
+      <span class="dot" style="background:${STATUS_COLOR[s]}"></span>
+      <span class="nm">${esc(p.name)}</span>
+      <span class="chip plain" style="font-size:10.5px">${esc(p.category || "—")}</span></li>`;
+  }).join("") || `<li class="empty" style="cursor:default">No parts match.</li>`;
+}
+$("plist").addEventListener("click", e => {
+  const li = e.target.closest("li[data-pid]");
+  if (li) select(li.dataset.pid);
+});
+$("search").addEventListener("input", e => { state.search = e.target.value; renderPartList(); });
+$("explode").addEventListener("input", e => {
+  state.explode = e.target.value / 100; applyExplode(state.explode);
+});
+$("btn-frame").addEventListener("click", () => frameModel(state.models[state.active]));
+
+function renderInspector(){
+  const p = state.selected && partById[state.selected];
+  if (!p){ $("inspector").innerHTML = `<div class="empty">No part selected.</div>`; return; }
+  const claims = p.claims.map(c => `
+    <div class="claim">
+      <div class="top"><span class="lbl">${esc(c.label || c.key)}</span>
+        <span class="chip ${c.status}">${c.status === "unknown" ? "needs evidence" : esc(c.status)}</span></div>
+      <div class="val">${window.__fmtValue(c.value, c.unit, c.status)}</div>
+      <div class="meta">
+        <b>Source</b> ${esc(c.source || "none recorded")}
+        ${(c.assumptions || []).length ? `<div style="margin-top:7px"><b>Assumptions</b>${
+          (c.assumptions || []).map(a => `<div style="margin-top:4px">— ${esc(a)}</div>`).join("")}</div>` : ""}
+      </div>
+    </div>`).join("");
+  $("inspector").innerHTML = `
+    <div style="margin-bottom:16px">
+      <div style="font-size:17px;font-weight:600;letter-spacing:-.2px">${esc(p.name)}</div>
+      <div style="font:12px var(--mono);color:var(--ink-3);margin-top:4px">${esc(p.part_id)}</div>
+      <div style="margin-top:10px">${p.category ? `<span class="chip plain">${esc(p.category)}</span>` : ""}
+        <span class="chip ${partStatus(p)}">${partStatus(p)}</span></div>
+    </div>
+    <p class="sec-label">Claims (${p.claims.length})</p>
+    ${claims || `<div class="empty">No claims recorded for this part.</div>`}`;
+}
+
+/* ================================================================= GRAPH */
+const G = DATA.graph;
+const gNodeById = {};
+for (const n of G.nodes) gNodeById[n.id] = n;
+const outAdj = {}, inAdj = {};
+for (const e of G.edges){
+  (outAdj[e.from] = outAdj[e.from] || []).push(e.to);
+  (inAdj[e.to] = inAdj[e.to] || []).push(e.from);
+}
+
+function layerOf(){
+  const depth = {};
+  const nodes = G.nodes.map(n => n.id);
+  let changed = true, guard = 0;
+  for (const id of nodes) depth[id] = (inAdj[id] || []).length ? -1 : 0;
+  while (changed && guard++ < 50){
+    changed = false;
+    for (const id of nodes){
+      const ins = inAdj[id] || [];
+      if (!ins.length) continue;
+      const d = Math.max(...ins.map(s => depth[s])) + 1;
+      if (d > depth[id]){ depth[id] = d; changed = true; }
+    }
+  }
+  for (const id of nodes) if (depth[id] < 0) depth[id] = 0;
+  return depth;
+}
+
+const LAYER_TITLES = ["Parts", "Derived", "Claims", "Checks", "Downstream", "—", "—", "—"];
+let graphLaidOut = false;
+function layoutGraph(){
+  const svg = $("graph-svg");
+  const W = $("graph-host").clientWidth || 1100;
+  const H = $("graph-host").clientHeight || 800;
+  const depth = layerOf();
+  const byLayer = {};
+  for (const n of G.nodes) (byLayer[depth[n.id]] = byLayer[depth[n.id]] || []).push(n);
+  const layers = Object.keys(byLayer).map(Number).sort((a, b) => a - b);
+  const padX = 120, padY = 64;
+  const colW = layers.length > 1 ? (W - padX * 2) / (layers.length - 1) : 0;
+  const pos = {};
+  for (const L of layers){
+    const col = byLayer[L];
+    const x = padX + layers.indexOf(L) * colW;
+    const step = (H - padY * 2) / Math.max(col.length, 1);
+    col.forEach((n, i) => { pos[n.id] = { x, y: padY + step * (i + 0.5) }; });
+  }
+  const NW = 132, NH = 30;
+  const edges = G.edges.map((e, i) => {
+    const a = pos[e.from], b = pos[e.to];
+    if (!a || !b) return "";
+    const mx = (a.x + b.x) / 2;
+    return `<path class="gedge" id="ge-${i}" data-from="${esc(e.from)}" data-to="${esc(e.to)}"
+      d="M ${a.x + NW/2} ${a.y} C ${mx} ${a.y}, ${mx} ${b.y}, ${b.x - NW/2} ${b.y}"/>`;
+  }).join("");
+  const nodes = G.nodes.map(n => {
+    const p = pos[n.id]; if (!p) return "";
+    const label = n.label.length > 19 ? n.label.slice(0, 18) + "…" : n.label;
+    const dash = n.kind === "check" ? ' stroke-dasharray="4 3"' : "";
+    return `<g class="gnode" id="gn-${esc(n.id)}" data-id="${esc(n.id)}" data-pid="${esc(n.part_id || "")}">
+      <rect x="${p.x - NW/2}" y="${p.y - NH/2}" width="${NW}" height="${NH}" rx="8"${dash}></rect>
+      <text x="${p.x}" y="${p.y + 4}" text-anchor="middle">${esc(label)}</text>
+      <title>${esc(n.label)} — ${esc(n.kind)}</title></g>`;
+  }).join("");
+  const heads = layers.map(L => {
+    const x = padX + layers.indexOf(L) * colW;
+    return `<text class="glayer-label" x="${x}" y="28" text-anchor="middle">${esc(LAYER_TITLES[L] || "Layer " + L)}</text>`;
+  }).join("");
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.innerHTML = heads + edges + nodes;
+  graphLaidOut = true;
+  if (state.selected) highlightGraph(state.selected);
+}
+
+function downstream(id){
+  const seen = new Set([id]); const stack = [id];
+  while (stack.length){
+    const cur = stack.pop();
+    for (const nx of outAdj[cur] || []) if (!seen.has(nx)){ seen.add(nx); stack.push(nx); }
+  }
+  return seen;
+}
+
+function highlightGraph(pid){
+  if (!graphLaidOut) return;
+  const rootNode = G.nodes.find(n => n.part_id === pid || n.id === pid);
+  const svg = $("graph-svg");
+  svg.querySelectorAll(".gnode").forEach(g => g.classList.remove("lit","root","dim"));
+  svg.querySelectorAll(".gedge").forEach(g => g.classList.remove("lit"));
+  if (!rootNode){ renderGraphSide(null); return; }
+  const lit = downstream(rootNode.id);
+  svg.querySelectorAll(".gnode").forEach(g => {
+    if (g.dataset.id === rootNode.id) g.classList.add("root");
+    else if (lit.has(g.dataset.id)) g.classList.add("lit");
+    else g.classList.add("dim");
+  });
+  svg.querySelectorAll(".gedge").forEach(g => {
+    if (lit.has(g.dataset.from) && lit.has(g.dataset.to)) g.classList.add("lit");
+  });
+  renderGraphSide(rootNode, lit);
+}
+
+function renderGraphSide(rootNode, lit){
+  if (!rootNode){
+    $("graph-side").innerHTML = `<div class="empty">Click a node — or a part in the 3D view — to light the path it affects.</div>`;
+    return;
+  }
+  const path = [...(lit || [])].filter(id => id !== rootNode.id).map(id => gNodeById[id]).filter(Boolean);
+  $("graph-side").innerHTML = `
+    <div style="font-size:16px;font-weight:600;margin-bottom:3px">${esc(rootNode.label)}</div>
+    <div style="font:12px var(--mono);color:var(--ink-3);margin-bottom:16px">${esc(rootNode.id)}</div>
+    <p class="sec-label">Affects ${path.length} downstream</p>
+    ${path.map(n => `<div style="display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--line)">
+        <span class="chip plain" style="font-size:10px">${esc(n.kind)}</span>
+        <span style="font-size:13px">${esc(n.label)}</span></div>`).join("")
+      || `<div class="empty">Nothing downstream.</div>`}`;
+}
+
+$("graph-svg").addEventListener("click", e => {
+  const g = e.target.closest(".gnode");
+  if (!g) return;
+  const pid = g.dataset.pid;
+  if (pid && partById[pid]) select(pid, { fromGraph: true });
+  highlightGraph(pid || g.dataset.id);
+});
+
+/* =========================================================== SUGGESTIONS */
+const sugState = {};   // id -> 'proposed' | 'applied' | 'declined'
+for (const s of DATA.suggestions) sugState[s.id] = "proposed";
+
+function changeLine(c){
+  const unit = c.unit ? ` ${c.unit}` : "";
+  const unknown = c.before == null && c.after == null;
+  const fmt = v => v == null ? "unknown" : Array.isArray(v)
+    ? "[" + v.map(x => (+x).toFixed(3)).join(", ") + "]"
+    : (typeof v === "number" ? String(parseFloat(v.toFixed(5))) : esc(String(v)));
+  return `<div class="ch">
+    <div class="f"><b>${esc(c.part_id || "")}</b> · ${esc(c.field || "")}
+      ${c.note ? `<div style="color:var(--ink-3);font-size:11.5px;margin-top:3px;line-height:1.45">${esc(c.note)}</div>` : ""}</div>
+    <div class="d">${unknown
+      ? `<span class="unknown-val" style="font-size:11.5px">unknown → unknown</span>`
+      : `<span class="from">${fmt(c.before)}</span><span class="arw">→</span><span class="to">${fmt(c.after)}${esc(unit)}</span>`}</div>
+  </div>`;
+}
+
+function renderSuggestions(){
+  const cards = DATA.suggestions.map(s => {
+    const st = sugState[s.id];
+    if (st === "applied") return "";
+    if (s.status === "refused"){
+      return `<article class="scard refused" data-id="${esc(s.id)}">
+        <div class="hd"><div class="row">
+          <span class="chip bad">refused</span>
+          ${s.error_code ? `<span class="chip plain" style="font-family:var(--mono)">${esc(s.error_code)}</span>` : ""}
+          <span class="chip plain">no geometry built, no revision produced</span></div>
+          <h3>${esc(s.title)}</h3></div>
+        <div class="bd">
+          ${s.rationale ? `<p class="rationale">${esc(s.rationale)}</p>` : ""}
+          <p class="sec-label">Requested change</p>
+          <div class="changes">${s.changes.map(changeLine).join("")}</div>
+          <div class="refusal"><span class="who">Why DroneBench will not do this</span>${esc(s.refusal_text)}</div>
+          ${s.constraint_source ? `<div style="margin-top:12px;font-size:11.5px;color:var(--ink-3);line-height:1.55">
+            <b style="color:var(--ink-2)">Constraint</b> <span style="font-family:var(--mono)">${esc(s.constraint_source)}</span></div>` : ""}
+        </div></article>`;
+    }
+    const m = (DATA.metrics.per_suggestion || {})[s.id];
+    return `<article class="scard ${st === "declined" ? "declined" : ""}" data-id="${esc(s.id)}">
+      <div class="hd"><div class="row">
+        <span class="chip ${s.verified ? "ok" : "unknown"} tt" ${
+          (s.unverified_reasons || []).length ? `data-tip="${esc(s.unverified_reasons.join("\n\n"))}"` : ""
+        }>${s.verified ? "verified" : "unverified — evidence gap"}</span>
+        ${s.revision_id ? `<span class="chip plain" style="font-family:var(--mono)">${esc(s.revision_id)}</span>` : ""}
+      </div><h3>${esc(s.title)}</h3></div>
+      <div class="bd">
+        <p class="rationale">${esc(s.rationale)}</p>
+        ${(s.unverified_reasons || []).length ? `<div class="whynot">${esc(s.unverified_reasons[0])}</div>` : ""}
+        <p class="sec-label">Typed changes</p>
+        <div class="changes">${s.changes.map(changeLine).join("") || `<div class="ch"><div class="f">No typed changes recorded.</div><div class="d"></div></div>`}</div>
+        <p class="sec-label">Checks passed — ${(s.checks || []).filter(c => c.passed).length} of ${(s.checks || []).length}</p>
+        <div class="checks">${(s.checks || []).map(c =>
+            `<span class="chip ${c.passed ? "ok" : "bad"} tt" ${c.detail ? `data-tip="${esc(c.detail)}"` : ""}>${esc(c.name)}</span>`).join("")
+          || `<span class="chip plain">none recorded</span>`}</div>
+        <div id="delta-${esc(s.id)}">${m ? metricStrip(m) : ""}</div>
+        <div class="actions">
+          <button class="btn primary" data-act="apply" ${st === "declined" ? "disabled" : ""}>Apply</button>
+          <button class="btn ghost" data-act="decline" ${st === "declined" ? "disabled" : ""}>${st === "declined" ? "Declined" : "Decline"}</button>
+        </div>
+      </div></article>`;
+  }).join("");
+  $("sugg-grid").innerHTML = cards || `<div class="empty">All suggestions handled.</div>`;
+}
+
+/* Deltas against the baseline design, from DATA.metrics. Higher-is-better is
+   per field, so a drop in power is a win and is coloured as one. */
+const DELTA_FIELDS = [
+  { key: "endurance_min", label: "endurance", unit: " min", better: 1, dp: 1 },
+  { key: "L_over_D",      label: "L/D",        unit: "",     better: 1, dp: 2 },
+  { key: "electrical_power_W", label: "cruise power", unit: " W", better: -1, dp: 1 },
+  { key: "range_km",      label: "range",      unit: " km",  better: 1, dp: 1 }
+];
+
+function computeDeltas(){
+  const base = DATA.metrics.baseline || {};
+  const per = DATA.metrics.suggestions || {};
+  const out = {};
+  for (const id of Object.keys(per)){
+    const m = per[id];
+    out[id] = { status: m.status || base.status || "estimated", rows: DELTA_FIELDS.map(f => ({
+      label: f.label, unit: f.unit, dp: f.dp, better: f.better,
+      value: (m[f.key] == null || base[f.key] == null) ? null : m[f.key] - base[f.key],
+      abs: m[f.key] == null ? null : m[f.key]
+    })) };
+  }
+  return out;
+}
+
+function metricStrip(m){
+  const rows = (m.rows || []).map(r => {
+    if (r.value == null)
+      return `<div class="diffrow"><span class="g">${esc(r.label)}</span><span class="unknown-val">unknown</span></div>`;
+    const good = r.value * r.better > 0;
+    const sign = r.value > 0 ? "+" : "";
+    return `<div class="diffrow"><span class="g">${esc(r.label)}</span>
+      <span><span class="delta ${good ? "up" : "down"}">${sign}${r.value.toFixed(r.dp)}${esc(r.unit)}</span>
+      <span class="g"> &nbsp;(${r.abs.toFixed(r.dp)}${esc(r.unit)})</span></span></div>`;
+  }).join("");
+  return `<div class="diffstrip"><div class="dl">Modelled mission vs baseline ${
+    `<span class="chip ${m.status === "estimated" ? "computed" : "measured"}" style="margin-left:6px">${esc(m.status || "estimated")}</span>`
+  }</div>${rows}</div>`;
+}
+
+function applyBenchResults(payload){
+  const per = (payload && payload.per_suggestion) || computeDeltas();
+  DATA.metrics.per_suggestion = Object.assign({}, DATA.metrics.per_suggestion, per);
+  renderSuggestions(); renderApplied();
+}
+window.__applyBenchResults = applyBenchResults;
+
+function diffStrip(s){
+  const rows = s.changes.map(c => {
+    const unknown = c.before == null && c.after == null;
+    const fmt = v => v == null ? "unknown" : Array.isArray(v)
+      ? "[" + v.map(x => (+x).toFixed(3)).join(", ") + "]"
+      : (typeof v === "number" ? String(parseFloat(v.toFixed(5))) : String(v));
+    return `<div class="diffrow"><span class="g">${esc(c.field)}</span>
+      <span>${unknown ? `<span class="unknown-val">unknown</span>`
+        : `${fmt(c.before)} → <b style="color:var(--accent)">${fmt(c.after)}</b>`}</span></div>`;
+  }).join("");
+  return `<div class="diffstrip"><div class="dl">Geometry diff</div>${rows || `<div class="diffrow"><span class="g">no geometry moved</span></div>`}</div>`;
+}
+
+function renderApplied(){
+  const applied = DATA.suggestions.filter(s => sugState[s.id] === "applied");
+  if (!applied.length){ $("applied-list").innerHTML = `<div class="empty">Nothing applied yet.</div>`; return; }
+  $("applied-list").innerHTML = applied.map(s => {
+    const m = (DATA.metrics.per_suggestion || {})[s.id];
+    const step = s.step || {};
+    const tip = `${step.filename || "updated_reconstruction.step"}\n${window.__fmtBytes(step.bytes)}`;
+    return `<div class="acard">
+      <h4>${esc(s.title)}</h4>
+      <div class="rid">${esc(s.revision_id || "revision id pending")}</div>
+      ${diffStrip(s)}
+      <div id="adelta-${esc(s.id)}">${m ? metricStrip(m) : ""}</div>
+      <div class="actions" style="margin-top:10px">
+        <span class="tt" data-tip="${esc(tip)}"><button class="btn" data-act="step" data-id="${esc(s.id)}">Download STEP</button></span>
+        <button class="btn ghost" data-act="view" data-id="${esc(s.id)}">View in 3D</button>
+      </div></div>`;
+  }).join("");
+}
+
+$("sugg-grid").addEventListener("click", async e => {
+  const btn = e.target.closest("button[data-act]");
+  if (!btn) return;
+  const card = btn.closest(".scard");
+  const s = DATA.suggestions.find(x => x.id === card.dataset.id);
+  if (!s) return;
+  if (btn.dataset.act === "decline"){
+    sugState[s.id] = "declined";
+    card.classList.add("declined");
+    setTimeout(renderSuggestions, 260);
+    return;
+  }
+  btn.disabled = true; btn.textContent = "Applying…";
+  sugState[s.id] = "applied";
+  await setActiveModel(s.glb || "reference", { transition: true });
+  renderSuggestions(); renderApplied();
+  $("hdr-rev").textContent = s.revision_id || $("hdr-rev").textContent;
+});
+
+$("applied-list").addEventListener("click", async e => {
+  const btn = e.target.closest("button[data-act]");
+  if (!btn) return;
+  const s = DATA.suggestions.find(x => x.id === btn.dataset.id);
+  if (!s) return;
+  if (btn.dataset.act === "view"){
+    await setActiveModel(s.glb || "reference", { transition: true });
+    window.__showTab("parts");
+  } else {
+    const url = (s.step && s.step.url) || null;
+    if (url){ const a = document.createElement("a"); a.href = url;
+      a.download = s.step.filename || "updated_reconstruction.step"; a.click(); }
+    else {
+      btn.textContent = `${(s.step && s.step.filename) || "updated_reconstruction.step"} — ${window.__fmtBytes(s.step && s.step.bytes)}`;
+      setTimeout(() => { btn.textContent = "Download STEP"; }, 2600);
+    }
+  }
+});
+
+/* ============================================================ BENCH TEST */
+let flightCtl = null;
+function mountFlight(){
+  if (flightCtl || !window.DroneBenchFlight || typeof window.DroneBenchFlight.mount !== "function"){
+    if (!flightCtl && !window.DroneBenchFlight){
+      $("flight-host").innerHTML = `<div class="placeholder">
+        <div style="font-size:15px;color:var(--ink-2)">Bench-test scene not loaded</div>
+        <div><code style="font:12px var(--mono)">demo/flight.js</code> is not present next to this page.</div>
+        <div style="max-width:460px">Everything else runs without it. The modelled-mission numbers are already in the
+          dataset, so the Suggestions tab can be fed from them directly.</div>
+        <button class="btn primary" id="btn-use-metrics">Use the modelled mission numbers</button>`;
+      const b = $("btn-use-metrics");
+      if (b) b.addEventListener("click", () => { applyBenchResults(null); window.__showTab("suggestions"); });
+    }
+    return;
+  }
+  try {
+    flightCtl = window.DroneBenchFlight.mount($("flight-host"), DATA.raw || DATA, { theme: "dark" });
+    if (flightCtl && typeof flightCtl.on === "function"){
+      flightCtl.on("complete", (payload) => applyBenchResults(payload));
+    }
+  } catch (err){
+    console.warn("flight mount failed:", err);
+    $("flight-host").innerHTML = `<div class="placeholder">The bench-test scene failed to mount. ${esc(err.message)}</div>`;
+  }
+}
+
+/* ============================================================== lifecycle */
+window.__tabHooks.graph = () => { requestAnimationFrame(layoutGraph); };
+/* The reference GLB is ~15 MB and its parse blocks the main thread, so it is
+   loaded when the Parts act opens rather than under the ingest animation. */
+let geometryStarted = false;
+window.__tabHooks.parts = () => {
+  resize();
+  if (geometryStarted) return;
+  geometryStarted = true;
+  requestAnimationFrame(async () => {
+    try { await setActiveModel(window.__baselineAsset(), { transition: false }); }
+    catch (e){ console.warn(e); }
+    $("vp-loading").style.display = "none";
+    resize();
+    window.__ready = true;
+  });
+};
+window.__tabHooks.flight = () => { mountFlight(); };
+
+function resize(){
+  const w = host.clientWidth, h = host.clientHeight;
+  if (!w || !h) return;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+addEventListener("resize", () => { resize(); if (window.__currentTab() === "graph") layoutGraph(); });
+
+renderer.setAnimationLoop(() => { controls.update(); renderer.render(scene, camera); });
+
+/* boot */
+renderSuggestions();
+renderApplied();
+renderGraphSide(null);
+renderPartList();
+renderInspector();
+resize();
+
+window.__ready = true;   // page chrome is live; geometry loads with the Parts act
+</script>
+
+<script>
+/* Bridge between the classic script (page chrome) and the module (3D). */
+window.__tabHooks = tabHooks;
+window.__showTab = showTab;
+window.__currentTab = () => currentTab;
+window.__fmtValue = fmtValue;
+window.__fmtBytes = fmtBytes;
+window.__assetUrl = assetUrl;
+window.__baselineAsset = () => {
+  const a = window.__DEMO_ASSETS__;
+  if (a) return a.reference ? "reference" : (a.recon_baseline ? "recon_baseline" : Object.keys(a)[0] || "reference");
+  return "reference";
+};
+window.__loadDataPromise = loadData().then(d => { DATA = d; renderIngest(); return d; });
+</script>
+</body>
+</html>
