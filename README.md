@@ -13,7 +13,7 @@ product says so instead of guessing. A big graph or a pretty flight animation on
 show that.
 
 Built at the Houston AITX Community Hackathon, 19 September 2026, in three parallel lanes.
-Specification: [`DroneBench_Final_Architecture.md`](DroneBench_Final_Architecture.md).
+Specification: [`docs/DroneBench_Final_Architecture.md`](docs/DroneBench_Final_Architecture.md).
 
 ---
 
@@ -326,7 +326,7 @@ validated flight dynamics.
 
 | Document | What it covers |
 |---|---|
-| [`DroneBench_Final_Architecture.md`](DroneBench_Final_Architecture.md) | the specification; normative |
+| [`docs/DroneBench_Final_Architecture.md`](docs/DroneBench_Final_Architecture.md) | the specification; normative |
 | [`docs/BUILD.md`](docs/BUILD.md) | how it was built, what each lane shipped, integration state |
 | [`docs/decisions/0001`](docs/decisions/0001-team-b-contract-baseline.md) | the contract freeze and every assumption made |
 | [`docs/decisions/0002`](docs/decisions/0002-synthetic-fixture-scenario.md) | the fixture scenario and its numbers |

@@ -1,7 +1,7 @@
 # How DroneBench was built
 
 Houston AITX Community Hackathon, 19 September 2026. Three developers, three lanes, one repository,
-one specification: [`DroneBench_Final_Architecture.md`](../DroneBench_Final_Architecture.md).
+one specification: [`DroneBench_Final_Architecture.md`](DroneBench_Final_Architecture.md).
 
 This document records what each lane shipped, what actually integrates today, and what the
 remaining work is. It is written to be useful to someone picking the repository up cold — including
