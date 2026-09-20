@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dronebench-edits"
+version = "0.1.0"
+description = "Typed CAD edits, the append-only revision store and collision checks for DroneBench Studio (Team A, deliverable A3)"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.6",
+]
+
+[project.optional-dependencies]
+# The store and the CLI need neither CadQuery nor trimesh: they hash bytes and move directories.
+# The edit operations (A3b) and the collision checks (A3c) pull the CAD stack in themselves.
+cad = ["dronebench-cad", "dronebench-ingest"]
+test = ["pytest>=8"]
+
+[project.scripts]
+dronebench-edit = "dronebench_edits.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["dronebench_edits*"]

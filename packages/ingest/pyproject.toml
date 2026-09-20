@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dronebench-ingest"
+version = "0.1.0"
+description = "Stage, inspect, confirm and measure mesh design archives for DroneBench Studio"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "trimesh>=4.0",
+    "pydantic>=2.6",
+    "pyyaml>=6.0",
+]
+
+[project.scripts]
+dronebench-a = "dronebench_ingest.cli:main"
+
+[tool.setuptools]
+packages = ["dronebench_ingest"]
+
+[tool.setuptools.package-data]
+dronebench_ingest = []
+
+[tool.setuptools.data-files]
+"share/dronebench" = ["demo_bom.yaml"]

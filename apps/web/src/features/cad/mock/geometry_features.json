@@ -1,0 +1,412 @@
+{
+  "schema_version": "0.1.0",
+  "design_id": "titan_avenger_mock",
+  "revision_id": "rev_mock_0001",
+  "frame": "FRD",
+  "reference_area_m2": {
+    "value": 0.3742,
+    "unit": "m2",
+    "status": "estimated",
+    "source_kind": "computed",
+    "evidence_ids": [
+      "ev_slice_wing"
+    ],
+    "confidence": 0.6,
+    "assumptions": [
+      "projected planform counted once; aileron mapped to its parent"
+    ]
+  },
+  "reference_span_m": {
+    "value": 2.2245,
+    "unit": "m",
+    "status": "estimated",
+    "source_kind": "computed",
+    "evidence_ids": [
+      "ev_bounds_wing"
+    ],
+    "confidence": 0.7,
+    "assumptions": [
+      "mm units and mirroring about native x=0, both unconfirmed"
+    ]
+  },
+  "reference_chord_m": {
+    "value": 0.1755,
+    "unit": "m",
+    "status": "estimated",
+    "source_kind": "computed",
+    "evidence_ids": [
+      "ev_slice_wing"
+    ],
+    "confidence": null,
+    "assumptions": []
+  },
+  "surfaces": [
+    {
+      "surface_id": "wing",
+      "part_ids": [
+        "wing_left",
+        "wing_right",
+        "aileron_left",
+        "aileron_right"
+      ],
+      "stations": [
+        {
+          "span_y_m": 0.082,
+          "leading_edge_x_m": 0.33,
+          "chord_m": 0.214,
+          "z_m": -0.01,
+          "twist_rad": -0.0,
+          "thickness_ratio": 0.12
+        },
+        {
+          "span_y_m": 0.2291,
+          "leading_edge_x_m": 0.3379,
+          "chord_m": 0.202,
+          "z_m": -0.0134,
+          "twist_rad": -0.0025,
+          "thickness_ratio": 0.12
+        },
+        {
+          "span_y_m": 0.3763,
+          "leading_edge_x_m": 0.3457,
+          "chord_m": 0.19,
+          "z_m": -0.0169,
+          "twist_rad": -0.005,
+          "thickness_ratio": 0.12
+        },
+        {
+          "span_y_m": 0.5234,
+          "leading_edge_x_m": 0.3536,
+          "chord_m": 0.178,
+          "z_m": -0.0203,
+          "twist_rad": -0.0075,
+          "thickness_ratio": 0.12
+        },
+        {
+          "span_y_m": 0.6706,
+          "leading_edge_x_m": 0.3614,
+          "chord_m": 0.166,
+          "z_m": -0.0237,
+          "twist_rad": -0.01,
+          "thickness_ratio": 0.12
+        },
+        {
+          "span_y_m": 0.8177,
+          "leading_edge_x_m": 0.3693,
+          "chord_m": 0.154,
+          "z_m": -0.0271,
+          "twist_rad": -0.0125,
+          "thickness_ratio": 0.12
+        },
+        {
+          "span_y_m": 0.9649,
+          "leading_edge_x_m": 0.3771,
+          "chord_m": 0.142,
+          "z_m": -0.0306,
+          "twist_rad": -0.015,
+          "thickness_ratio": 0.12
+        },
+        {
+          "span_y_m": 1.112,
+          "leading_edge_x_m": 0.385,
+          "chord_m": 0.13,
+          "z_m": -0.034,
+          "twist_rad": -0.0175,
+          "thickness_ratio": 0.12
+        }
+      ],
+      "symmetric": true,
+      "cant_rad": null,
+      "span_m": {
+        "value": 2.2245,
+        "unit": "m",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [
+          "ev_bounds_wing"
+        ],
+        "confidence": 0.7,
+        "assumptions": [
+          "mm units and mirroring about native x=0, both unconfirmed"
+        ]
+      },
+      "area_m2": {
+        "value": 0.3742,
+        "unit": "m2",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [
+          "ev_slice_wing"
+        ],
+        "confidence": 0.6,
+        "assumptions": [
+          "projected planform counted once; aileron mapped to its parent"
+        ]
+      },
+      "mac_m": {
+        "value": 0.1755,
+        "unit": "m",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [
+          "ev_slice_wing"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "x_mac_le_m": {
+        "value": 0.3541,
+        "unit": "m",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [
+          "ev_slice_wing"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "aspect_ratio": {
+        "value": 13.22,
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [
+          "ev_slice_wing"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "sweep_le_rad": {
+        "value": 0.0494,
+        "unit": "rad",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [
+          "ev_slice_wing"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "dihedral_rad": {
+        "value": 0.0233,
+        "unit": "rad",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [
+          "ev_slice_wing"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "airfoil": {
+        "value": "NACA 4412 (assumed)",
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "assumed",
+        "evidence_ids": [],
+        "confidence": 0.2,
+        "assumptions": [
+          "declared assumption for the reconstruction; no airfoil match was claimed"
+        ]
+      },
+      "control_surfaces": [
+        "aileron_left",
+        "aileron_right"
+      ],
+      "fit_rms_m": 0.0031
+    },
+    {
+      "surface_id": "vtail_right",
+      "part_ids": [
+        "vtail_right"
+      ],
+      "stations": [
+        {
+          "span_y_m": 0.04,
+          "leading_edge_x_m": 0.84,
+          "chord_m": 0.15,
+          "z_m": -0.03,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.1
+        },
+        {
+          "span_y_m": 0.29,
+          "leading_edge_x_m": 0.905,
+          "chord_m": 0.09,
+          "z_m": -0.03,
+          "twist_rad": 0.0,
+          "thickness_ratio": 0.1
+        }
+      ],
+      "symmetric": false,
+      "cant_rad": 0.5585,
+      "span_m": {
+        "value": 0.2544,
+        "unit": "m",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [
+          "ev_cant_vtail"
+        ],
+        "confidence": null,
+        "assumptions": [
+          "panel length along the canted axis, not a projected span"
+        ]
+      },
+      "area_m2": {
+        "value": 0.0305,
+        "unit": "m2",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [
+          "ev_cant_vtail"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "mac_m": {
+        "value": 0.1224,
+        "unit": "m",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [
+          "ev_cant_vtail"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "x_mac_le_m": {
+        "value": 0.8654,
+        "unit": "m",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [
+          "ev_cant_vtail"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "aspect_ratio": {
+        "value": 2.12,
+        "unit": null,
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [
+          "ev_cant_vtail"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "sweep_le_rad": {
+        "value": 0.2554,
+        "unit": "rad",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [
+          "ev_cant_vtail"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "dihedral_rad": {
+        "value": 0.5585,
+        "unit": "rad",
+        "status": "estimated",
+        "source_kind": "computed",
+        "evidence_ids": [
+          "ev_cant_vtail"
+        ],
+        "confidence": null,
+        "assumptions": []
+      },
+      "airfoil": {
+        "value": null,
+        "unit": null,
+        "status": "unknown",
+        "source_kind": null,
+        "evidence_ids": [],
+        "confidence": null,
+        "assumptions": [
+          "no tail airfoil was fitted"
+        ]
+      },
+      "control_surfaces": [
+        "taileron_right"
+      ],
+      "fit_rms_m": 0.0047
+    }
+  ],
+  "fuselage": [
+    {
+      "x_m": 0.0,
+      "width_m": 0.052,
+      "height_m": 0.048,
+      "z_center_m": 0.0
+    },
+    {
+      "x_m": 0.24,
+      "width_m": 0.14,
+      "height_m": 0.11,
+      "z_center_m": 0.0
+    },
+    {
+      "x_m": 0.38,
+      "width_m": 0.165,
+      "height_m": 0.12,
+      "z_center_m": 0.0
+    },
+    {
+      "x_m": 0.62,
+      "width_m": 0.118,
+      "height_m": 0.098,
+      "z_center_m": -0.006
+    },
+    {
+      "x_m": 0.99,
+      "width_m": 0.06,
+      "height_m": 0.058,
+      "z_center_m": -0.01
+    }
+  ],
+  "fuselage_length_m": {
+    "value": 0.9913,
+    "unit": "m",
+    "status": "estimated",
+    "source_kind": "computed",
+    "evidence_ids": [
+      "ev_bounds_wing"
+    ],
+    "confidence": 0.7,
+    "assumptions": [
+      "mm units unconfirmed"
+    ]
+  },
+  "mass_kg": {
+    "value": null,
+    "unit": "kg",
+    "status": "unknown",
+    "source_kind": null,
+    "evidence_ids": [],
+    "confidence": null,
+    "assumptions": [
+      "printed-part masses are unknown, so the total cannot be summed"
+    ]
+  },
+  "cg_m": {
+    "value": null,
+    "unit": "m",
+    "status": "unknown",
+    "source_kind": null,
+    "evidence_ids": [],
+    "confidence": null,
+    "assumptions": [
+      "depends on the unknown printed-part masses"
+    ]
+  },
+  "quality": {
+    "station_fit_rms_m": 0.0031,
+    "warnings": [
+      "wing1/wing3 are not watertight, so volume-based mass is invalid"
+    ]
+  }
+}

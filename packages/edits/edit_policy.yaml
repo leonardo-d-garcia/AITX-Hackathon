@@ -1,0 +1,122 @@
+# ============== DEMO-FIXTURE EDIT POLICY — NOT TITAN DATA, NOT VENDOR DATA ==============
+# ----------------------------------------------------------------------------------------
+# Every bound in this file is a DEMO-FIXTURE value chosen for the DroneBench demonstration.
+# None of it was measured from, supplied with, or inferred from the Titan Avenger archive,
+# and none of it is a manufacturing, structural or airworthiness limit.
+#
+# There is exactly one real constraint in here, and it is marked as such: the through-spar
+# diameter ceiling comes from the *confirmed* wing3 variant, because the variant a human
+# selected at confirm time says how big a hole the wing rib actually has. Everything else --
+# the battery corridor, the wall-thickness floor, the tip-extension ceiling, the clearance
+# minimum -- is a plausible placeholder so that the edit kernel has something to refuse.
+#
+# Rules this file obeys:
+#   * every bound is declared here, never hard-coded in policy.py / operations.py
+#   * a bound whose source is a human confirmation says so in `source`
+#   * replace this file with engineering limits before any result is published
+# ----------------------------------------------------------------------------------------
+schema: dronebench.edit_policy/1
+synthetic: true
+title: DroneBench demo edit bounds (synthetic fixture)
+provenance: >-
+  Hand-authored demonstration bounds for the DroneBench CAD edit kernel. Not vendor data,
+  not derived from the STL archive, not an engineering limit for any real aircraft.
+
+# ---------------------------------------------------------------- translate_component
+battery_corridor:
+  # DEMO-FIXTURE. Bounds on the battery envelope *centre* in the canonical FRD frame
+  # (x forward from the confirmed nose datum, y right, z down, metres). Chosen to keep the
+  # 0.155 m pack inside the lofted fuselage bay between the nose cone and the wing bay
+  # plate; the printed bay is not reconstructed, so this is a declared corridor, not a fit.
+  source: demo fixture (fuselage station envelope, eyeballed); not measured
+  units: m
+  x_min: -0.420          # aft limit of the pack centre
+  x_max: -0.120          # forward limit of the pack centre
+  y_min: -0.020
+  y_max: 0.020
+  z_min: -0.030
+  z_max: 0.015
+  harness_allowance_m: 0.030
+  # DEMO-FIXTURE. How far one reviewed edit may move the pack. Stands in for the slack in
+  # the (unknown) power harness and the (unknown) retention strap. Real harness geometry is
+  # not in the archive, so a move beyond this cannot be called verified.
+  retention_known: false
+  # The retention/harness interface is UNKNOWN. Any movement claim stays unverified; the
+  # collider (A3c) is what turns this into a check.
+
+# ---------------------------------------------------------------- resize_spar
+spar:
+  # The wall-thickness floor is DEMO-FIXTURE. The outer-diameter ceiling is NOT: it is read
+  # from the wing3 variant a human confirmed at ingest time.
+  wall_thickness_floor_mm: 0.5
+  wall_thickness_floor_source: demo fixture; no material, layup or supplier is claimed
+  min_outer_diameter_mm: 4.0     # DEMO-FIXTURE sanity floor
+  outer_diameter_ceiling:
+    source: confirmed wing3 variant (DesignManifest.variants group "wing3")
+    variant_group: wing3
+    by_variant:
+      # The rib hole the spar has to pass through. Selected by a human at confirm; this
+      # kernel never picks a variant.
+      wing3_12mm_hole: 12.0
+      wing3_16mm_hole: 16.0
+      wing3_no_hole: null        # null => no through-spar is allowed at all
+    unconfirmed_blocks: true     # no confirmed wing3 selection => no spar resize
+
+# ---------------------------------------------------------------- set_wing_tip_extension
+wing_tip_extension:
+  # DEMO-FIXTURE. The joint model at the tip is not reconstructed (no rib, no spar stub, no
+  # bonded sleeve), so this ceiling is a demonstration bound and not a structural one.
+  source: demo fixture; the tip joint is not modelled and no structure is claimed
+  units: m
+  min_m: -0.050
+  max_m: 0.150
+  symmetric: true                # both occurrences move in one transaction, always
+
+# ---------------------------------------------------------------- collision / clearance
+clearance:
+  interference_tolerance_m: 0.0005
+  # DEMO-FIXTURE. How far two solids may overlap before it counts as interference. Matches
+  # the 0.1 mm-class demo validation settings in architecture 6; the tessellation the
+  # collider measures on is itself coarser than a manufacturing tolerance.
+  prop_clearance_min_m: 0.010
+  # DEMO-FIXTURE. Minimum gap from the propeller swept disc to any airframe solid.
+  prop_clearance_source: demo fixture; no blade geometry, no vibration or flex model
+
+declared_overlap_pairs:
+  # Intended mating/nesting engagements between RECONSTRUCTION parts. A pair listed here is
+  # contact by design and never counts as interference (architecture 6, "Export acceptance").
+  # The reference-mesh pairs live in the DesignManifest (`allowed_overlap_with`); these are
+  # the synthetic reconstruction's own.
+  - [recon_spar, recon_wing_right]
+  - [recon_spar, recon_wing_left]
+  - [recon_spar, recon_fuselage]
+  - [recon_spar, recon_wing_bay_plate]
+  - [recon_battery, recon_fuselage]
+  - [recon_motor, recon_motor_mount]
+  - [recon_motor_mount, recon_fuselage]
+  - [recon_wing_right, recon_fuselage]
+  - [recon_wing_left, recon_fuselage]
+  - [recon_wing_right, recon_wing_bay_plate]
+  - [recon_wing_left, recon_wing_bay_plate]
+  - [recon_vtail_right, recon_fuselage]
+  - [recon_vtail_left, recon_fuselage]
+  # recon_prop is deliberately absent: the propeller may never overlap anything, and its
+  # gap is checked against `clearance.prop_clearance_min_m` instead.
+
+# ---------------------------------------------------------------- targets
+reconstruction_targets:
+  # What each RECONSTRUCTION part may be asked to do. Reference-mesh and BOM-envelope parts
+  # carry their own `edit_capabilities` in the DesignManifest and that list wins for them;
+  # this table exists because the synthetic spar and the lofted wings have no manifest
+  # counterpart at all (the archive contains no spar, and the wing is a lofted surrogate).
+  recon_battery: [translate_component]
+  recon_spar: [resize_spar]
+  recon_wing_right: [set_wing_tip_extension]
+  recon_wing_left: [set_wing_tip_extension]
+
+target_aliases:
+  # A manifest part id whose edit lands on a reconstruction parameter. The battery envelope
+  # in the synthetic demo BOM is the movable component; matching is by category, so the
+  # hashed part id does not have to be written down here.
+  by_category:
+    battery: recon_battery

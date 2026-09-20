@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dronebench-viewer"
+version = "0.1.0"
+description = "Standalone self-contained CAD inspector for DroneBench Studio (Team A, deliverable A4)"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26",
+    "trimesh>=4",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[project.scripts]
+dronebench-viewer = "dronebench_viewer.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["dronebench_viewer*"]
+
+[tool.setuptools.package-data]
+dronebench_viewer = ["assets/*.html"]

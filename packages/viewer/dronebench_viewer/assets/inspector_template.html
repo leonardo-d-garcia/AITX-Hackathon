@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__ — DroneBench inspector</title>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<style>
+:root{
+  --bg:#f4f5f7; --panel:#ffffff; --panel-2:#eceef2; --ink:#12151b; --ink-2:#4b5563;
+  --line:#d3d7de; --accent:#1d4ed8; --accent-ink:#ffffff; --viewport:#dfe3ea;
+  --known:#0f7a52; --estimated:#1d4ed8; --unknown:#a45a00; --conflicted:#b3261e;
+  --known-bg:#d9f0e5; --estimated-bg:#dde8ff; --unknown-bg:#ffeccc; --conflicted-bg:#fbdedc;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0e1116; --panel:#161b22; --panel-2:#1f242d; --ink:#e9edf3; --ink-2:#a6b0bf;
+    --line:#2c333d; --accent:#6c9bff; --accent-ink:#0e1116; --viewport:#0a0d12;
+    --known:#5fd2a3; --estimated:#8fb4ff; --unknown:#ffc061; --conflicted:#ff8f86;
+    --known-bg:#123528; --estimated-bg:#16264a; --unknown-bg:#3d2a08; --conflicted-bg:#401b18;
+  }
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font:15px/1.45 ui-sans-serif,-apple-system,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;
+  display:flex; flex-direction:column; overflow:hidden;
+}
+button,select,input{font:inherit;color:inherit}
+header{
+  display:flex;align-items:center;gap:10px 12px;flex-wrap:wrap;
+  padding:9px 14px;background:var(--panel);border-bottom:1px solid var(--line);
+}
+h1{font-size:16px;margin:0;font-weight:650;letter-spacing:.2px}
+.sub{color:var(--ink-2);font-size:13px}
+.mode-label{
+  font-weight:700;font-size:14px;padding:6px 12px;border-radius:999px;
+  border:2px solid var(--accent);color:var(--accent);white-space:nowrap;
+}
+.mode-label[data-mode="reconstruction"],.mode-label[data-mode="overlay"]{
+  border-color:var(--unknown);color:var(--unknown);
+}
+.spacer{flex:1}
+.ctl{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-2)}
+.ctl select,.ctl input[type=search]{
+  background:var(--panel-2);border:1px solid var(--line);border-radius:7px;padding:5px 8px;
+}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{background:var(--panel-2);border:0;padding:6px 12px;cursor:pointer;font-size:13px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:650}
+.seg button+button{border-left:1px solid var(--line)}
+main{flex:1;display:grid;grid-template-columns:330px 1fr 370px;min-height:0}
+aside{background:var(--panel);display:flex;flex-direction:column;min-height:0;overflow:hidden}
+aside.left{border-right:1px solid var(--line)}
+aside.right{border-left:1px solid var(--line)}
+.panel-head{
+  padding:10px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;
+  gap:8px;flex-wrap:wrap;font-size:13px;font-weight:650;text-transform:uppercase;
+  letter-spacing:.6px;color:var(--ink-2)
+}
+.panel-body{overflow:auto;padding:10px 14px;flex:1}
+#viewport{position:relative;background:var(--viewport);min-width:0}
+#viewport canvas{display:block;width:100%;height:100%}
+#legend{
+  position:absolute;left:12px;bottom:12px;background:var(--panel);border:1px solid var(--line);
+  border-radius:10px;padding:10px 12px;font-size:12px;max-width:320px;box-shadow:0 2px 12px rgba(0,0,0,.14)
+}
+#legend h2{font-size:11px;margin:0 0 6px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-2)}
+.legend-row{display:flex;align-items:center;gap:7px;padding:1px 0}
+.sw{width:12px;height:12px;border-radius:3px;border:1px solid rgba(128,128,128,.6);flex:none}
+#hud{
+  position:absolute;right:12px;top:12px;background:var(--panel);border:1px solid var(--line);
+  border-radius:10px;padding:8px 11px;font-size:12px;color:var(--ink-2);max-width:280px
+}
+#status-line{
+  position:absolute;left:12px;top:12px;background:var(--panel);border:1px solid var(--line);
+  border-radius:10px;padding:8px 11px;font-size:12px;max-width:420px
+}
+.chip{
+  display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:1px 9px;
+  font-size:11.5px;font-weight:650;border:1px solid transparent;white-space:nowrap
+}
+.chip::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+.chip.known{color:var(--known);background:var(--known-bg);border-color:var(--known)}
+.chip.estimated{color:var(--estimated);background:var(--estimated-bg);border-color:var(--estimated)}
+.chip.unknown{color:var(--unknown);background:var(--unknown-bg);border-color:var(--unknown)}
+.chip.conflicted{color:var(--conflicted);background:var(--conflicted-bg);border-color:var(--conflicted)}
+.chip.plain{color:var(--ink-2);background:var(--panel-2);border-color:var(--line)}
+.chip.plain::before{display:none}
+table.parts{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+table.parts th{
+  text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-2);
+  padding:6px;cursor:pointer;user-select:none;position:sticky;top:-10px;z-index:2;
+  background:var(--panel);box-shadow:0 1px 0 var(--line)
+}
+table.parts th[aria-sort="ascending"]::after{content:" ▲"}
+table.parts th[aria-sort="descending"]::after{content:" ▼"}
+table.parts td{padding:5px 6px;border-top:1px solid var(--line);vertical-align:middle;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+table.parts th:nth-child(2),table.parts td:nth-child(2){width:74px}
+table.parts th:nth-child(3),table.parts td:nth-child(3){width:96px}
+table.parts td:nth-child(3){overflow:visible}
+table.parts tr.row{cursor:pointer}
+table.parts tr.row.absent td{opacity:.45;font-style:italic}
+table.parts tr.row:hover td{background:var(--panel-2)}
+table.parts tr.row[aria-selected="true"] td{background:var(--accent);color:var(--accent-ink)}
+table.parts tr.row[aria-selected="true"] .chip{background:transparent;color:inherit;border-color:currentColor}
+table.parts tr.row:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.dot{width:10px;height:10px;border-radius:3px;display:inline-block;border:1px solid rgba(128,128,128,.6)}
+h3.sec{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--ink-2);margin:16px 0 6px}
+h3.sec:first-child{margin-top:0}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:0;font-size:13px}
+dl.kv dt{color:var(--ink-2)}
+dl.kv dd{margin:0;word-break:break-word}
+.claim{border:1px solid var(--line);border-radius:9px;padding:8px 10px;margin-bottom:8px;background:var(--panel-2)}
+.claim .top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.claim .name{font-weight:650;font-size:13px}
+.claim .val{font-variant-numeric:tabular-nums}
+.claim .val.is-unknown{color:var(--unknown);font-weight:650}
+.claim .meta{font-size:12px;color:var(--ink-2);margin-top:4px}
+.claim ul{margin:4px 0 0 16px;padding:0;font-size:12px;color:var(--ink-2)}
+.empty{color:var(--ink-2);font-size:13px;font-style:italic}
+table.data{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
+table.data th{text-align:right;color:var(--ink-2);font-weight:600;padding:3px 5px;border-bottom:1px solid var(--line)}
+table.data th:first-child,table.data td:first-child{text-align:left}
+table.data td{text-align:right;padding:3px 5px;border-top:1px solid var(--line)}
+.warn{
+  border-left:3px solid var(--unknown);background:var(--unknown-bg);color:var(--unknown);
+  padding:6px 10px;border-radius:0 7px 7px 0;font-size:12.5px;margin-bottom:8px;font-weight:600
+}
+#boot-error{display:none;padding:18px;color:var(--conflicted);font-family:ui-monospace,monospace;white-space:pre-wrap}
+input[type=range]{accent-color:var(--accent);width:130px}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1 id="doc-title">__TITLE__</h1>
+    <div class="sub"><span id="design-id"></span> · <span id="revision-id"></span> · <span id="frame-state"></span></div>
+  </div>
+  <div class="mode-label" id="mode-label" role="status" aria-live="polite">Original mesh reference</div>
+  <div class="seg" role="group" aria-label="Geometry representation">
+    <button id="btn-reference" aria-pressed="true">Reference</button>
+    <button id="btn-reconstruction" aria-pressed="false">Reconstruction</button>
+    <button id="btn-overlay" aria-pressed="false">Overlay</button>
+  </div>
+  <div class="spacer"></div>
+  <label class="ctl">Colour by
+    <select id="colour-by">
+      <option value="status">claim status</option>
+      <option value="category">category</option>
+      <option value="neutral">neutral</option>
+    </select>
+  </label>
+  <label class="ctl">Explode
+    <input type="range" id="explode" min="0" max="1" step="0.01" value="0" aria-label="Explode view amount">
+    <span id="explode-val" style="font-variant-numeric:tabular-nums">0%</span>
+  </label>
+  <button class="ctl" id="btn-reset" style="background:var(--panel-2);border:1px solid var(--line);border-radius:7px;padding:6px 11px;cursor:pointer">Reset view</button>
+</header>
+
+<main>
+  <aside class="left">
+    <div class="panel-head">
+      <span>Parts</span>
+      <span class="chip plain" id="part-count"></span>
+    </div>
+    <div style="padding:8px 14px 0"><input type="search" id="part-search" placeholder="Search name, id, category…" aria-label="Search parts" style="width:100%"></div>
+    <div class="panel-body">
+      <table class="parts" id="part-table">
+        <thead><tr>
+          <th data-sort="name" aria-sort="ascending" scope="col">Part</th>
+          <th data-sort="category" scope="col">Category</th>
+          <th data-sort="status" scope="col">Status</th>
+        </tr></thead>
+        <tbody id="part-rows"></tbody>
+      </table>
+    </div>
+  </aside>
+
+  <section id="viewport" aria-label="3D viewport">
+    <div id="status-line"></div>
+    <div id="hud">Drag to orbit · scroll to zoom · right-drag to pan · click a part to inspect</div>
+    <div id="legend"><h2 id="legend-title">Legend</h2><div id="legend-rows"></div></div>
+  </section>
+
+  <aside class="right">
+    <div class="panel-head"><span>Inspector</span></div>
+    <div class="panel-body" id="inspector"></div>
+  </aside>
+</main>
+
+<pre id="boot-error"></pre>
+
+<script type="application/json" id="dronebench-payload">__PAYLOAD__</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const $ = (id) => document.getElementById(id);
+const fail = (e) => {
+  const box = $('boot-error');
+  box.style.display = 'block';
+  box.textContent = 'Inspector failed to start:\n' + (e && e.stack ? e.stack : String(e));
+  console.error(e);
+};
+window.addEventListener('error', (ev) => fail(ev.error || ev.message));
+
+const PAYLOAD = JSON.parse($('dronebench-payload').textContent);
+const manifest = PAYLOAD.manifest || {};
+const features = PAYLOAD.features;
+const fitReport = PAYLOAD.fit_report;
+const editResult = PAYLOAD.edit_result;
+const parts = manifest.parts || [];
+const evidenceById = Object.fromEntries((manifest.evidence || []).map(e => [e.evidence_id, e]));
+const partById = Object.fromEntries(parts.map(p => [p.part_id, p]));
+
+const STATUS_ORDER = ['conflicted', 'unknown', 'estimated', 'known'];
+const STATUS_COLOR = { known:'#0f7a52', estimated:'#1d4ed8', unknown:'#d08300', conflicted:'#b3261e' };
+const CATEGORY_COLOR = {
+  wing:'#3b82f6', aileron:'#60a5fa', fuselage:'#94a3b8', canopy:'#cbd5e1', hatch:'#a3adbb',
+  vtail:'#8b5cf6', ruddervator:'#a78bfa', mount:'#64748b', spar:'#ef8f3c', battery:'#14b8a6',
+  motor:'#e05252', prop:'#f472b6', servo:'#22c55e', esc:'#84cc16', fc:'#06b6d4', rx:'#0ea5e9',
+  gps:'#38bdf8', payload:'#fbbf24', other:'#9ca3af'
+};
+const NEUTRAL = '#9aa3ad';
+
+const CLAIM_FIELDS = [
+  ['mass_kg', 'Mass'], ['local_com_m', 'Local CoM'], ['material', 'Material'], ['function', 'Function']
+];
+
+function claimsOf(part) {
+  return CLAIM_FIELDS
+    .filter(([k]) => part[k])
+    .map(([k, label]) => ({ key: k, label, claim: part[k] }));
+}
+function partStatus(part) {
+  const st = claimsOf(part).map(c => (c.claim && c.claim.status) || 'unknown');
+  for (const s of STATUS_ORDER) if (st.includes(s)) return s;
+  return 'unknown';
+}
+function partColor(part, mode) {
+  if (mode === 'category') return CATEGORY_COLOR[part.category] || CATEGORY_COLOR.other;
+  if (mode === 'neutral') return NEUTRAL;
+  return STATUS_COLOR[partStatus(part)] || NEUTRAL;
+}
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+    ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+function fmtNumber(v) {
+  if (typeof v !== 'number' || !isFinite(v)) return String(v);
+  const a = Math.abs(v);
+  if (a !== 0 && (a < 1e-3 || a >= 1e6)) return v.toExponential(3);
+  return (Math.round(v * 1e6) / 1e6).toString();
+}
+function fmtValue(v) {
+  if (v === null || v === undefined) return null;
+  if (Array.isArray(v)) return '[' + v.map(x => typeof x === 'number' ? fmtNumber(x) : String(x)).join(', ') + ']';
+  if (typeof v === 'number') return fmtNumber(v);
+  if (typeof v === 'object') return JSON.stringify(v);
+  return String(v);
+}
+function deg(rad) { return typeof rad === 'number' ? fmtNumber(rad * 180 / Math.PI) : null; }
+
+/* ------------------------------------------------------------------ 3D scene */
+
+const viewport = $('viewport');
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+viewport.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const darkQuery = matchMedia('(prefers-color-scheme: dark)');
+let dark = darkQuery.matches;
+const paintBackground = () => scene.background = new THREE.Color(dark ? 0x0a0d12 : 0xdfe3ea);
+paintBackground();
+darkQuery.addEventListener('change', (ev) => {
+  dark = ev.matches;
+  paintBackground();
+  if (document.body.dataset.ready) { applyMaterials(); renderLegend(); }
+});
+
+const camera = new THREE.PerspectiveCamera(45, 1, 0.01, 200);
+camera.position.set(1.4, 1.0, 1.8);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0x4a5058, dark ? 1.5 : 2.1));
+const key = new THREE.DirectionalLight(0xffffff, dark ? 1.6 : 1.9);
+key.position.set(2.5, 4, 3);
+scene.add(key);
+const rim = new THREE.DirectionalLight(0xffffff, 0.5);
+rim.position.set(-3, 1.5, -2.5);
+scene.add(rim);
+
+const groups = {
+  reference: new THREE.Group(),
+  reconstruction: new THREE.Group()
+};
+groups.reference.name = 'group:reference';
+groups.reconstruction.name = 'group:reconstruction';
+scene.add(groups.reference, groups.reconstruction);
+
+/** partEntries[kind] = { part_id: {objects:[], meshes:[], home:Vector3, dir:Vector3, dims:{}} } */
+const partEntries = { reference: {}, reconstruction: {} };
+const pickable = { reference: [], reconstruction: [] };
+
+function b64ToArrayBuffer(b64) {
+  const bin = atob(b64);
+  const buf = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+  return buf.buffer;
+}
+
+function resolvePartId(obj) {
+  let o = obj;
+  while (o) {
+    if (o.name && partById[o.name]) return o.name;
+    if (o.userData && o.userData.part_id && partById[o.userData.part_id]) return o.userData.part_id;
+    o = o.parent;
+  }
+  // fall back to a loose name match (trimesh may suffix duplicated node names)
+  o = obj;
+  while (o) {
+    if (o.name) {
+      const hit = parts.find(p => o.name === p.part_id || o.name.startsWith(p.part_id + '.') ||
+                                  o.name.startsWith(p.part_id + '_dup'));
+      if (hit) return hit.part_id;
+    }
+    o = o.parent;
+  }
+  return null;
+}
+
+function ingestGltf(kind, gltf) {
+  const root = gltf.scene || gltf.scenes[0];
+  groups[kind].add(root);
+  const entries = partEntries[kind];
+  root.updateMatrixWorld(true);
+  root.traverse((obj) => {
+    if (!obj.isMesh) return;
+    const pid = resolvePartId(obj) || ('unmapped:' + (obj.name || obj.uuid));
+    let e = entries[pid];
+    if (!e) e = entries[pid] = { part_id: pid, meshes: [], carriers: new Set() };
+    obj.userData.part_id = pid;
+    obj.userData.kind = kind;
+    const mat = new THREE.MeshStandardMaterial({
+      color: 0xffffff, roughness: 0.62, metalness: 0.06,
+      transparent: true, opacity: 1, depthWrite: true, side: THREE.DoubleSide
+    });
+    obj.material = mat;
+    // trimesh-exported GLBs often omit the NORMAL attribute; a lit material renders black without it
+    if (!obj.geometry.attributes.normal) obj.geometry.computeVertexNormals();
+    e.meshes.push(obj);
+    pickable[kind].push(obj);
+    // the explode carrier is the highest ancestor that belongs to this part only
+    let carrier = obj;
+    while (carrier.parent && carrier.parent !== root && resolvePartId(carrier.parent) === pid) carrier = carrier.parent;
+    e.carriers.add(carrier);
+  });
+  for (const e of Object.values(entries)) {
+    const box = new THREE.Box3();
+    for (const m of e.meshes) box.expandByObject(m);
+    e.box = box;
+    e.center = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3());
+    // GLB axes: x = FRD y (right), y = -FRD z (up), z = -FRD x (forward is -z)
+    e.dims = { length_x_m: size.z, width_y_m: size.x, height_z_m: size.y };
+    e.carriers = [...e.carriers];
+    e.home = e.carriers.map(c => c.position.clone());
+  }
+}
+
+function computeExplodeDirections() {
+  for (const kind of ['reference', 'reconstruction']) {
+    const entries = partEntries[kind];
+    const ids = Object.keys(entries);
+    if (!ids.length) continue;
+    const all = new THREE.Box3();
+    for (const id of ids) all.union(entries[id].box);
+    const origin = all.getCenter(new THREE.Vector3());
+    for (const id of ids) {
+      const d = entries[id].center.clone().sub(origin);
+      if (d.lengthSq() < 1e-12) d.set(0, 0.001, 0);
+      entries[id].dir = d;
+    }
+  }
+}
+
+function applyExplode(t) {
+  for (const kind of ['reference', 'reconstruction']) {
+    for (const e of Object.values(partEntries[kind])) {
+      if (!e.dir) continue;
+      e.carriers.forEach((c, i) => {
+        c.position.copy(e.home[i]).addScaledVector(e.dir, t * 0.9);
+      });
+    }
+  }
+}
+
+function frameAll() {
+  const box = new THREE.Box3();
+  for (const kind of ['reference', 'reconstruction']) {
+    if (groups[kind].children.length) box.expandByObject(groups[kind]);
+  }
+  if (box.isEmpty()) return;
+  const size = box.getSize(new THREE.Vector3());
+  const center = box.getCenter(new THREE.Vector3());
+  const radius = Math.max(size.length() * 0.5, 0.05);
+  controls.target.copy(center);
+  const dir = new THREE.Vector3(0.75, 0.45, 1).normalize();
+  camera.position.copy(center).addScaledVector(dir, radius * 2.6);
+  camera.near = radius / 200;
+  camera.far = radius * 60;
+  camera.updateProjectionMatrix();
+  controls.update();
+}
+
+function resize() {
+  const w = viewport.clientWidth, h = viewport.clientHeight;
+  if (!w || !h) return;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+addEventListener('resize', resize);
+
+/* ------------------------------------------------------------------ state */
+
+const state = {
+  mode: 'reference',          // reference | reconstruction | overlay
+  colourBy: 'status',
+  explode: 0,
+  selected: null,
+  hovered: null,
+  search: '',
+  sortKey: 'name',
+  sortDir: 1
+};
+
+const MODE_LABEL = {
+  reference: 'Original mesh reference',
+  reconstruction: 'Editable reconstruction',
+  overlay: 'Overlay — reconstruction over reference'
+};
+
+function hasRecon() { return groups.reconstruction.children.length > 0; }
+
+function applyMaterials() {
+  const mode = state.mode;
+  for (const kind of ['reference', 'reconstruction']) {
+    const visible = mode === 'overlay' ? true : mode === kind;
+    groups[kind].visible = visible && (kind === 'reference' || hasRecon());
+    for (const e of Object.values(partEntries[kind])) {
+      const part = partById[e.part_id];
+      const selected = state.selected === e.part_id;
+      const hovered = state.hovered === e.part_id;
+      let color = part ? partColor(part, state.colourBy) : NEUTRAL;
+      let opacity = 1.0;
+      if (mode === 'overlay') {
+        if (kind === 'reference') { color = dark ? '#5b636d' : '#b6bdc6'; opacity = 0.55; }
+        else { opacity = 0.42; }
+      }
+      if (selected) opacity = Math.min(1, opacity + 0.35);
+      for (const m of e.meshes) {
+        const mat = m.material;
+        mat.color.set(color);
+        mat.opacity = opacity;
+        mat.transparent = opacity < 1;
+        mat.depthWrite = opacity >= 0.99;
+        mat.emissive.set(selected ? '#ffffff' : (hovered ? '#8899aa' : '#000000'));
+        mat.emissiveIntensity = selected ? 0.32 : (hovered ? 0.22 : 0);
+        mat.needsUpdate = true;
+      }
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ picking */
+
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+let pointerInside = false;
+
+function activePickables() {
+  if (state.mode === 'reconstruction') return pickable.reconstruction;
+  if (state.mode === 'overlay') return pickable.reconstruction.concat(pickable.reference);
+  return pickable.reference;
+}
+function pick(ev) {
+  const rect = renderer.domElement.getBoundingClientRect();
+  pointer.x = ((ev.clientX - rect.left) / rect.width) * 2 - 1;
+  pointer.y = -((ev.clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(pointer, camera);
+  const hits = raycaster.intersectObjects(activePickables(), false);
+  for (const h of hits) {
+    if (h.object.visible && h.object.parent && h.object.userData.part_id) return h.object.userData.part_id;
+  }
+  return null;
+}
+renderer.domElement.addEventListener('pointermove', (ev) => {
+  pointerInside = true;
+  const pid = pick(ev);
+  if (pid !== state.hovered) {
+    state.hovered = pid;
+    renderer.domElement.style.cursor = pid ? 'pointer' : 'default';
+    applyMaterials();
+    renderStatusLine();
+  }
+});
+renderer.domElement.addEventListener('pointerleave', () => {
+  pointerInside = false;
+  if (state.hovered) { state.hovered = null; applyMaterials(); renderStatusLine(); }
+});
+let downAt = null;
+renderer.domElement.addEventListener('pointerdown', (ev) => { downAt = { x: ev.clientX, y: ev.clientY }; });
+renderer.domElement.addEventListener('pointerup', (ev) => {
+  if (!downAt) return;
+  const moved = Math.hypot(ev.clientX - downAt.x, ev.clientY - downAt.y);
+  downAt = null;
+  if (moved > 4 || ev.button !== 0) return;
+  select(pick(ev));
+});
+
+function select(pid) {
+  state.selected = (pid && partById[pid]) ? pid : null;
+  applyMaterials();
+  renderPartList();
+  renderInspector();
+  renderStatusLine();
+}
+window.__dronebenchSelect = select;   // test / automation hook
+window.__dronebench = { scene, groups, partEntries, state, THREE };
+
+/* ------------------------------------------------------------------ panels */
+
+function chip(status) {
+  return `<span class="chip ${esc(status)}">${esc(status)}</span>`;
+}
+
+function renderLegend() {
+  const title = state.colourBy === 'status' ? 'Colour = claim status'
+              : state.colourBy === 'category' ? 'Colour = part category'
+              : 'Colour = neutral (status shown as text)';
+  $('legend-title').textContent = title;
+  let rows = '';
+  if (state.colourBy === 'status') {
+    for (const s of ['known', 'estimated', 'unknown', 'conflicted']) {
+      const n = parts.filter(p => partStatus(p) === s).length;
+      const note = s === 'unknown' ? ' — needs evidence' : '';
+      rows += `<div class="legend-row"><span class="sw" style="background:${STATUS_COLOR[s]}"></span>${chip(s)}<span>${n} part${n === 1 ? '' : 's'}${note}</span></div>`;
+    }
+  } else if (state.colourBy === 'category') {
+    const cats = [...new Set(parts.map(p => p.category))].sort();
+    for (const c of cats) {
+      const n = parts.filter(p => p.category === c).length;
+      rows += `<div class="legend-row"><span class="sw" style="background:${CATEGORY_COLOR[c] || CATEGORY_COLOR.other}"></span><span>${esc(c)} (${n})</span></div>`;
+    }
+  } else {
+    rows = '<div class="legend-row">All parts drawn neutral; use the part list status column.</div>';
+  }
+  if (state.mode === 'overlay') {
+    rows += `<div class="legend-row" style="margin-top:6px"><span class="sw" style="background:${dark ? '#5b636d' : '#b6bdc6'}"></span><span>solid grey = original mesh reference</span></div>`;
+    rows += `<div class="legend-row"><span class="sw" style="background:${STATUS_COLOR.estimated};opacity:.45"></span><span>translucent = editable reconstruction</span></div>`;
+  }
+  $('legend-rows').innerHTML = rows;
+}
+
+function visibleParts() {
+  const q = state.search.trim().toLowerCase();
+  let list = parts.filter(p => {
+    if (!q) return true;
+    return [p.name, p.part_id, p.category, p.side, p.representation].join(' ').toLowerCase().includes(q);
+  });
+  const key = state.sortKey;
+  list = list.slice().sort((a, b) => {
+    let va, vb;
+    if (key === 'status') { va = STATUS_ORDER.indexOf(partStatus(a)); vb = STATUS_ORDER.indexOf(partStatus(b)); }
+    else { va = String(a[key] || '').toLowerCase(); vb = String(b[key] || '').toLowerCase(); }
+    return (va < vb ? -1 : va > vb ? 1 : 0) * state.sortDir;
+  });
+  return list;
+}
+
+function renderPartList() {
+  const list = visibleParts();
+  $('part-count').textContent = `${list.length} of ${parts.length}`;
+  $('part-rows').innerHTML = list.map(p => {
+    const st = partStatus(p);
+    const col = partColor(p, state.colourBy);
+    const sel = state.selected === p.part_id;
+    const absent = state.mode === 'reconstruction' && !partEntries.reconstruction[p.part_id];
+    return `<tr class="row${absent ? ' absent' : ''}" tabindex="0" role="option" aria-selected="${sel}"
+      data-part="${esc(p.part_id)}"${absent ? ' title="no geometry in the reconstruction"' : ''}>
+      <td><span class="dot" style="background:${col}"></span> ${esc(p.name)}<div style="font-size:11px;opacity:.7">${esc(p.part_id)}${p.side ? ' · ' + esc(p.side) : ''}</div></td>
+      <td>${esc(p.category)}</td>
+      <td>${chip(st)}</td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="3" class="empty">No part matches “${esc(state.search)}”.</td></tr>`;
+  for (const tr of $('part-rows').querySelectorAll('tr.row')) {
+    tr.addEventListener('click', () => select(tr.dataset.part));
+    tr.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); select(tr.dataset.part); }
+    });
+  }
+  const selRow = $('part-rows').querySelector('tr[aria-selected="true"]');
+  if (selRow) selRow.scrollIntoView({ block: 'nearest' });
+}
+
+function claimBlock(label, claim) {
+  const status = (claim && claim.status) || 'unknown';
+  const raw = claim ? fmtValue(claim.value) : null;
+  const isUnknown = status === 'unknown' || raw === null;
+  const shown = isUnknown ? 'unknown — needs evidence'
+                          : esc(raw) + (claim.unit ? ' ' + esc(claim.unit) : '');
+  const ev = (claim && claim.evidence_ids || []).map(id => {
+    const e = evidenceById[id];
+    return e ? `${esc(e.evidence_id)} (${esc(e.method)}${e.uri ? ' · ' + esc(e.uri) : ''})` : esc(id);
+  });
+  const conf = (claim && typeof claim.confidence === 'number') ? ` · confidence ${fmtNumber(claim.confidence)}` : '';
+  const src = (claim && claim.source_kind) ? esc(claim.source_kind) : 'no source kind';
+  return `<div class="claim">
+    <div class="top">
+      <span class="name">${esc(label)}</span>
+      <span class="val ${isUnknown ? 'is-unknown' : ''}">${shown}</span>
+      ${chip(status)}
+    </div>
+    <div class="meta">source: ${src}${conf}</div>
+    <div class="meta">evidence: ${ev.length ? ev.join('; ') : '<em>none recorded</em>'}</div>
+    ${(claim && claim.assumptions || []).length
+      ? `<ul>${claim.assumptions.map(a => `<li>assumes ${esc(a)}</li>`).join('')}</ul>` : ''}
+  </div>`;
+}
+
+function measuredDims(pid) {
+  const kind = (state.mode === 'reconstruction' && partEntries.reconstruction[pid]) ? 'reconstruction' : 'reference';
+  const e = partEntries[kind][pid] || partEntries.reconstruction[pid] || partEntries.reference[pid];
+  if (!e || !e.dims) return null;
+  return { kind, ...e.dims };
+}
+
+function fitFor(pid) {
+  if (!fitReport) return null;
+  const byPart = fitReport.per_part || fitReport.parts || null;
+  if (byPart && !Array.isArray(byPart) && byPart[pid]) return byPart[pid];
+  if (Array.isArray(byPart)) return byPart.find(r => r.part_id === pid) || null;
+  return null;
+}
+
+function renderInspector() {
+  const box = $('inspector');
+  if (!state.selected) {
+    box.innerHTML = `<p class="empty">Click a part in the viewport or the list to inspect its claims.</p>` + featuresHtml() + editHtml();
+    return;
+  }
+  const p = partById[state.selected];
+  const dims = measuredDims(p.part_id);
+  const fit = fitFor(p.part_id);
+  const mirror = p.mirror_of ? `${esc(p.mirror_of)} (mirrored instance)` : '—';
+  const reprNote = p.representation === 'reference_mesh'
+    ? 'reference_mesh — original geometry, no topology edits'
+    : esc(p.representation);
+  const html = `
+    <h3 class="sec">Part</h3>
+    <div style="font-size:17px;font-weight:650;margin-bottom:4px">${esc(p.name)}</div>
+    <div style="margin-bottom:8px">${chip(partStatus(p))} <span class="chip plain">${esc(p.category)}</span>${p.locked ? ' <span class="chip plain">locked</span>' : ''}</div>
+    <dl class="kv">
+      <dt>part_id</dt><dd>${esc(p.part_id)}</dd>
+      <dt>definition</dt><dd>${esc(p.definition_id)}</dd>
+      <dt>side</dt><dd>${esc(p.side || 'unspecified')}</dd>
+      <dt>mirror_of</dt><dd>${mirror}</dd>
+      <dt>representation</dt><dd>${reprNote}</dd>
+      <dt>source file</dt><dd>${p.source ? esc(p.source) : '<em>none (not from the archive)</em>'}</dd>
+    </dl>
+    <h3 class="sec">Measured bounding box${dims ? ` (${esc(dims.kind)} geometry)` : ''}</h3>
+    ${dims ? `<dl class="kv">
+      <dt>length (x fwd)</dt><dd>${fmtNumber(dims.length_x_m)} m</dd>
+      <dt>width (y right)</dt><dd>${fmtNumber(dims.width_y_m)} m</dd>
+      <dt>height (z)</dt><dd>${fmtNumber(dims.height_z_m)} m</dd>
+    </dl><div class="meta" style="font-size:12px;color:var(--ink-2);margin-top:4px">Axis-aligned extent of the rendered mesh, not a design dimension.</div>`
+    : `<p class="empty">No geometry loaded for this part.</p>`}
+    ${fit ? `<h3 class="sec">Reconstruction fit</h3><dl class="kv">
+      <dt>RMS</dt><dd>${fmtNumber(fit.rms_m)} m</dd>
+      <dt>max</dt><dd>${fmtNumber(fit.max_m)} m</dd>
+      ${fit.note ? `<dt>note</dt><dd>${esc(fit.note)}</dd>` : ''}
+    </dl>` : ''}
+    <h3 class="sec">Claims</h3>
+    ${claimsOf(p).map(c => claimBlock(c.label, c.claim)).join('') || '<p class="empty">No claims recorded.</p>'}
+    <h3 class="sec">Edit capabilities</h3>
+    ${(p.edit_capabilities || []).map(c => `<span class="chip plain">${esc(c)}</span> `).join('') || '<span class="chip plain">none</span>'}
+    ${(p.allowed_overlap_with || []).length ? `<h3 class="sec">Declared overlaps</h3><div>${p.allowed_overlap_with.map(x => `<span class="chip plain">${esc(x)}</span> `).join('')}</div>` : ''}
+    ${Object.keys(p.labels || {}).length ? `<h3 class="sec">Labels</h3><dl class="kv">${Object.entries(p.labels).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>` : ''}
+  `;
+  box.innerHTML = html + featuresHtml() + editHtml();
+}
+
+function claimCell(c) {
+  if (!c || c.value === null || c.value === undefined || c.status === 'unknown') {
+    return `<span class="chip unknown">unknown</span>`;
+  }
+  return `${esc(fmtValue(c.value))}${c.unit ? ' ' + esc(c.unit) : ''} ${chip(c.status)}`;
+}
+
+function featuresHtml() {
+  if (!features) return '';
+  let h = `<h3 class="sec">Geometry features (${esc(features.frame || 'FRD')})</h3>`;
+  h += `<dl class="kv">
+    <dt>reference area</dt><dd>${claimCell(features.reference_area_m2)}</dd>
+    <dt>reference span</dt><dd>${claimCell(features.reference_span_m)}</dd>
+    <dt>reference chord</dt><dd>${claimCell(features.reference_chord_m)}</dd>
+    <dt>fuselage length</dt><dd>${claimCell(features.fuselage_length_m)}</dd>
+    <dt>mass</dt><dd>${claimCell(features.mass_kg)}</dd>
+    <dt>CG</dt><dd>${claimCell(features.cg_m)}</dd>
+  </dl>`;
+  for (const s of features.surfaces || []) {
+    h += `<h3 class="sec">Surface — ${esc(s.surface_id)}</h3>`;
+    h += `<dl class="kv">
+      <dt>span</dt><dd>${claimCell(s.span_m)}</dd>
+      <dt>area</dt><dd>${claimCell(s.area_m2)}</dd>
+      <dt>MAC</dt><dd>${claimCell(s.mac_m)}</dd>
+      <dt>x of MAC LE</dt><dd>${claimCell(s.x_mac_le_m)}</dd>
+      <dt>aspect ratio</dt><dd>${claimCell(s.aspect_ratio)}</dd>
+      <dt>LE sweep</dt><dd>${claimCell(s.sweep_le_rad)}${typeof (s.sweep_le_rad || {}).value === 'number' ? ` (${deg(s.sweep_le_rad.value)}°)` : ''}</dd>
+      <dt>dihedral</dt><dd>${claimCell(s.dihedral_rad)}${typeof (s.dihedral_rad || {}).value === 'number' ? ` (${deg(s.dihedral_rad.value)}°)` : ''}</dd>
+      <dt>V-tail cant</dt><dd>${typeof s.cant_rad === 'number' ? `${fmtNumber(s.cant_rad)} rad (${deg(s.cant_rad)}°)` : '<span class="chip unknown">unknown</span>'}</dd>
+      <dt>airfoil</dt><dd>${claimCell(s.airfoil)}</dd>
+      <dt>fit RMS</dt><dd>${typeof s.fit_rms_m === 'number' ? fmtNumber(s.fit_rms_m) + ' m' : '<span class="chip unknown">unknown</span>'}</dd>
+    </dl>`;
+    if ((s.stations || []).length) {
+      h += `<table class="data"><thead><tr><th>y (m)</th><th>LE x (m)</th><th>chord (m)</th><th>z (m)</th><th>twist (°)</th><th>t/c</th></tr></thead><tbody>`;
+      for (const st of s.stations) {
+        h += `<tr><td>${fmtNumber(st.span_y_m)}</td><td>${fmtNumber(st.leading_edge_x_m)}</td><td>${fmtNumber(st.chord_m)}</td><td>${fmtNumber(st.z_m)}</td><td>${deg(st.twist_rad || 0)}</td><td>${st.thickness_ratio == null ? '—' : fmtNumber(st.thickness_ratio)}</td></tr>`;
+      }
+      h += `</tbody></table>`;
+    }
+  }
+  if ((features.fuselage || []).length) {
+    h += `<h3 class="sec">Fuselage stations</h3><table class="data"><thead><tr><th>x (m)</th><th>width (m)</th><th>height (m)</th><th>z centre (m)</th></tr></thead><tbody>`;
+    for (const f of features.fuselage) {
+      h += `<tr><td>${fmtNumber(f.x_m)}</td><td>${fmtNumber(f.width_m)}</td><td>${fmtNumber(f.height_m)}</td><td>${fmtNumber(f.z_center_m)}</td></tr>`;
+    }
+    h += `</tbody></table>`;
+  }
+  if (fitReport) {
+    h += `<h3 class="sec">Reconstruction fit report</h3>`;
+    h += `<dl class="kv">
+      <dt>overall RMS</dt><dd>${fitReport.rms_m != null ? fmtNumber(fitReport.rms_m) + ' m' : '<span class="chip unknown">unknown</span>'}</dd>
+      <dt>overall max</dt><dd>${fitReport.max_m != null ? fmtNumber(fitReport.max_m) + ' m' : '<span class="chip unknown">unknown</span>'}</dd>
+    </dl>`;
+    const rows = Array.isArray(fitReport.per_part) ? fitReport.per_part
+               : Object.entries(fitReport.per_part || {}).map(([k, v]) => ({ part_id: k, ...v }));
+    if (rows.length) {
+      h += `<table class="data"><thead><tr><th>part</th><th>RMS (m)</th><th>max (m)</th></tr></thead><tbody>` +
+           rows.map(r => `<tr><td>${esc(r.part_id)}</td><td>${r.rms_m == null ? '—' : fmtNumber(r.rms_m)}</td><td>${r.max_m == null ? '—' : fmtNumber(r.max_m)}</td></tr>`).join('') +
+           `</tbody></table>`;
+    }
+    h += `<div class="warn">The reconstruction is not usable for engineering comparison until a human confirms it.</div>`;
+  }
+  return h;
+}
+
+function editHtml() {
+  if (!editResult) return '';
+  let h = `<h3 class="sec">Last edit — ${esc(editResult.operation)}</h3>`;
+  h += `<div><span class="chip ${editResult.status === 'ok' ? 'known' : editResult.status === 'blocked' ? 'unknown' : 'conflicted'}">${esc(editResult.status)}</span>
+        <span class="chip plain">base ${esc(editResult.base_revision_id)}</span>
+        ${editResult.preview_revision_id ? `<span class="chip plain">preview ${esc(editResult.preview_revision_id)}</span>` : ''}</div>`;
+  if (editResult.error) h += `<div class="warn">${esc(editResult.error.code)}: ${esc(editResult.error.message)}</div>`;
+  if ((editResult.changes || []).length) {
+    h += `<table class="data"><thead><tr><th>part</th><th>field</th><th>before</th><th>after</th></tr></thead><tbody>` +
+      editResult.changes.map(c => `<tr><td>${esc(c.part_id)}</td><td>${esc(c.field)}</td><td>${esc(fmtValue(c.before))}</td><td>${esc(fmtValue(c.after))}${c.unit ? ' ' + esc(c.unit) : ''}</td></tr>`).join('') +
+      `</tbody></table>`;
+  }
+  if ((editResult.checks || []).length) {
+    h += `<h3 class="sec">Acceptance checks</h3>` + editResult.checks.map(c =>
+      `<div style="margin-bottom:3px">${chip(c.passed ? 'known' : 'conflicted')} ${esc(c.name)}${c.detail ? ` — <span style="color:var(--ink-2)">${esc(c.detail)}</span>` : ''}</div>`).join('');
+  }
+  return h;
+}
+
+function renderStatusLine() {
+  const pid = state.hovered || state.selected;
+  const p = pid ? partById[pid] : null;
+  const frame = manifest.frame || {};
+  const parts_ = [];
+  parts_.push(`<b>${esc(MODE_LABEL[state.mode])}</b>`);
+  if (p) parts_.push(`${esc(p.name)} ${chip(partStatus(p))}`);
+  else parts_.push(`<span style="color:var(--ink-2)">no part selected</span>`);
+  if (!frame.confirmed) parts_.push(`<span class="chip unknown">frame unconfirmed — metrics are hypotheses</span>`);
+  $('status-line').innerHTML = parts_.join(' · ');
+}
+
+function renderHeader() {
+  $('design-id').textContent = manifest.design_id || 'design ?';
+  $('revision-id').textContent = manifest.revision_id || 'revision ?';
+  const frame = manifest.frame || {};
+  $('frame-state').textContent = (frame.confirmed
+    ? `frame confirmed (${frame.units || '?'} → m)`
+    : `frame UNCONFIRMED (${frame.units || '?'} assumed)`)
+    + ` · mass model: ${manifest.mass_model || 'none'}`;
+  $('doc-title').textContent = manifest.title || 'DroneBench inspector';
+}
+
+function setMode(mode) {
+  if (mode === 'reconstruction' && !hasRecon()) return;
+  if (mode === 'overlay' && !hasRecon()) return;
+  state.mode = mode;
+  for (const m of ['reference', 'reconstruction', 'overlay']) {
+    $('btn-' + m).setAttribute('aria-pressed', String(m === mode));
+  }
+  $('mode-label').textContent = MODE_LABEL[mode];
+  $('mode-label').dataset.mode = mode;
+  applyMaterials();
+  renderLegend();
+  renderStatusLine();
+  renderPartList();
+  renderInspector();
+}
+window.__dronebenchSetMode = setMode;
+
+/* ------------------------------------------------------------------ wiring */
+
+for (const m of ['reference', 'reconstruction', 'overlay']) {
+  $('btn-' + m).addEventListener('click', () => setMode(m));
+}
+$('colour-by').addEventListener('change', (e) => {
+  state.colourBy = e.target.value;
+  applyMaterials(); renderLegend(); renderPartList();
+});
+$('explode').addEventListener('input', (e) => {
+  state.explode = parseFloat(e.target.value);
+  $('explode-val').textContent = Math.round(state.explode * 100) + '%';
+  applyExplode(state.explode);
+});
+$('part-search').addEventListener('input', (e) => { state.search = e.target.value; renderPartList(); });
+$('btn-reset').addEventListener('click', () => { $('explode').value = 0; state.explode = 0; $('explode-val').textContent = '0%'; applyExplode(0); frameAll(); });
+for (const th of document.querySelectorAll('table.parts th[data-sort]')) {
+  th.addEventListener('click', () => {
+    const k = th.dataset.sort;
+    state.sortDir = (state.sortKey === k) ? -state.sortDir : 1;
+    state.sortKey = k;
+    for (const o of document.querySelectorAll('table.parts th[data-sort]')) o.removeAttribute('aria-sort');
+    th.setAttribute('aria-sort', state.sortDir === 1 ? 'ascending' : 'descending');
+    renderPartList();
+  });
+}
+
+/* ------------------------------------------------------------------ boot */
+
+function loadGlb(kind, b64) {
+  return new Promise((resolve, reject) => {
+    const loader = new GLTFLoader();
+    loader.parse(b64ToArrayBuffer(b64), '', (gltf) => { ingestGltf(kind, gltf); resolve(true); }, reject);
+  });
+}
+
+async function boot() {
+  renderHeader();
+  const glb = PAYLOAD.glb || {};
+  const jobs = [];
+  if (glb.reference) jobs.push(loadGlb('reference', glb.reference));
+  if (glb.reconstruction) jobs.push(loadGlb('reconstruction', glb.reconstruction));
+  await Promise.all(jobs);
+  computeExplodeDirections();
+  if (!hasRecon()) {
+    $('btn-reconstruction').disabled = true;
+    $('btn-overlay').disabled = true;
+    $('btn-reconstruction').title = 'No reconstruction GLB was supplied';
+    $('btn-overlay').title = 'No reconstruction GLB was supplied';
+  }
+  setMode('reference');
+  renderPartList();
+  renderInspector();
+  renderLegend();
+  resize();
+  frameAll();
+  renderer.setAnimationLoop(() => { controls.update(); renderer.render(scene, camera); });
+  document.body.dataset.ready = 'true';
+}
+
+boot().catch(fail);
+</script>
+</body>
+</html>
