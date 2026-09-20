@@ -1,0 +1,295 @@
+{
+  "geometry_hash": "f0d361e699ec0a56c4664ac82a5489be8708a0a6c52a2bdca77909690a25ce1c",
+  "alphas_deg": [
+    -2.0,
+    0.0,
+    2.0,
+    4.0,
+    6.0
+  ],
+  "alphas_deg_result": [
+    -2.0,
+    0.0,
+    2.0,
+    4.0,
+    6.0
+  ],
+  "CL": [
+    -0.305746565536,
+    -0.07699981555,
+    0.151546782981,
+    0.379698147482,
+    0.606676163152
+  ],
+  "CDi": [
+    0.002822602266,
+    0.000403928023,
+    0.000991818639,
+    0.004582385284,
+    0.011130068813
+  ],
+  "Sref": 0.4,
+  "bref": 2.2,
+  "cref": 0.2,
+  "Vinf": 15.0,
+  "Rho": 1.225,
+  "altitude_m": 120.0,
+  "mesh_delta": {
+    "alpha_deg": 2.0,
+    "tess_u_baseline": 8,
+    "tess_u_refined": 16,
+    "tess_w_baseline": 17,
+    "tess_w_refined": 33,
+    "CL_baseline": 0.151546782981,
+    "CL_refined": 0.149571524755,
+    "dCL": -0.001975258226000004,
+    "CDi_baseline": 0.000991818639,
+    "CDi_refined": 0.001041069834,
+    "dCDi": 4.925119500000003e-05,
+    "note": "Single refined-mesh point (SectTess_U and Tess_W doubled). Not a convergence study.",
+    "error": null
+  },
+  "polar": [
+    {
+      "alpha_deg": -2.0,
+      "alpha_rad": -0.03490658503988659,
+      "CL": -0.305746565536,
+      "CDi": 0.002822602266,
+      "CY": 4.20732e-07,
+      "Cl_rolling": -7.6184e-08,
+      "Sref": 0.4,
+      "bref": 2.2,
+      "cref": 0.2,
+      "fields": {
+        "alpha": "Alpha",
+        "CL": "CLtot",
+        "CDi": "CDi",
+        "CY": "CStot",
+        "Cl_rolling": "CMxtot",
+        "Sref": "FC_Sref_",
+        "bref": "FC_Bref_",
+        "cref": "FC_Cref_"
+      }
+    },
+    {
+      "alpha_deg": 0.0,
+      "alpha_rad": 0.0,
+      "CL": -0.07699981555,
+      "CDi": 0.000403928023,
+      "CY": 7.88892e-07,
+      "Cl_rolling": 6.2676e-08,
+      "Sref": 0.4,
+      "bref": 2.2,
+      "cref": 0.2,
+      "fields": {
+        "alpha": "Alpha",
+        "CL": "CLtot",
+        "CDi": "CDi",
+        "CY": "CStot",
+        "Cl_rolling": "CMxtot",
+        "Sref": "FC_Sref_",
+        "bref": "FC_Bref_",
+        "cref": "FC_Cref_"
+      }
+    },
+    {
+      "alpha_deg": 2.0,
+      "alpha_rad": 0.03490658503988659,
+      "CL": 0.151546782981,
+      "CDi": 0.000991818639,
+      "CY": 1.4315673e-05,
+      "Cl_rolling": -1.967925e-06,
+      "Sref": 0.4,
+      "bref": 2.2,
+      "cref": 0.2,
+      "fields": {
+        "alpha": "Alpha",
+        "CL": "CLtot",
+        "CDi": "CDi",
+        "CY": "CStot",
+        "Cl_rolling": "CMxtot",
+        "Sref": "FC_Sref_",
+        "bref": "FC_Bref_",
+        "cref": "FC_Cref_"
+      }
+    },
+    {
+      "alpha_deg": 4.0,
+      "alpha_rad": 0.06981317007977318,
+      "CL": 0.379698147482,
+      "CDi": 0.004582385284,
+      "CY": 2.7987694e-05,
+      "Cl_rolling": -4.004084e-06,
+      "Sref": 0.4,
+      "bref": 2.2,
+      "cref": 0.2,
+      "fields": {
+        "alpha": "Alpha",
+        "CL": "CLtot",
+        "CDi": "CDi",
+        "CY": "CStot",
+        "Cl_rolling": "CMxtot",
+        "Sref": "FC_Sref_",
+        "bref": "FC_Bref_",
+        "cref": "FC_Cref_"
+      }
+    },
+    {
+      "alpha_deg": 6.0,
+      "alpha_rad": 0.10471975511965978,
+      "CL": 0.606676163152,
+      "CDi": 0.011130068813,
+      "CY": 4.550201e-05,
+      "Cl_rolling": -5.675597e-06,
+      "Sref": 0.4,
+      "bref": 2.2,
+      "cref": 0.2,
+      "fields": {
+        "alpha": "Alpha",
+        "CL": "CLtot",
+        "CDi": "CDi",
+        "CY": "CStot",
+        "Cl_rolling": "CMxtot",
+        "Sref": "FC_Sref_",
+        "bref": "FC_Bref_",
+        "cref": "FC_Cref_"
+      }
+    }
+  ],
+  "versions": {
+    "openvsp": "OpenVSP 3.51.3",
+    "vspaero": "VSPAERO v.7.2.2 --- Compiled on: Aug 17 2026 at 20:47:37 PST",
+    "interpreter": "/root/openvsp-c3/venv/bin/python",
+    "python_version": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+    "abi": "cp314",
+    "vspaero_path": "/root/openvsp-c3/venv/lib/python3.14/site-packages/openvsp"
+  },
+  "alpha_unit": "deg",
+  "validation": {
+    "all_passed": true,
+    "checks": [
+      {
+        "name": "every returned number finite",
+        "pass": true,
+        "numbers": {
+          "count": 53,
+          "nonfinite": [],
+          "min": -2.0,
+          "max": 15.0
+        }
+      },
+      {
+        "name": "reference S/b/c come back as set",
+        "pass": true,
+        "numbers": {
+          "set_Sref": 0.4,
+          "set_bref": 2.2,
+          "set_cref": 0.2,
+          "readback_Sref": 0.4,
+          "readback_bref": 2.2,
+          "readback_cref": 0.2,
+          "history_Sref": 0.4,
+          "history_bref": 2.2,
+          "history_cref": 0.2
+        }
+      },
+      {
+        "name": "lift slope dCL/dalpha > 0 from -2 to 6 deg",
+        "pass": true,
+        "numbers": {
+          "alphas_deg": [
+            -2.0,
+            0.0,
+            2.0,
+            4.0,
+            6.0
+          ],
+          "CL": [
+            -0.305746565536,
+            -0.07699981555,
+            0.151546782981,
+            0.379698147482,
+            0.606676163152
+          ],
+          "dCL_dalpha_per_deg": [
+            0.11437337499299999,
+            0.1142732992655,
+            0.1140756822505,
+            0.11348900783500002
+          ]
+        }
+      },
+      {
+        "name": "left/right symmetry (CStot side force, CMxtot rolling)",
+        "pass": true,
+        "numbers": {
+          "tolerance_abs_CStot": 0.005,
+          "tolerance_abs_CMxtot": 0.005,
+          "CStot": [
+            4.20732e-07,
+            7.88892e-07,
+            1.4315673e-05,
+            2.7987694e-05,
+            4.550201e-05
+          ],
+          "CMxtot": [
+            -7.6184e-08,
+            6.2676e-08,
+            -1.967925e-06,
+            -4.004084e-06,
+            -5.675597e-06
+          ],
+          "max_abs_CStot": 4.550201e-05,
+          "max_abs_CMxtot": 5.675597e-06,
+          "method": "full-span model via OpenVSP SYM_XZ; VSPAEROSweep Symmetry=0; this 3.51.3 history names CStot (side) and CMxtot (roll)"
+        }
+      },
+      {
+        "name": "one refined-mesh point (not a convergence study)",
+        "pass": true,
+        "numbers": {
+          "alpha_deg": 2.0,
+          "CL_baseline": 0.151546782981,
+          "CL_refined": 0.149571524755,
+          "dCL": -0.001975258226000004,
+          "CDi_baseline": 0.000991818639,
+          "CDi_refined": 0.001041069834,
+          "dCDi": 4.925119500000003e-05,
+          "tess_u": "8 -> 16",
+          "tess_w": "17 -> 33",
+          "note": "Single refined-mesh point (SectTess_U and Tess_W doubled). Not a convergence study."
+        }
+      },
+      {
+        "name": "MainWing TotalProjectedSpan near reference.b_m (geometry check, not Sref)",
+        "pass": true,
+        "numbers": {
+          "TotalProjectedSpan": 2.2,
+          "TotalSpan": 2.201499410266452,
+          "TotalArea": 0.4843132186169043,
+          "reference_b_m": 2.2,
+          "tol_m": 0.05
+        }
+      }
+    ]
+  },
+  "error": null,
+  "raw": {
+    "vsp3": "/mnt/c/Users/leona/.grok/worktrees/downloads-aitx-hackathon/subagent-01a0bbac-589d-7aa2-8a89-e22217069693/artifacts/openvsp/aircraft.vsp3",
+    "solver_inputs": "/mnt/c/Users/leona/.grok/worktrees/downloads-aitx-hackathon/subagent-01a0bbac-589d-7aa2-8a89-e22217069693/artifacts/openvsp/solver_inputs.json",
+    "outputs": "/mnt/c/Users/leona/.grok/worktrees/downloads-aitx-hackathon/subagent-01a0bbac-589d-7aa2-8a89-e22217069693/artifacts/openvsp/raw_outputs.json",
+    "csv": "/mnt/c/Users/leona/.grok/worktrees/downloads-aitx-hackathon/subagent-01a0bbac-589d-7aa2-8a89-e22217069693/artifacts/openvsp/vspaero_results.csv",
+    "logs": "/mnt/c/Users/leona/.grok/worktrees/downloads-aitx-hackathon/subagent-01a0bbac-589d-7aa2-8a89-e22217069693/artifacts/openvsp/vspaero.log",
+    "sweep_result": "/mnt/c/Users/leona/.grok/worktrees/downloads-aitx-hackathon/subagent-01a0bbac-589d-7aa2-8a89-e22217069693/artifacts/openvsp/sweep_result.json"
+  },
+  "notes": [
+    "OpenVSP WING + V-tail use geom Sym_Planar_Flag=SYM_XZ (left side is the XZ mirror).",
+    "Airfoil is the OpenVSP WING default four-series (t/c=0.10, camber=0); geometry_features.json has no airfoil.",
+    "VSPAEROSweep AlphaStart/AlphaEnd are degrees on OpenVSP 3.51.3 (defaults 0 and 10; shipped tests pass 1.0 deg).",
+    "Sref/bref/cref are set once on VSPAEROSweep with RefFlag=MANUAL_REF. Not copied onto WingGeom TotalArea/TotalSpan.",
+    "V-tail root LE is at X_vsp=tail_arm_m (aft of model origin). No extra AC offset is applied.",
+    "MachStart=0 (incompressible). Vinf and Rho come from the fixture. Speed of sound is not in the fixture.",
+    "Panel chord = panel_area_m2 / panel_span_m (rectangular; fixture has no tail taper).",
+    "2*tip_y=2.2 m matches reference.b_m"
+  ]
+}

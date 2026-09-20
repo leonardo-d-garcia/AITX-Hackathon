@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dronebench.dev/schemas/evaluation.schema.json",
+  "title": "Evaluation",
+  "description": "Lane C evaluator output. Metrics are Claims (null + unknown is a valid result). Conventional-tail heuristics on a V-tail are not_applicable, never fail. Stability stays unknown without validated derivatives.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["meta", "metrics", "checks"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "meta": { "$ref": "#/$defs/meta" },
+    "metrics": {
+      "type": "object",
+      "description": "Named Claims. Unknown metrics stay null; never substitute zero.",
+      "additionalProperties": { "$ref": "claim.schema.json" }
+    },
+    "checks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/check" }
+    },
+    "quarantine": {
+      "type": "array",
+      "description": "Implausible inputs retained raw, never clamped.",
+      "items": { "$ref": "#/$defs/quarantine_item" }
+    },
+    "score": { "$ref": "#/$defs/score" },
+    "part_reports": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/part_report" }
+    }
+  },
+  "$defs": {
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revision_id",
+        "geometry_hash",
+        "fidelity_tier",
+        "input_hashes",
+        "assumptions"
+      ],
+      "properties": {
+        "revision_id": { "type": "string", "minLength": 1 },
+        "geometry_hash": { "type": "string", "minLength": 1 },
+        "fidelity_tier": {
+          "type": "string",
+          "enum": ["analytic", "vspaero"],
+          "description": "analytic unless a real VSPAERO run exists for this exact geometry_hash."
+        },
+        "solver_versions": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "openvsp": { "type": ["string", "null"] },
+            "vspaero": { "type": ["string", "null"] }
+          }
+        },
+        "input_hashes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["design_manifest", "parts", "geometry_features"],
+          "properties": {
+            "design_manifest": { "type": "string", "minLength": 1 },
+            "parts": { "type": "string", "minLength": 1 },
+            "geometry_features": { "type": "string", "minLength": 1 },
+            "part_map": { "type": "string", "minLength": 1 }
+          }
+        },
+        "assumptions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "status"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "enum": [
+            "static_margin",
+            "stall",
+            "climb",
+            "spar",
+            "tail_volume_horizontal",
+            "tail_volume_vertical",
+            "servo_torque",
+            "motor_current",
+            "esc_current",
+            "battery_current",
+            "propulsion_chain",
+            "control_chain",
+            "payload",
+            "clearance",
+            "vtail_or_tail_layout"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pass", "fail", "unknown", "not_applicable", "conflicted"]
+        },
+        "metric": { "$ref": "claim.schema.json" },
+        "limit_low": { "type": ["number", "null"] },
+        "limit_high": { "type": ["number", "null"] },
+        "detail": { "type": "string" }
+      }
+    },
+    "quarantine_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "reason", "raw"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 },
+        "raw": true
+      }
+    },
+    "score": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["preset", "value"],
+      "properties": {
+        "preset": {
+          "type": "string",
+          "enum": ["endurance", "range", "speed", "payload", "efficiency"]
+        },
+        "value": { "$ref": "claim.schema.json" }
+      }
+    },
+    "part_report": {
+      "type": "object",
+      "required": ["part_id"],
+      "properties": {
+        "part_id": { "type": "string", "minLength": 1 },
+        "function": { "type": "string" },
+        "why": { "type": "string" },
+        "necessity": {
+          "type": "string",
+          "enum": ["required", "helpful", "unnecessary", "unknown"]
+        },
+        "removal_test": { "type": "string" }
+      }
+    }
+  }
+}

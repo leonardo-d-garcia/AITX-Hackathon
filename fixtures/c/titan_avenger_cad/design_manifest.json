@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "design_id": "archive_fw_print",
+  "revision_id": "rev_archive_fw_001",
+  "representation": "as_measured",
+  "frame": "FRD",
+  "units": "SI",
+  "notes": "Print-archive fixed-wing pusher. Geometry from STL bounds. No mass, material, propulsion, or rotor hardware in the archive. Filename VTOL claim is not supported by the parts.",
+  "assumptions": [
+    "Right-wing stations only; left wing is the implied mirror.",
+    "FRD: X forward, Y right, Z down. Lengths in metres, angles in radians.",
+    "Reference S is exposed planform, both sides, no carry-through.",
+    "not present in the print archive"
+  ]
+}

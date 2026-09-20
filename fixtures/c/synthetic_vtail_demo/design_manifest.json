@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "design_id": "synthetic_vtail_demo",
+  "revision_id": "rev_synthetic_vtail_001",
+  "representation": "editable_reconstruction",
+  "frame": "FRD",
+  "units": "SI",
+  "notes": "Synthetic V-tail demo. Every numeric value is an assumed demo assumption, not a measurement.",
+  "assumptions": [
+    "synthetic demo assumption; not a measurement",
+    "Right-wing stations only; left wing is the implied mirror.",
+    "FRD frame: X forward, Y right, Z down. Lengths in metres, angles in radians, mass in kilograms."
+  ]
+}

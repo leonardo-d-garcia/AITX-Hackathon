@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dronebench.dev/schemas/simulation_run.schema.json",
+  "title": "SimulationRun",
+  "description": "Telemetry contract for replay (R3F / Unreal). pos_ned is world North-East-Down metres. Body frame is FRD. quat is scalar-first (w, x, y, z) body-to-NED. alpha/beta in radians. energy_wh_remaining is usable energy after the mission reserve is withheld. Unreal converts FRD/NED -> UE left-handed Z-up at the adapter boundary only.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["meta", "frames", "part_stress"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "meta": { "$ref": "#/$defs/meta" },
+    "frames": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/frame" }
+    },
+    "part_stress": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "$ref": "#/$defs/stress_sample" }
+      }
+    }
+  },
+  "$defs": {
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revision_id",
+        "geometry_hash",
+        "fidelity_tier",
+        "assumptions",
+        "dt_s"
+      ],
+      "properties": {
+        "revision_id": { "type": "string", "minLength": 1 },
+        "geometry_hash": { "type": "string", "minLength": 1 },
+        "fidelity_tier": {
+          "type": "string",
+          "enum": ["analytic", "vspaero"]
+        },
+        "solver_versions": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "openvsp": { "type": ["string", "null"] },
+            "vspaero": { "type": ["string", "null"] }
+          }
+        },
+        "assumptions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "dt_s": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Nominal frame period in seconds."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "fidelity_tier": { "const": "vspaero" } },
+            "required": ["fidelity_tier"]
+          },
+          "then": { "required": ["solver_versions"] }
+        }
+      ]
+    },
+    "frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "t",
+        "pos_ned",
+        "quat",
+        "Va",
+        "alpha",
+        "beta",
+        "load_factor_n",
+        "power_w",
+        "energy_wh_remaining"
+      ],
+      "properties": {
+        "t": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Time in seconds. Must be monotonic non-decreasing along frames."
+        },
+        "pos_ned": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": { "type": "number" },
+          "description": "World position North, East, Down in metres."
+        },
+        "quat": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": { "type": "number" },
+          "description": "Scalar-first quaternion (w, x, y, z), body FRD to NED."
+        },
+        "Va": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Airspeed m/s."
+        },
+        "alpha": {
+          "type": "number",
+          "description": "Angle of attack, radians."
+        },
+        "beta": {
+          "type": "number",
+          "description": "Sideslip, radians."
+        },
+        "load_factor_n": { "type": "number" },
+        "power_w": { "type": "number" },
+        "energy_wh_remaining": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Usable watt-hours remaining after mission reserve is withheld."
+        }
+      }
+    },
+    "stress_sample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["t", "sigma_mpa", "station_m"],
+      "properties": {
+        "t": { "type": "number", "minimum": 0 },
+        "sigma_mpa": { "type": "number" },
+        "station_m": { "type": "number" }
+      }
+    }
+  }
+}

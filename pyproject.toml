@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dronebench"
+version = "0.1.0"
+description = "Lane C analytic evaluator, mission plant, and OpenVSP worker"
+requires-python = ">=3.11"
+dependencies = [
+  "pydantic>=2.6",
+  "numpy>=1.26",
+  "jsonschema>=4.21",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+cad = ["trimesh>=4"]
+
+[project.scripts]
+dronebench = "dronebench.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["packages"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["packages"]
+addopts = "-q"

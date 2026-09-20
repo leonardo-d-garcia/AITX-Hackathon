@@ -1,0 +1,49 @@
+# Generated solver / runtime
+artifacts/
+vendor_assets/
+*.vsp3
+*.vsp3.*
+
+# Nested accidental clone
+/AITX-Hackathon/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+dist/
+build/
+
+# Node / Vite
+node_modules/
+apps/web/dist/
+apps/web/.vite/
+
+# Generated evaluation dumps (reproducible via CLI)
+fixtures/**/evaluation.json
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Secrets
+.env
+.env.*
+
+# CAD archives / meshes (local, not committed)
+Titan*.zip
+*Avenger*.zip
+*.glb
+fixtures/c/titan_avenger_cad/meshes/
+unreal/**/Binaries/
+unreal/**/Intermediate/
+unreal/**/Saved/
+unreal/**/DerivedDataCache/
+unreal/**/Content/

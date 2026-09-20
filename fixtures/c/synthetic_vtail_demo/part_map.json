@@ -1,0 +1,184 @@
+{
+  "wing_L": {
+    "name": "Left wing panel",
+    "mesh_node": "wing_L",
+    "material": {
+      "name": "foam",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  },
+  "wing_R": {
+    "name": "Right wing panel",
+    "mesh_node": "wing_R",
+    "material": {
+      "name": "foam",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  },
+  "fuse": {
+    "name": "Fuselage",
+    "mesh_node": "fuse",
+    "material": {
+      "name": "polymer",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  },
+  "vtail_L": {
+    "name": "Left V-tail panel",
+    "mesh_node": "vtail_L",
+    "material": {
+      "name": "foam",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  },
+  "vtail_R": {
+    "name": "Right V-tail panel",
+    "mesh_node": "vtail_R",
+    "material": {
+      "name": "foam",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  },
+  "spar_L": {
+    "name": "Left wing spar",
+    "mesh_node": "spar_L",
+    "material": {
+      "name": "CFRP",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  },
+  "spar_R": {
+    "name": "Right wing spar",
+    "mesh_node": "spar_R",
+    "material": {
+      "name": "CFRP",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  },
+  "battery": {
+    "name": "Battery pack",
+    "mesh_node": "battery",
+    "material": {
+      "name": "LiPo",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  },
+  "motor": {
+    "name": "Propulsion motor",
+    "mesh_node": "motor",
+    "material": {
+      "name": "metal",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  },
+  "prop": {
+    "name": "Propeller",
+    "mesh_node": "prop",
+    "material": {
+      "name": "polymer",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  },
+  "esc": {
+    "name": "Electronic speed controller",
+    "mesh_node": "esc",
+    "material": {
+      "name": "electronics",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  },
+  "servo_L": {
+    "name": "Left surface servo",
+    "mesh_node": "servo_L",
+    "material": {
+      "name": "electronics",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  },
+  "servo_R": {
+    "name": "Right surface servo",
+    "mesh_node": "servo_R",
+    "material": {
+      "name": "electronics",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  },
+  "payload": {
+    "name": "Locked payload",
+    "mesh_node": "payload",
+    "material": {
+      "name": "mixed",
+      "status": "known",
+      "source_kind": "assumed",
+      "evidence_ids": [],
+      "assumptions": [
+        "synthetic demo assumption; not a measurement"
+      ]
+    }
+  }
+}

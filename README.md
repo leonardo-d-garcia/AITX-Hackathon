@@ -11,6 +11,29 @@ Give it a `design/` folder (CAD + BOM), pick a scoring preset, and it returns a 
 - **In scope:** electric fixed-wing aircraft, 1–3 m span. Reference design: Titan Dynamics Falcon V2.
 - **Out of scope:** design suggestions, supplier/price lookup, cost, agent training.
 
+## Mission replay demo
+
+Shipping viewport is the Vite / React Three Fiber replay in `apps/web`. It plays a prescribed-route mission of print-archive geometry (30 named parts). It is not a 6DOF plant, not a bench test, and not VTOL.
+
+```bash
+cd apps/web && npm install && npm run dev
+```
+
+Open http://localhost:5173
+
+- **Fidelity:** no VSPAERO run for this `geometry_hash` → `fidelity_tier: analytic`, UI **"Engineering estimate"**. A real VSPAERO run for the exact hash → `fidelity_tier: vspaero`, UI **"VSPAERO analysis + mission model"**. This fixture is analytic.
+- **Heatmap:** colour is load factor *n*, not MPa (spar inner diameter unknown).
+- **Part pick:** mass and material are unknown (no BOM in the archive).
+- **Unreal Engine 5.8** is an optional second window (Mode A). R3F is the shipping fallback if Unreal is down.
+
+Rebake telemetry:
+
+```bash
+python -m dronebench simulate --geometry fixtures/c/titan_avenger_cad/geometry_features.json --parts fixtures/c/titan_avenger_cad/parts.json --design-manifest fixtures/c/titan_avenger_cad/design_manifest.json --out fixtures/c/titan_avenger_cad/simulation_run.json
+```
+
+Lane C's live CLI is `python -m dronebench {evaluate,simulate,doctor}`. The older `dronebench score design/` PRD CLI is not the live path in this repo.
+
 ## Design folder layout
 
 ```
